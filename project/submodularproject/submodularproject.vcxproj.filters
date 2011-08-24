@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\source\submodular_tests.cpp" />
+    <ClCompile Include="..\..\source\library\PseudoBoolean_create_g.cpp" />
+    <ClCompile Include="..\..\source\library\PseudoBoolean_heuristic.cpp" />
+    <ClCompile Include="..\..\source\library\PseudoBoolean_minimize.cpp" />
+    <ClCompile Include="..\..\source\library\PseudoBoolean_reduce.cpp" />
+    <ClCompile Include="..\..\source\main_program.cpp" />
+    <ClCompile Include="..\..\source\library\PseudoBoolean.cpp" />
+    <ClCompile Include="..\..\source\library\PseudoBoolean_complete.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\library\PseudoBoolean.h" />
+    <ClInclude Include="..\..\source\library\Minimizer.h" />
+  </ItemGroup>
+</Project>
