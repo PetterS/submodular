@@ -41,6 +41,9 @@ namespace Petter
 		}
 		ASSERT_STR(fin,"Could not read degree 1 monomials");
 		fin >> n;
+		if (!fin) {
+			return;
+		}
 		for (int c=1;c<=n;++c) {
 			fin >> i >> j;
 			i--; j--;
@@ -49,6 +52,9 @@ namespace Petter
 		}
 		ASSERT_STR(fin,"Could not read degree 2 monomials");
 		fin >> n;
+		if (!fin) {
+			return;
+		}
 		for (int c=1;c<=n;++c) {
 			fin >> i >> j >> k;
 			i--; j--; k--;
@@ -57,6 +63,9 @@ namespace Petter
 		}
 		ASSERT_STR(fin,"Could not read degree 3 monomials");
 		fin >> n;
+		if (!fin) {
+			return;
+		}
 		for (int c=1;c<=n;++c) {
 			fin >> i >> j >> k >> l; 
 			i--; j--; k--; l--;
@@ -330,32 +339,32 @@ namespace Petter
 
 	pair make_pair(int i, int j)
 	{
-    //
-    // We only want pairs where i<j, so we
-    // permute accordingly
-    //
-    if (j<i) {
-      return make_pair(j,i);
-    }
-    ASSERT(i<j);
+		//
+		// We only want pairs where i<j, so we
+		// permute accordingly
+		//
+		if (j<i) {
+			return make_pair(j,i);
+		}
+		ASSERT(i<j);
 		return std::make_pair(i,j);
 	}
 
 	triple make_triple(int i, int j, int k)
 	{
-    //
-    // We only want triplets where i<j<k, so we
-    // permute accordingly
-    //
-    if (j<i) {
-      return make_triple(j,i,k);
-    }
-    if (k<i) {
-      return make_triple(k,j,i);
-    }
-    if (k<j) {
-      return make_triple(i,k,j);
-    }
+		//
+		// We only want triplets where i<j<k, so we
+		// permute accordingly
+		//
+		if (j<i) {
+			return make_triple(j,i,k);
+		}
+		if (k<i) {
+			return make_triple(k,j,i);
+		}
+		if (k<j) {
+			return make_triple(i,k,j);
+		}
 		ASSERT(i<j && j<k);
 
 
@@ -364,29 +373,29 @@ namespace Petter
 
 	quad make_quad(int i, int j, int k, int l)
 	{
-    //
-    // We only want quads where i<j<k, so we
-    // permute accordingly
-    //
-    if (j<i) {
-      return make_quad(j,i,k,l);
-    }
-    if (k<i) {
-      return make_quad(k,j,i,l);
-    }
-    if (l<i) {
-      return make_quad(l,j,k,i);
-    }
-    if (k<j) {
-      return make_quad(i,k,j,l);
-    }
-    if (l<j) {
-      return make_quad(i,l,k,j);
-    }
-    if (l<k) {
-      return make_quad(i,j,l,k);
-    }
-    ASSERT(i<j && j<k && k<l);
+		//
+		// We only want quads where i<j<k, so we
+		// permute accordingly
+		//
+		if (j<i) {
+			return make_quad(j,i,k,l);
+		}
+		if (k<i) {
+			return make_quad(k,j,i,l);
+		}
+		if (l<i) {
+			return make_quad(l,j,k,i);
+		}
+		if (k<j) {
+			return make_quad(i,k,j,l);
+		}
+		if (l<j) {
+			return make_quad(i,l,k,j);
+		}
+		if (l<k) {
+			return make_quad(i,j,l,k);
+		}
+		ASSERT(i<j && j<k && k<l);
 		return std::make_pair(std::make_pair(i,j), std::make_pair(k,l));
 		//return std::make_tuple<int,int,int,int>(i,j,k,l);
 	}
