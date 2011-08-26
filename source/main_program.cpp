@@ -136,6 +136,8 @@ int main_program(int num_args, char** args)
 		typedef std::pair<int, bool> variable;
 		vector< vector<variable> > clauses;
 
+		m = 0;
+
 		for (int c=1; c<=nclauses; ++c) {
 			vector<variable> vars;
 			int i;
@@ -150,54 +152,79 @@ int main_program(int num_args, char** args)
 			sort(vars.begin(), vars.end());
 
 			clauses.push_back( vars );
+			
+			m = max(m, (int)vars.size());
 		}
 
-		//for (auto itr=clauses.begin(); itr != clauses.end(); ++itr) {
-		//	vector<variable>& vars = *itr;
+		if (cmd_line.find("-verbose") != cmd_line.end()) {
+			for (auto itr=clauses.begin(); itr != clauses.end(); ++itr) {
+				vector<variable>& vars = *itr;
 
-		//	for (auto itr2=vars.begin(); itr2 != vars.end(); ++itr2) {
-		//		int  i   = itr2->first;
-		//		bool neg = itr2->second;
-		//		if (neg) {
-		//			cout << "not(";
-		//		}
-		//		cout << i;
-		//		if (neg) {
-		//			cout << ")";
-		//		}
-		//		cout << " ";
-		//	}
-		//	cout << endl;
-		//}
-
-
-		m = 3; // Only 3-SAT for now
+				for (auto itr2=vars.begin(); itr2 != vars.end(); ++itr2) {
+					int  i   = itr2->first;
+					bool neg = itr2->second;
+					if (neg) {
+						cout << "not(";
+					}
+					cout << i;
+					if (neg) {
+						cout << ")";
+					}
+					cout << " ";
+				}
+				cout << endl;
+			}
+		}
 
 		for (auto itr=clauses.begin(); itr != clauses.end(); ++itr) {
 			vector<variable>& vars = *itr;
-			ASSERT(vars.size() == unsigned(m)); // Only 3-SAT for now
+			ASSERT(vars.size() == 2 || vars.size() == 3); // Only 3-SAT or lower for now
 
-			// If the clause is "xi or not(xj) or not(xk)"
-			// then all assignments of (xi,xj,xk) except
-			// (0,1,1) are OK.
+			if (vars.size() == 3) {
+				// If the clause is "xi or not(xj) or not(xk)"
+				// then all assignments of (xi,xj,xk) except
+				// (0,1,1) are OK.
 
-			int eind = 0;
-			if (vars.at(0).second) {
-				eind += 4;
-			}
-			if (vars.at(1).second) {
-				eind += 2;
-			}
-			if (vars.at(2).second) {
-				eind += 1;
-			}
-			vector<real> E(8,0);
-			E.at(eind) = 1;
+				int eind = 0;
+				if (vars.at(0).second) {
+					eind += 4;
+				}
+				if (vars.at(1).second) {
+					eind += 2;
+				}
+				if (vars.at(2).second) {
+					eind += 1;
+				}
+				vector<real> E(8,0);
+				E.at(eind) = 1;
 
-			int i = vars.at(0).first;
-			int j = vars.at(1).first;
-			int k = vars.at(2).first;
-			pb.add_clique(i,j,k, E);
+				int i = vars.at(0).first;
+				int j = vars.at(1).first;
+				int k = vars.at(2).first;
+				pb.add_clique(i,j,k, E);
+			}
+			else if (vars.size() == 2) {
+				int i = vars.at(0).first;
+				int j = vars.at(1).first;
+				bool i_neg = vars.at(0).second;
+				bool j_neg = vars.at(1).second;
+
+				if (i_neg && j_neg) {
+					pb.add_clique(i,j, 0,0,0,1);
+				}
+				else if (i_neg && !j_neg) {
+					pb.add_clique(i,j, 0,0,1,0);
+				}
+				else if (!i_neg && j_neg) {
+					pb.add_clique(i,j, 0,1,0,0);
+				}
+				else if (!i_neg && !j_neg) {
+					pb.add_clique(i,j, 1,0,0,0);
+				}
+			}
+			else {
+				throw runtime_error("Invalid clause length");
+			}
 		}
 	}
 	/////////////////////////
@@ -425,6 +452,10 @@ int main_program(int num_args, char** args)
 			pb.reduce(x);
 			double t_reduce = stop();
 
+			if (cmd_line.find("-verbose") != cmd_line.end()) {
+				cout << "Relaxation g : " << spb << endl;
+			}
+
 			cout << "Labeled : "<< GREEN << labeled << NORMAL << endl;
 			cout << "Bound   : " << GREEN << bound << NORMAL << endl;
 			cout << "time (create)   : " << GREEN << t_create <<  NORMAL << endl;
@@ -489,6 +520,10 @@ int main_program(int num_args, char** args)
 			start();
 			pb2.reduce(x);
 			double t_reduce = stop();
+
+			if (cmd_line.find("-verbose") != cmd_line.end()) {
+				cout << "Relaxation g : " << spb << endl;
+			}
 
 			cout << "Labeled : "<< YELLOW << labeled << NORMAL << endl;
 			cout << "Bound   : " << YELLOW << bound << NORMAL << endl;
