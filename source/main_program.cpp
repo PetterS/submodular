@@ -394,7 +394,7 @@ int main_program(int num_args, char** args)
 	}
 
 	hocr_itr_bound = bound;
-	hocr_labeled = labeled;
+	hocr_itr_labeled = labeled;
 
 		
 	if (cmd_line.find("-lp") != cmd_line.end()) {
@@ -509,17 +509,17 @@ int main_program(int num_args, char** args)
 		
 	// Write to log file
 	ofstream log("logfile.data", ios::app);
-	log << n << '\t' 
-		<< nterms << '\t' 
-		<< griddim << '\t'
-		<< hocr_labeled << '\t' 
-		<< hocr_itr_labeled << '\t' 
-		<< lp_labeled << '\t'
-		<< heur_labeled  << '\t' 
-		<< hocr_bound << '\t' 
-		<< hocr_itr_bound  << '\t'
-		<< lp_bound << '\t' 
-		<< heur_bound << endl;
+	log << n                << '\t' // 0 
+		<< nterms           << '\t' // 1
+		<< griddim          << '\t' // 2
+		<< hocr_labeled     << '\t' // 3
+		<< hocr_itr_labeled << '\t' // 4
+		<< lp_labeled       << '\t' // 5
+		<< heur_labeled     << '\t' // 6
+		<< hocr_bound       << '\t' // 7
+		<< hocr_itr_bound   << '\t' // 8
+		<< lp_bound         << '\t' // 9
+		<< heur_bound      << endl; // 10
 
 	//cin.get();
 
@@ -615,19 +615,22 @@ int main(int argc, char** argv)
 	catch (runtime_error& e) {
 		statusFailed();
 		cerr << RED << "Run-time error : " << e.what() << NORMAL << endl;
+		return 100;
 	}
 	catch (bad_alloc&) {
 		statusFailed();
 		cerr << RED << "Out of memory." << NORMAL << endl;
+		return 101;
 	}
 	catch (exception& e) {
 		statusFailed();
 		cerr << RED << "Exception : " << e.what() << NORMAL << endl;
+		return 102;
 	}
 	catch (...) {
 		cerr << RED << "Unknown error" << NORMAL << endl;
+		return 103;
 	}
-	return 1;
 }
 
 
