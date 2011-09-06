@@ -112,6 +112,46 @@ int main_program(int num_args, char** args)
 		pb = PseudoBoolean(cmd_line["-file"]);
 		n = pb.nvars();
 	}
+	///////////////
+	//  Dat file //
+	///////////////
+	else if (cmd_line.find("-dat") != cmd_line.end() ) {
+		statusTry("Reading file...");
+		ifstream fin(cmd_line["-dat"]);
+		ASSERT(fin);
+		fin >> n;
+		for (int i=0;i<n;++i) {
+			real E0,E1;
+			fin >> E0 >> E1;
+			pb.add_clique(i,E0,E1);
+		}
+		ASSERT(fin);
+		int np;
+		fin >> np;
+		for (int c=0;c<np;++c) {
+			int i,j;
+			real E00,E01,E10,E11;
+			fin >> i >> j >> E00 >> E01 >> E10 >> E11;
+			i--;
+			j--;
+			pb.add_clique(i,j,E00,E01,E10,E11);
+		}
+		ASSERT(fin);
+		int nt;
+		fin >> nt;
+		for (int c=0;c<nt;++c) {
+			int i,j,k;
+			real E000,E001,E010,E011,E100,E101,E110,E111;
+			fin >> i >> j >> k >> E000 >> E001 >> E010 >> E011 >> E100 >> E101 >> E110 >> E111;
+			i--;
+			j--;
+			k--;
+			pb.add_clique(i,j,k,E000,E001,E010,E011,E100,E101,E110,E111);
+		}
+		ASSERT(fin);
+		statusOK();
+		cout << n << " variables, " << np << " quadratic terms and " << nt << " cubic terms." << endl;
+	}
 	/////////
 	// SAT //
 	/////////
@@ -362,8 +402,7 @@ int main_program(int num_args, char** args)
 	}
 	cout << endl;
 
-	Petter::PseudoBoolean pb2 = pb;
-	Petter::PseudoBoolean f   = pb;
+	
 
 	// For timing
 	clock_t t_raw;
@@ -377,54 +416,62 @@ int main_program(int num_args, char** args)
 	int labeled = 0;
 	bool should_continue;
 
-	const Petter::Color* COL = &RED;
+	bool run_hocr = true;
+	if (run_hocr) {
 
-	do {
-		iters++;
+		Petter::PseudoBoolean f = pb;
 
-		int new_labeled = 0;
-		start();
-		bound = pb.minimize_reduction(x,new_labeled);
-		double t_minimize = stop();
+		const Petter::Color* COL = &RED;
 
-		should_continue = new_labeled > labeled;
-		labeled = new_labeled;
+		do {
+			iters++;
+
+			int new_labeled = 0;
+			start();
+			bound = f.minimize_reduction(x,new_labeled);
+			double t_minimize = stop();
+
+			should_continue = new_labeled > labeled;
+			labeled = new_labeled;
+			if (labeled == n) {
+				//Nothing more to do
+				should_continue = false;
+			}
+
+			start();
+			f.reduce(x);
+			double t_reduce = stop();
+
+			if (iters == 1) {
+				hocr_bound = bound;
+				hocr_labeled = new_labeled;
+				COL = &DKRED;
+			}
+			else {
+				COL = &RED;
+			}
+
+			cout << "labeled : " << *COL << labeled << NORMAL << endl;
+			cout << "f_bound : " << *COL << bound << NORMAL << endl;
+			cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
+			cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;
+			cout << endl;
+
+		} while (should_continue);
+
 		if (labeled == n) {
-			//Nothing more to do
-			should_continue = false;
+			cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
+			cout << endl;
 		}
 
-		start();
-		pb.reduce(x);
-		double t_reduce = stop();
-
-		if (iters == 1) {
-			hocr_bound = bound;
-			hocr_labeled = new_labeled;
-			COL = &DKRED;
-		}
-		else {
-			COL = &RED;
-		}
-
-		cout << "labeled : " << *COL << labeled << NORMAL << endl;
-		cout << "f_bound : " << *COL << bound << NORMAL << endl;
-		cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
-		cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;
-		cout << endl;
-
-	} while (should_continue);
-
-	if (labeled == n) {
-		cout << "Global minimum : " << WHITE << f.eval(x) << NORMAL << endl;
-		cout << endl;
+		hocr_itr_bound = bound;
+		hocr_itr_labeled = labeled;
 	}
-
-	hocr_itr_bound = bound;
-	hocr_itr_labeled = labeled;
 
 		
 	if (cmd_line.find("-lp") != cmd_line.end()) {
+
+		Petter::PseudoBoolean f   = pb;
 
 		iters = 0;
 		labeled = 0;
@@ -434,7 +481,7 @@ int main_program(int num_args, char** args)
 
 			Petter::SymmetricPseudoBoolean spb;
 			start();
-			spb.create_lp(pb);
+			spb.create_lp(f);
 			double t_create = stop();
 
 			int new_labeled = 0;
@@ -449,7 +496,7 @@ int main_program(int num_args, char** args)
 			}
 
 			start();
-			pb.reduce(x);
+			f.reduce(x);
 			double t_reduce = stop();
 
 			if (cmd_line.find("-verbose") != cmd_line.end()) {
@@ -466,7 +513,7 @@ int main_program(int num_args, char** args)
 		} while (should_continue);
 
 		if (labeled == n) {
-			cout << "Global minimum : " << WHITE << f.eval(x) << NORMAL << endl;
+			cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
 			cout << endl;
 		}
 
@@ -477,6 +524,8 @@ int main_program(int num_args, char** args)
 		
 	if (cmd_line.find("-heuristic") != cmd_line.end()) {
 
+		Petter::PseudoBoolean f = pb;
+
 		iters = 0;
 		labeled = 0;
 
@@ -485,7 +534,7 @@ int main_program(int num_args, char** args)
 
 			Petter::SymmetricPseudoBoolean spb;
 			start();
-			spb.create_heuristic(pb2);
+			spb.create_heuristic(f);
 			double t_create = stop();
 
 			int new_labeled = 0;
@@ -508,17 +557,17 @@ int main_program(int num_args, char** args)
 					u[i] = rand()%2;
 					v[i] = 1-u[i];
 				}
-				double f = pb2.eval(u);
-				double g = spb.eval(u,v);
-				if ( absolute(f-g) > 1e-6 ) {
-					cout << "f = " << f << endl;
-					cout << "g = " << g << endl;
+				double fval = f.eval(u);
+				double gval = spb.eval(u,v);
+				if ( absolute(fval-gval) > 1e-6 ) {
+					cout << "f = " << fval << endl;
+					cout << "g = " << gval << endl;
 					throw runtime_error("f(x) =/= g(x,bar(x)) for heuristic");
 				}
 			}
 
 			start();
-			pb2.reduce(x);
+			f.reduce(x);
 			double t_reduce = stop();
 
 			if (cmd_line.find("-verbose") != cmd_line.end()) {
@@ -535,7 +584,7 @@ int main_program(int num_args, char** args)
 		} while (should_continue);
 
 		if (labeled == n) {
-			cout << "Global minimum : " << WHITE << f.eval(x) << NORMAL << endl;
+			cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
 		}
 
 		heur_bound = bound;
