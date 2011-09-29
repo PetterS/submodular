@@ -320,60 +320,99 @@ int main_program(int num_args, char** args)
 		ASSERT(m>=2);
 		ASSERT(nterms>0);
 
-		cout << endl << YELLOW << "Random polynomial" << NORMAL << endl;
+		statusTry("Generating random polynomial...");
 
-		uniform_int_distribution<int> distribution(-100, 100);
-		auto random_value = bind(distribution, engine);
+		uniform_int_distribution<int> coef_distribution(-100, 100);
+		auto random_coef = bind(coef_distribution, engine);
+		uniform_int_distribution<int> index_distribution(0, n-1);
+		auto random_index = bind(index_distribution, engine);
 
 		map< quad, bool> exists;
-		for (int t=1; t <= nterms; ++t) {
+		map< int, bool > used;
+
+		auto add_term = [&nterms,&used,&exists,&pb,&random_coef,m,n](index i, index j, index k, index l) 
+		{
+			if (m<4) {
+				l = 3*n;
+			}
+			if (m<3) {
+				k = 2*n;
+			}
+
+			if (nterms > 0 && !exists[ make_quad(i,j,k,l) ]) {
+				exists[ make_quad(i,j,k,l) ] = true;
+				used[i] = true;
+				used[j] = true;
+				if (m >= 3) {
+					used[k] = true;
+				}
+				if (m >= 4) {
+					used[l] = true;
+				}
+
+				pb.add_monomial(i, random_coef());
+				pb.add_monomial(j, random_coef());
+				pb.add_monomial(i,j, random_coef());
+				if (m >= 3) {
+					pb.add_monomial(k, random_coef());
+					pb.add_monomial(i,k, random_coef());
+					pb.add_monomial(j,k, random_coef());
+					pb.add_monomial(i,j,k, random_coef());
+				}
+				if (m >= 4) {
+					pb.add_monomial(l, random_coef());
+					pb.add_monomial(i,l, random_coef());
+					pb.add_monomial(j,l, random_coef());
+					pb.add_monomial(k,l, random_coef());
+					pb.add_monomial(i,j,l, random_coef());
+					pb.add_monomial(i,k,l, random_coef());
+					pb.add_monomial(j,k,l, random_coef());
+					pb.add_monomial(i,j,k,l, random_coef());
+				}
+
+				//cout << i << ' ' << j << ' ' << k << ' ' << l << endl;
+
+				nterms--;
+			}
+		}; 
+
+		//First make sure every variable is used once
+		for (int i=0; i<=n-m-1 && nterms>0; i+=m) {
+			add_term(i,i+1,i+2,i+3);
+		}
+		int i = n-m;
+		add_term(i,i+1,i+2,i+3);
+
+		while (nterms > 0) {
 			int i,j,k,l;
 			do {
-				i = rand()%n;
-				j = rand()%n;
+				i = random_index();
+				j = random_index();
 
 				if (m>=3) {
-					k = rand()%n;
+					k = random_index();
 				}
 				else {
 					k = 2*n;
 				}
 
 				if (m>=4) {
-					l = rand()%n;
+					l = random_index();
 				}
 				else {
 					l = 3*n;
 				}
-			} while (i>=j || i>=k || j>=k || k>=l || exists[ make_quad(i,j,k,l) ] );
-			exists[ make_quad(i,j,k,l) ] = true;
+			} while (i>=j || i>=k || j>=k || k>=l);
 
-
-			pb.add_monomial(i, random_value());
-			pb.add_monomial(j, random_value());
-			pb.add_monomial(i,j, random_value());
-			if (m >= 3) {
-				pb.add_monomial(k, random_value());
-				pb.add_monomial(i,k, random_value());
-				pb.add_monomial(j,k, random_value());
-				pb.add_monomial(i,j,k, random_value());
-			}
-			if (m >= 4) {
-				pb.add_monomial(l, random_value());
-				pb.add_monomial(i,l, random_value());
-				pb.add_monomial(j,l, random_value());
-				pb.add_monomial(k,l, random_value());
-				pb.add_monomial(i,j,l, random_value());
-				pb.add_monomial(i,k,l, random_value());
-				pb.add_monomial(j,k,l, random_value());
-				pb.add_monomial(i,j,k,l, random_value());
-			}
+			add_term(i,j,k,l);			
 		}
 
 		// Save to temporary file
 		string tmp = std::getenv("TEMP");
 		pb.save_to_file(tmp + "/pb.txt");
 
+		statusOK();
+		cout << "Number of used variables : " << used.size() << endl;
 	}
 
 	const int print_limit = 10;
