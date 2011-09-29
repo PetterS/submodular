@@ -116,13 +116,20 @@ int main_program(int num_args, char** args)
 	//  Dat file //
 	///////////////
 	else if (cmd_line.find("-dat") != cmd_line.end() ) {
+		cout << "File : " << cmd_line["-dat"] << endl;
 		statusTry("Reading file...");
 		ifstream fin(cmd_line["-dat"]);
 		ASSERT(fin);
+
+		uniform_real_distribution<double> distribution(1.0, 1.000001);
+		auto random_mod = bind(distribution, engine);
+
 		fin >> n;
 		for (int i=0;i<n;++i) {
 			real E0,E1;
 			fin >> E0 >> E1;
+			//E0 *= random_mod();
+			//E1 *= random_mod();
 			pb.add_clique(i,E0,E1);
 		}
 		ASSERT(fin);
@@ -392,6 +399,11 @@ int main_program(int num_args, char** args)
 	Petter::real lp_bound = 100;
 	Petter::real heur_bound = 100;
 
+	double hocr_time = -1;
+	double hocr_itr_time = -1;
+	double lp_time = -1;
+	double heur_time = -1;
+
 	cout << DKRED << "DKRED" << NORMAL << " is HOCR" << endl;
 	cout << RED << "RED" << NORMAL << " is iterated HOCR" << endl;
 	if (cmd_line.find("-lp") != cmd_line.end()) {
@@ -415,6 +427,8 @@ int main_program(int num_args, char** args)
 	double bound = 0;
 	int labeled = 0;
 	bool should_continue;
+
+	Petter::PseudoBoolean f_hocrreduced;
 
 	bool run_hocr = true;
 	if (run_hocr) {
@@ -445,10 +459,13 @@ int main_program(int num_args, char** args)
 			if (iters == 1) {
 				hocr_bound = bound;
 				hocr_labeled = new_labeled;
+				hocr_time = t_minimize;
+				hocr_itr_time = t_minimize + t_reduce;
 				COL = &DKRED;
 			}
 			else {
 				COL = &RED;
+				hocr_itr_time += t_minimize + t_reduce;
 			}
 
 			cout << "labeled : " << *COL << labeled << NORMAL << endl;
@@ -466,16 +483,28 @@ int main_program(int num_args, char** args)
 
 		hocr_itr_bound = bound;
 		hocr_itr_labeled = labeled;
+
+		f_hocrreduced = f;
 	}
 
 		
 	if (cmd_line.find("-lp") != cmd_line.end()) {
 
-		Petter::PseudoBoolean f   = pb;
+		Petter::PseudoBoolean f;
+		if (cmd_line.find("-usehocr") != cmd_line.end()) {
+			//Start at the HOCR solution (for speed)
+			f = f_hocrreduced;
+			cout << "USING HOCR REDUCED" << endl;
+		}
+		else {
+			//Default
+			f = pb;
+		}
 
 		iters = 0;
 		labeled = 0;
 
+		lp_time = 0;
 		do {
 			iters++;
 
@@ -510,6 +539,8 @@ int main_program(int num_args, char** args)
 			cout << "time (reduce)   : " << GREEN << t_reduce <<  NORMAL << endl;
 			cout << endl;
 
+			lp_time += t_create + t_minimize + t_reduce;
+
 		} while (should_continue);
 
 		if (labeled == n) {
@@ -528,6 +559,7 @@ int main_program(int num_args, char** args)
 
 		iters = 0;
 		labeled = 0;
+		heur_time = 0;
 
 		do {
 			iters++;
@@ -581,6 +613,8 @@ int main_program(int num_args, char** args)
 			cout << "time (reduce)   : " << YELLOW << t_reduce <<  NORMAL << endl;	
 			cout << endl;
 
+			heur_time += t_create + t_minimize + t_reduce;
+
 		} while (should_continue);
 
 		if (labeled == n) {
@@ -603,82 +637,13 @@ int main_program(int num_args, char** args)
 		<< hocr_bound       << '\t' // 7
 		<< hocr_itr_bound   << '\t' // 8
 		<< lp_bound         << '\t' // 9
-		<< heur_bound      << endl; // 10
+		<< heur_bound       << '\t' // 10
+		<< hocr_time        << '\t' // 11
+		<< hocr_itr_time    << '\t' // 12
+		<< lp_time          << '\t' // 13
+		<< heur_time        << endl;// 14
 
 	//cin.get();
-
-	return 0;
-
-#if 0
-
-
-		////////////////////
-		// Solve using LP //
-		////////////////////
-
-		int labeled, reduction_labeled;
-		bool should_continue = false;
-		double bound, reduction_bound;
-
-		reduction_bound = pb.minimize_reduction(x,reduction_labeled);
-
-		cout << "x = (";
-		for (int i=0;i<n-1 && i<=print_limit;++i) {
-			if (i < n-2 && i == print_limit) {
-				cout << " ... ";
-			}
-			else {
-				cout << x.at(i) << ", ";
-			}
-		}
-		cout << x.at(n-1) << ")" << endl;
-		cout << "Labeled : " << RED << reduction_labeled << NORMAL<< endl;
-		cout << "Bound   : "<< RED << reduction_bound << endl << NORMAL<< endl;
-
-		labeled = 0;
-		int iters = 0;
-		do {
-			iters++;
-
-			Petter::SymmetricPseudoBoolean spb;
-			spb.create_lp(pb);
-
-			cout << "Submodular relaxation : " << spb << endl;
-
-			int new_labeled = 0;
-			bound = spb.minimize(x, new_labeled);
-			should_continue = new_labeled > labeled;
-			labeled = new_labeled;
-			if (labeled == n) {
-				//Nothing more to do
-				should_continue = false;
-			}
-
-			cout << "x = (";
-			for (int i=0;i<n-1 && i<=print_limit;++i) {
-				if (i < n-2 && i == print_limit) {
-					cout << " ... ";
-				}
-				else {
-					cout << x.at(i) << ", ";
-				}
-			}
-			cout << x.at(n-1) << ")" << endl;
-			cout << "Labeled : "<< GREEN << labeled << NORMAL << endl;
-			cout << "Bound   : " << GREEN << bound << NORMAL << endl;
-
-			pb.reduce(x);
-
-		} while (should_continue);
-
-
-		// Write to log file
-		ofstream log("logfile.data", ios::app);
-		log << n << '\t' << nterms << '\t' << reduction_labeled << '\t' << labeled << '\t' << griddim << '\t' << reduction_bound << '\t' << bound << '\t' << iters << endl;
-
-		return 0;
-	
-#endif
 
 	return 0;
 }
