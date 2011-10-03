@@ -330,7 +330,7 @@ int main_program(int num_args, char** args)
 		map< quad, bool> exists;
 		map< int, bool > used;
 
-		auto add_term = [&nterms,&used,&exists,&pb,&random_coef,m,n](index i, index j, index k, index l) 
+		auto add_term = [&nterms,&used,&exists,&pb,&random_coef,m,n](int i, int j, int k, int l) 
 		{
 			if (m<4) {
 				l = 3*n;
