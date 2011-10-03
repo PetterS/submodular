@@ -408,8 +408,10 @@ int main_program(int num_args, char** args)
 		}
 
 		// Save to temporary file
-		string tmp = std::getenv("TEMP");
-		pb.save_to_file(tmp + "/pb.txt");
+		if (std::getenv("TEMP")) {
+			string tmp = std::getenv("TEMP");
+			pb.save_to_file(tmp + "/pb.txt");
+		}
 
 		statusOK();
 		cout << "Number of used variables : " << used.size() << endl;
