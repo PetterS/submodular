@@ -415,8 +415,6 @@ int main_program(int num_args, char** args)
 		cout << "Number of used variables : " << used.size() << endl;
 	}
 
-	const int print_limit = 10;
-
 	cout << "Polynomial : " << pb << endl;
 	cout << WHITE;
 	cout << "n = " << n << endl;
