@@ -288,12 +288,12 @@ void test_pseudoboolean()
 
 
 
-		int labeled;
-		double lowerbound = pb.minimize_reduction(x, labeled);
+		//int labeled;
+		//double lowerbound = pb.minimize_reduction(x, labeled);
 		//cout << " labeled = " << labeled  << "/" << nVars << " = " << double(labeled)/nVars*100 << "%" << endl;
 		//cout << " bound = " << lowerbound << endl;
 
-		lowerbound = spbf.minimize(x, labeled);
+		//lowerbound = spbf.minimize(x, labeled);
 		//cout << " labeled = " << labeled  << "/" << nVars << " = " << double(labeled)/nVars*100 << "%" << endl;
 		//cout << " bound = " << lowerbound << endl;
 	}
