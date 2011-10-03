@@ -122,7 +122,7 @@ int main_program(int num_args, char** args)
 		ASSERT(fin);
 
 		uniform_real_distribution<double> distribution(1.0, 1.000001);
-		auto random_mod = bind(distribution, engine);
+		//auto random_mod = bind(distribution, engine);
 
 		fin >> n;
 		for (int i=0;i<n;++i) {
