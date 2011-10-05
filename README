@@ -23,3 +23,10 @@ Reproducing figures 1 and 2 in the paper
         python parse_batchrun.py
 		
  This will generate statistics.
+ 
+ 
+Running the examples from the papers
+=====================================
+ The file "examples from paper.cmd" will run the two examples
+ which appear in the papers. 
+ 
