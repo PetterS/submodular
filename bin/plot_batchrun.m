@@ -1,4 +1,4 @@
-function plot_logfile(filename)
+function plot_batchrun(filename)
     data = load(filename);
     disp(filename)
     figure
