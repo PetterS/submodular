@@ -10,9 +10,9 @@ function plot_batchrun(filename)
     lpbound = data(:,9+1);
     
     relbound = (lpbound - qpbobound)./abs(lpbound);
-    minrelbound = min(relbound)
-    medianrelbound = median(relbound)
-    maxrelbound = max(relbound)
+    minrelbound = min(relbound);
+    medianrelbound = median(relbound);
+    maxrelbound = max(relbound);
 
 
     edges = linspace(0,data(1,1),20);
