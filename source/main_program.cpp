@@ -569,6 +569,14 @@ int main_program(int num_args, char** args)
 
 			if (cmd_line.find("-verbose") != cmd_line.end()) {
 				cout << "Relaxation g : " << spb << endl;
+				cout << "Solution   x = [";
+				for (int i=0;i<n && i<20;++i){
+					cout << x[i] << " ";
+				}
+				if (n>20) {
+					cout << " ... ";
+				}
+				cout << "]" << endl;
 			}
 
 			cout << "Labeled : "<< GREEN << labeled << NORMAL << endl;

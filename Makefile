@@ -35,6 +35,7 @@ clean:
 	rm -f $(TARGET)
 	rm -f $(OBJDIR)*.o
 	rm -f $(OBJDIR)*.la
+	rm -f $(OBJDIR)*.a
 	
 test: $(TARGET)
 	./$(TARGET)
