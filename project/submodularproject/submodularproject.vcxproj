@@ -243,7 +243,6 @@
     <ClCompile Include="..\..\source\submodular_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\source\library\Minimizer.h" />
     <ClInclude Include="..\..\source\library\PseudoBoolean.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -12,6 +12,5 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\library\PseudoBoolean.h" />
-    <ClInclude Include="..\..\source\library\Minimizer.h" />
   </ItemGroup>
 </Project>
