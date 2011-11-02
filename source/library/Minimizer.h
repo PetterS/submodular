@@ -119,6 +119,7 @@ namespace Petter {
 			terms1.push_back(0);
 
 			if (aijk < 0) { 
+				// Use reduction
 				// -xi*xj*xk = min{z} z*(2-xi-xj-xk) 
 				terms2[ unordered_pair(i,l)] += aijk;
 				terms2[ unordered_pair(j,l)] += aijk;
@@ -126,7 +127,8 @@ namespace Petter {
 				terms1[ l ] += -2*aijk;
 			}
 			else if (aijk > 0) { 
-				// // -xi*xj*xk = min{z} z*(1-xi-xj-xk)  + xi*xj + xi*xk + xj*xk
+				// Use reduction
+				// xi*xj*xk = min{z} z*(1-xi-xj-xk)  + xi*xj + xi*xk + xj*xk
 				terms2[ unordered_pair(i,l)] += -aijk;
 				terms2[ unordered_pair(j,l)] += -aijk;
 				terms2[ unordered_pair(k,l)] += -aijk;
@@ -169,6 +171,7 @@ namespace Petter {
 				//}
 				// Check submodularity
 				ASSERT(coef <= 1e-6);
+				coef = min(real(0),coef);
 				// Add to graph
 				terms0 += coef;
 				graph.add_tweights(j, 0,  -coef);
