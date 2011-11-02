@@ -1,3 +1,11 @@
+//
+// Petter Strandmark 2011
+// petter@maths.lth.se
+//
+// Complete workflow for minimizing f(x) using generalized roof duality
+//
+
+
 #include "PseudoBoolean.h"
 
 

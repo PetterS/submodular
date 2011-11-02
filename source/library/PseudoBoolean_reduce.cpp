@@ -1,3 +1,11 @@
+//
+// Petter Strandmark 2011
+// petter@maths.lth.se
+//
+// Reduces a function f(x) using known persistencies.
+//
+
+
 #include "PseudoBoolean.h"
 
 namespace Petter

@@ -1,14 +1,16 @@
+//
+// Petter Strandmark 2011
+// petter@maths.lth.se
+//
+// Heuristics for creating a submodular relaxation g(x,y)
+//
+
+
 #include "PseudoBoolean.h"
 
 #include <tuple>
 #include <algorithm>
 
-//#ifdef HAS_ARMADILLO
-//	#define ARMA_USE_LAPACK
-//	#define ARMA_USE_BLAS
-//	// You may have to edit Armadillo's config.hpp to match your BLAS.
-//	#include <armadillo>
-//#endif
 
 namespace Petter
 {

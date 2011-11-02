@@ -1,3 +1,11 @@
+//
+// Petter Strandmark 2011
+// petter@maths.lth.se
+//
+// Creates a submodular relaxation g(x,y) using linear programming. Clp is required.
+//
+
+
 #include "PseudoBoolean.h"
 
 #include <coin/ClpSimplex.hpp>

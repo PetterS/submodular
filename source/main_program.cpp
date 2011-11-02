@@ -1,3 +1,10 @@
+//
+// Petter Strandmark 2011
+// petter@maths.lth.se
+//
+// Demonstration program for generalized roof duality
+//
+
 
 #include <iostream>
 #include <fstream>
@@ -18,6 +25,7 @@ using namespace std;
 
 #include "Petter-Color.h"
 #include "PseudoBoolean.h"
+#include "Minimizer.h"
 using namespace Petter;
 
 
@@ -75,6 +83,17 @@ int main_program(int num_args, char** args)
 		cerr << "    -heuristic                       : use heuristics" << endl;
 		cerr << endl;
 		cerr << "    -verbose                         : print polynomials" << endl;
+		cerr << endl;
+
+		Minimizer<int> minimizer(3);
+		int ind[] = {0,1,2};
+		int E[8]  = {0,0,0,0,0,0,0,-1};
+		minimizer.AddHigherTerm(3,ind,E);
+		cerr << minimizer.minimize() << endl;
+		cerr << int(minimizer.get_solution(0)) << 
+			    int(minimizer.get_solution(1)) << 
+				int(minimizer.get_solution(2)) << endl;
+
 		return 0;
 	}
 

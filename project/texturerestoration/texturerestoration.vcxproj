@@ -42,7 +42,7 @@
     <ProjectGuid>{FA3939A0-A497-433B-BD54-0B82F2E27776}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>texturerestoration</RootNamespace>
-    <ProjectName>imagedenoising</ProjectName>
+    <ProjectName>image denoising</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

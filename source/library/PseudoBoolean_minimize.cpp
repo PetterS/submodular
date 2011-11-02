@@ -1,17 +1,26 @@
+//
+// Petter Strandmark 2011
+// petter@maths.lth.se
+//
+// Functions to minimize a general f(x) and a submodular g(x,y) using reductions
+//
+
 #include "PseudoBoolean.h"
 
 #include "QPBO.h"
 #include "HOCR.h"
 #include "graph.h"
 
-#define USE_HOCR //Whether to use HOCR for representing quadratic functions
+//#define USE_HOCR //Whether to use HOCR for representing quadratic functions
 #ifndef USE_HOCR
+	// Degree-3 minimizer
 	#include "Minimizer.h"
 #endif
 
 namespace Petter
 {
 
+#ifdef USE_HOCR
 	//
 	// Converts a submodular quadratic pseudo-Boolean function into 
 	// a graph for minimization via maxflow
@@ -56,6 +65,7 @@ namespace Petter
 		
 		return constant;
 	}
+#endif
 
 	// This is the error function used by the QPBO and Graph classes
 	void err_function(char* msg)
@@ -147,7 +157,7 @@ namespace Petter
 #ifdef USE_HOCR
 	typedef PBF<opttype,3> OPTIMIZER;
 #else
-	typedef Minimizer OPTIMIZER;
+	typedef Minimizer<real> OPTIMIZER;
 #endif
 	void reduce_bijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr);
 	void reduce_cijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr);
@@ -185,7 +195,7 @@ namespace Petter
 #ifdef USE_HOCR
 		PBF<double, 3> hocr;
 #else
-		Minimizer hocr(2*nVars);
+		Minimizer<real> hocr(2*nVars);
 #endif
 
 
@@ -514,16 +524,33 @@ namespace Petter
 
 
 #else
-		energy2 = hocr.minimize();
+		energy2 = constant + hocr.minimize();
+
+		// Extract solution
+		nlabelled = 0;
+		for (int i=0; i<nVars; ++i) {
+			if (var_used[i]) {
+				x[i] = hocr.get_solution(i);
+				y[i] = hocr.get_solution(i+nVars);
+				if (x[i] != y[i]) {
+					nlabelled++;
+				}
+			}
+			else {
+				// This variable is not part of the polynomial,
+				// therefore labelled
+				nlabelled++;
+			}
+		}
 #endif
 
 		//Calculate energy from solution
 		double energy = eval(x,y);
 		//Make sure the two computed energies agree
-    //std::cout << "\n\n";
+		//std::cout << "\n\n";
 		//std::cout << energy << "\n";
 		//std::cout << energy2 << "\n";
-    //If this assertion fails, check that the version of HOCR is >= 1.02
+		//If this assertion fails, check that the version of HOCR is >= 1.02
 		ASSERT( abs(energy-energy2)/abs(energy) < 1e-5 || abs(energy) < 1e-5);
 
 		// Mark unlabeled nodes as -1

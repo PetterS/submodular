@@ -1,3 +1,11 @@
+//
+// Petter Strandmark 2011
+// petter@maths.lth.se
+//
+// Some tests to verify the functionality of PseudoBoolean and 
+// SymmetricPseudoBoolean
+//
+
 #include <iostream>
 #include <fstream>
 #include <vector>

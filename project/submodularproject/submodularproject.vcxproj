@@ -30,6 +30,7 @@
     <ProjectGuid>{39D751BF-DCC7-4B62-8B1C-99B6047B2B11}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>submodularproject</RootNamespace>
+    <ProjectName>test program</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -243,6 +244,7 @@
     <ClCompile Include="..\..\source\submodular_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\source\library\Minimizer.h" />
     <ClInclude Include="..\..\source\library\PseudoBoolean.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
