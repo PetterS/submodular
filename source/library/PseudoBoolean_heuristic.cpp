@@ -3,6 +3,7 @@
 // petter@maths.lth.se
 //
 // Heuristics for creating a submodular relaxation g(x,y)
+// Note that this entire file contains unpublished work. 
 //
 
 
@@ -23,27 +24,24 @@ namespace Petter
 	template<typename real>
 	void solve_system(real& x1, real& x2, real& x3, real b1, real b2, real b3) 
 	{
-		//arma::mat33 A;
-		//arma::vec3 b;
-		//A(0,0) = 0; A(0,1) = 1; A(0,2) = 1; b(0) = -m01;
-		//A(1,0) = 1; A(1,1) = 0; A(1,2) = 1; b(1) = -m02;
-		//A(2,0) = 1; A(2,1) = 1; A(2,2) = 0; b(2) = -m12;
-		//arma::vec3 x = arma::solve(A,b);
-		//x1 = x[0]; x2 = x[1]; x3 = x[2];
+		// TODO: change representation of g so that 
+		// this can be done in integer arithmetic.
 
 		x1 = (-b1 + b2 + b3) / 2;
 		x2 = ( b1 - b2 + b3) / 2;
 		x3 = ( b1 + b2 - b3) / 2;
 	}
 
-	template<typename real>
-	void SymmetricPseudoBoolean<real>::create_heuristic(PseudoBoolean<real>& pbf)
+	template<typename real> template<typename orgreal>
+	void SymmetricPseudoBoolean<real>::create_heuristic(PseudoBoolean<orgreal>& pbf)
 	{
 		using namespace std;
 
 		// There is no freedom in picking these
 		constant = pbf.constant;
-		bi = pbf.ai;
+		for (auto itr=pbf.ai.begin(); itr != pbf.ai.end(); ++itr) {
+			bi[itr->first] = static_cast<real>( itr->second );
+		}	
 
 		// Right-hand sides in the submodular inequalities
 		map<pair,real> bRHS;
@@ -307,6 +305,13 @@ namespace Petter
 		}
 
 	} 
+
+
+	// TODO: better solution to this?
+	template void SymmetricPseudoBoolean<double>::create_heuristic(PseudoBoolean<double>& pbf);
+	template void SymmetricPseudoBoolean<double>::create_heuristic(PseudoBoolean<int>& pbf);
+	template void SymmetricPseudoBoolean<int>::create_heuristic(PseudoBoolean<double>& pbf);
+	template void SymmetricPseudoBoolean<int>::create_heuristic(PseudoBoolean<int>& pbf);
 
 
 } //namespace Petter

@@ -16,8 +16,8 @@ namespace Petter
 	//
 	// The default behaviour is to raise an error message
 	//
-	template<typename real>
-	void SymmetricPseudoBoolean<real>::create_lp(const PseudoBoolean<real>& pbf) 
+	template<typename real> template<typename orgreal>
+	void SymmetricPseudoBoolean<real>::create_lp(const PseudoBoolean<orgreal>& pbf) 
 	{
 		auto& id = typeid(real);
 		std::string msg = "Linear programming not available for type ";
@@ -28,8 +28,8 @@ namespace Petter
 	//
 	// For doubles, LP is available
 	//
-	template<>
-	void SymmetricPseudoBoolean<double>::create_lp(const PseudoBoolean<double>& pbf) 
+	template<> template<typename orgreal>
+	void SymmetricPseudoBoolean<double>::create_lp(const PseudoBoolean<orgreal>& pbf) 
 	{
 		// Convenient to have this name available
 		typedef double real;
@@ -98,7 +98,11 @@ namespace Petter
 		//////////////////////////
 
 		// bi = ai
-		bi = pbf.ai;
+		// (there is no freedom in picking these)
+		constant = pbf.constant;
+		for (auto itr=pbf.ai.begin(); itr != pbf.ai.end(); ++itr) {
+			bi[itr->first] = static_cast<real>( itr->second );
+		}
 
 		for (auto itr = pbf.aij.begin(); itr != pbf.aij.end(); ++itr) {
 			int i=get_i(itr->first);
@@ -466,6 +470,14 @@ namespace Petter
 		}
 
 	}
+
+
+	//TODO: find a better way of doing this
+	template void SymmetricPseudoBoolean<double>::create_lp(const PseudoBoolean<double>& pbf);
+	template void SymmetricPseudoBoolean<double>::create_lp(const PseudoBoolean<int>& pbf);
+	template void SymmetricPseudoBoolean<int>::create_lp(const PseudoBoolean<double>& pbf);
+	template void SymmetricPseudoBoolean<int>::create_lp(const PseudoBoolean<int>& pbf);
+
 }
 
 #include "pb_instances.inc"

@@ -67,7 +67,7 @@ namespace Petter
 	class PseudoBoolean
 	{
 	public:
-		friend class SymmetricPseudoBoolean<real>;
+		template<typename real2> friend class SymmetricPseudoBoolean;
 		void print_helper(std::ostream& out) const;
 
 		PseudoBoolean(); //Creates the zero polynomial
@@ -128,7 +128,7 @@ namespace Petter
 	class SymmetricPseudoBoolean
 	{
 	public:
-		friend class PseudoBoolean<real>;
+		template<typename real2> friend class PseudoBoolean;
 		void print_helper(std::ostream& out);
 
 		SymmetricPseudoBoolean();
@@ -137,9 +137,12 @@ namespace Petter
 		real eval(const vector<label>& x, const vector<label>& y) const;
 
 		// Create using LP
-		void create_lp(const PseudoBoolean<real>& pbf);
+		template<typename orgreal>
+		void create_lp(const PseudoBoolean<orgreal>& pbf);
+
 		// Create using heuristics
-		void create_heuristic(PseudoBoolean<real>& pbf);
+		template<typename orgreal>
+		void create_heuristic(PseudoBoolean<orgreal>& pbf);
 
 		// Minimize; requires submodularity
 		real minimize(vector<label>& x) const;

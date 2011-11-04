@@ -620,6 +620,11 @@ int main_program(int num_args, char** args)
 
 		
 		if (cmd_line.find("-heuristic") != cmd_line.end()) {
+			//
+			// For the heuristic relaxations, we use
+			// integer arithmetic
+			//
+			typedef int heurreal;
 
 			Petter::PseudoBoolean<real> f = pb;
 
@@ -630,7 +635,7 @@ int main_program(int num_args, char** args)
 			do {
 				iters++;
 
-				Petter::SymmetricPseudoBoolean<real> spb;
+				Petter::SymmetricPseudoBoolean<heurreal> spb;
 				start();
 				spb.create_heuristic(f);
 				double t_create = stop();
@@ -656,8 +661,8 @@ int main_program(int num_args, char** args)
 							u[i] = rand()%2;
 							v[i] = 1-u[i];
 						}
-						double fval = f.eval(u);
-						double gval = spb.eval(u,v);
+						heurreal fval = f.eval(u);
+						heurreal gval = spb.eval(u,v);
 						if ( absolute(fval-gval) > 1e-6 ) {
 							cout << "f = " << fval << endl;
 							cout << "g = " << gval << endl;
