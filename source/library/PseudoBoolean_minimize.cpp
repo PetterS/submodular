@@ -54,7 +54,8 @@ namespace Petter
 
 				// c has no be non-positive for this function to be 
 				// submodular
-				ASSERT_STR(c <= 0, "Function not submodular");
+				ASSERT_STR(c <= 1e-9, "Function not submodular");
+				c = std::min(real(0), c);
 
 				constant += c;
 				graph.add_tweights(vars[1], 0,  -c);
@@ -205,7 +206,7 @@ namespace Petter
 		for (auto itr=bi.begin(); itr != bi.end(); ++itr) {
 			int xi = itr->first;
 			int yi = itr->first + nVars;
-			real val = 0.5 * itr->second;
+			real val = itr->second;
 			hocr.AddUnaryTerm(xi, 0, val);
 			hocr.AddUnaryTerm(yi, val, 0);
 		}
@@ -216,7 +217,7 @@ namespace Petter
 			int xj = get_j(itr->first);
 			int yi = xi + nVars;
 			int yj = xj + nVars;
-			real val = 0.5 * itr->second;
+			real val = itr->second;
 
 			hocr.AddPairwiseTerm(xi,xj, 0,  0,0, val);
 			hocr.AddPairwiseTerm(yi,yj, val,0,0, 0);
@@ -228,7 +229,7 @@ namespace Petter
 			int xj = get_j(itr->first);
 			int yi = xi + nVars;
 			int yj = xj + nVars;
-			real val = 0.5 * itr->second;
+			real val = itr->second;
 
 			hocr.AddPairwiseTerm(xi,yj, 0, 0,   val, 0);
 			hocr.AddPairwiseTerm(yi,xj, 0, val, 0,   0);
@@ -242,7 +243,7 @@ namespace Petter
 			int yi = xi + nVars;
 			int yj = xj + nVars;
 			int yk = xk + nVars;
-			real w = 0.5 * itr->second;
+			real w = itr->second;
 			double vals1[] = {0,0,0,0,0,0,0,w}; //111 
 			double vals2[] = {w,0,0,0,0,0,0,0}; //000
 			int vars1[] = {xi,xj,xk};
@@ -260,7 +261,7 @@ namespace Petter
 			int yi = xi + nVars;
 			int yj = xj + nVars;
 			int yk = xk + nVars;
-			real w = 0.5 * itr->second;
+			real w = itr->second;
 			double val1[] = {0, //000
 			                 0, //001
 			                 0, //010
@@ -294,7 +295,7 @@ namespace Petter
 			int yi = xi + nVars;
 			int yj = xj + nVars;
 			int yk = xk + nVars;
-			real w = 0.5 * itr->second;
+			real w = itr->second;
 			double val1[] = {0, //000
 			                 0, //001
 			                 0, //010
@@ -328,7 +329,7 @@ namespace Petter
 			int yi = xi + nVars;
 			int yj = xj + nVars;
 			int yk = xk + nVars;
-			real w = 0.5 * itr->second;
+			real w = itr->second;
 			double val1[] = {0, //000
 			                 0, //001
 			                 0, //010
@@ -365,7 +366,7 @@ namespace Petter
 			int yj = xj + nVars;
 			int yk = xk + nVars;
 			int yl = xl + nVars;
-			real w = 0.5 * itr->second;
+			real w = itr->second;
 
 			reduce_bijkl(xi,xj,xk,xl,yi,yj,yk,yl, w, var, hocr);
 		}
@@ -380,7 +381,7 @@ namespace Petter
 			int yj = xj + nVars;
 			int yk = xk + nVars;
 			int yl = xl + nVars;
-			real w = 0.5 * itr->second;
+			real w = itr->second;
 
 			reduce_cijkl(xi,xj,xk,xl,yi,yj,yk,yl, w, var, hocr);
 		}
@@ -395,7 +396,7 @@ namespace Petter
 			int yj = xj + nVars;
 			int yk = xk + nVars;
 			int yl = xl + nVars;
-			real w = 0.5 * itr->second;
+			real w = itr->second;
 
 			reduce_dijkl(xi,xj,xk,xl,yi,yj,yk,yl, w, var, hocr);
 		}
@@ -410,7 +411,7 @@ namespace Petter
 			int yj = xj + nVars;
 			int yk = xk + nVars;
 			int yl = xl + nVars;
-			real w = 0.5 * itr->second;
+			real w = itr->second;
 
 			reduce_eijkl(xi,xj,xk,xl,yi,yj,yk,yl, w, var, hocr);
 		}
@@ -425,7 +426,7 @@ namespace Petter
 			int yj = xj + nVars;
 			int yk = xk + nVars;
 			int yl = xl + nVars;
-			real w = 0.5 * itr->second;
+			real w = itr->second;
 
 			reduce_pijkl(xi,xj,xk,xl,yi,yj,yk,yl, w, var, hocr);
 		}
@@ -440,7 +441,7 @@ namespace Petter
 			int yj = xj + nVars;
 			int yk = xk + nVars;
 			int yl = xl + nVars;
-			real w = 0.5 * itr->second;
+			real w = itr->second;
 
 			reduce_qijkl(xi,xj,xk,xl,yi,yj,yk,yl, w, var, hocr);
 		}
@@ -455,7 +456,7 @@ namespace Petter
 			int yj = xj + nVars;
 			int yk = xk + nVars;
 			int yl = xl + nVars;
-			real w = 0.5 * itr->second;
+			real w = itr->second;
 
 			reduce_rijkl(xi,xj,xk,xl,yi,yj,yk,yl, w, var, hocr);
 		}
@@ -470,27 +471,26 @@ namespace Petter
 			int yj = xj + nVars;
 			int yk = xk + nVars;
 			int yl = xl + nVars;
-			real w = 0.5 * itr->second;
+			real w = itr->second;
 
 			reduce_sijkl(xi,xj,xk,xl,yi,yj,yk,yl, w, var, hocr);
 		}
-
-		//Make sure all vars are used TODO
-		hocr.AddUnaryTerm(2*nVars-1,1e-100,0);
-
-		//Hack to make the solver stay away from (0,0) solutions if others
-		//exist TODO
-		for (int i=0;i<nVars; ++i) {
-			hocr.AddUnaryTerm(i, 0, 1e-6);
-			hocr.AddUnaryTerm(i+nVars, 1e-6, 0);
-		}
-
 
 		double maxflowconstant;
 		double energy2;
 		vector<label> y(nVars,0);
 
 #ifdef USE_HOCR
+
+		//Make sure all vars are used
+		hocr.AddUnaryTerm(2*nVars-1,1e-100,0);
+
+		// Hack to make the solver stay away from (0,0) solutions if 
+		// other solutions exist 
+		for (int i=0;i<nVars; ++i) {
+			hocr.AddUnaryTerm(i, 0, 1e-6);
+			hocr.AddUnaryTerm(i+nVars, 1e-6, 0);
+		}
 
 		// Convert the submodular, reducible polynomial
 		// to a quadratic one
@@ -503,7 +503,9 @@ namespace Petter
 		maxflowconstant = convert(graph, qpbf);
 
 		//Solve maximum flow problem
-		energy2 = constant + maxflowconstant + graph.maxflow();
+		// Divide by two because we didn't include all all the 1/2's 
+		// in front of the summations
+		energy2 = constant + (maxflowconstant + graph.maxflow()) / real(2);
 
 		//Extract solution
 		nlabelled = 0;
@@ -524,7 +526,19 @@ namespace Petter
 
 
 #else
-		energy2 = constant + hocr.minimize();
+
+		// Divide by two because we didn't include all all the 1/2's 
+		// in front of the summations
+		energy2 = constant + hocr.minimize() / real(2);
+
+
+		vector<std::pair<int,int> > pairs(nVars);
+		for (int i=0;i<nVars;++i) {
+			pairs.at(i).first = i;
+			pairs.at(i).second = i+nVars;
+		}
+
+		hocr.resolve_different(pairs);
 
 		// Extract solution
 		nlabelled = 0;
@@ -544,14 +558,19 @@ namespace Petter
 		}
 #endif
 
+
 		//Calculate energy from solution
 		double energy = eval(x,y);
-		//Make sure the two computed energies agree
-		//std::cout << "\n\n";
-		//std::cout << energy << "\n";
-		//std::cout << energy2 << "\n";
-		//If this assertion fails, check that the version of HOCR is >= 1.02
-		ASSERT( abs(energy-energy2)/abs(energy) < 1e-5 || abs(energy) < 1e-5);
+
+		// Make sure the two computed energies agree
+		// If this assertion fails, it might be due to floating-point rounding
+		// errors, or that a bug has been found.
+		if ( abs(energy) > 1e-5 && abs(energy-energy2)/abs(energy) > 1e-5 ) {
+			std::cout << "\n\n";
+			std::cout << "eval(x,y) : " << energy << "\n";
+			std::cout << "maxflow   : " << energy2 << "\n";
+			throw std::runtime_error("Energy mismatch");
+		}
 
 		// Mark unlabeled nodes as -1
 		for (int i=0; i<nVars; ++i) {

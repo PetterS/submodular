@@ -25,7 +25,6 @@ using namespace std;
 
 #include "Petter-Color.h"
 #include "PseudoBoolean.h"
-#include "Minimizer.h"
 using namespace Petter;
 
 
@@ -37,6 +36,7 @@ namespace {
 // Function running some quick tests
 // In: submodular_tests.cpp
 void test_pseudoboolean();
+void test_minimize();
 
 
 //Simple routine for conversion of strings
@@ -69,7 +69,9 @@ int main_program(int num_args, char** args)
 
 	if (num_args == 1) {
 		// Run some tests
-		statusTry("Testing...");
+		statusTry("Testing minimization...");
+		test_minimize();
+		statusTry("Testing pseudo-Boolean functions...");
 		test_pseudoboolean();
 		statusOK();
 
@@ -84,15 +86,6 @@ int main_program(int num_args, char** args)
 		cerr << endl;
 		cerr << "    -verbose                         : print polynomials" << endl;
 		cerr << endl;
-
-		Minimizer<int> minimizer(3);
-		int ind[] = {0,1,2};
-		int E[8]  = {0,0,0,0,0,0,0,-1};
-		minimizer.AddHigherTerm(3,ind,E);
-		cerr << minimizer.minimize() << endl;
-		cerr << int(minimizer.get_solution(0)) << 
-			    int(minimizer.get_solution(1)) << 
-				int(minimizer.get_solution(2)) << endl;
 
 		return 0;
 	}
@@ -443,6 +436,8 @@ int main_program(int num_args, char** args)
 	cout << NORMAL;
 
 
+	
+
 	///////////////////////////////////
 	// Solve using different methods //
 	///////////////////////////////////
@@ -473,224 +468,237 @@ int main_program(int num_args, char** args)
 	cout << endl;
 
 	
+	try {
 
-	// For timing
-	clock_t t_raw;
-	auto start = [&t_raw]() { t_raw = clock(); };
-	auto stop  = [&t_raw]() -> double { return double(clock()-t_raw) / double(CLOCKS_PER_SEC); };
+		// For timing
+		clock_t t_raw;
+		auto start = [&t_raw]() { t_raw = clock(); };
+		auto stop  = [&t_raw]() -> double { return double(clock()-t_raw) / double(CLOCKS_PER_SEC); };
 
-	vector<label> x(n,0),x1(n,0),x2(n,0);
+		vector<label> x(n,0),x1(n,0),x2(n,0);
 
-	int iters = 0;
-	double bound = 0;
-	int labeled = 0;
-	bool should_continue;
+		int iters = 0;
+		double bound = 0;
+		int labeled = 0;
+		bool should_continue;
 
-	Petter::PseudoBoolean f_hocrreduced;
+		Petter::PseudoBoolean f_hocrreduced;
 
-	bool run_hocr = true;
-	if (run_hocr) {
+		bool run_hocr = true;
+		if (run_hocr) {
 
-		Petter::PseudoBoolean f = pb;
+			Petter::PseudoBoolean f = pb;
 
-		const Petter::Color* COL = &RED;
+			const Petter::Color* COL = &RED;
 
-		do {
-			iters++;
+			do {
+				iters++;
 
-			int new_labeled = 0;
-			start();
-			bound = f.minimize_reduction(x,new_labeled);
-			double t_minimize = stop();
+				int new_labeled = 0;
+				start();
+				bound = f.minimize_reduction(x,new_labeled);
+				double t_minimize = stop();
 
-			should_continue = new_labeled > labeled;
-			labeled = new_labeled;
+				should_continue = new_labeled > labeled;
+				labeled = new_labeled;
+				if (labeled == n) {
+					//Nothing more to do
+					should_continue = false;
+				}
+
+				start();
+				f.reduce(x);
+				double t_reduce = stop();
+
+				if (iters == 1) {
+					hocr_bound = bound;
+					hocr_labeled = new_labeled;
+					hocr_time = t_minimize;
+					hocr_itr_time = t_minimize + t_reduce;
+					COL = &DKRED;
+				}
+				else {
+					COL = &RED;
+					hocr_itr_time += t_minimize + t_reduce;
+				}
+
+				cout << "labeled : " << *COL << labeled << NORMAL << endl;
+				cout << "f_bound : " << *COL << bound << NORMAL << endl;
+				cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
+				cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;
+				cout << endl;
+
+			} while (should_continue);
+
 			if (labeled == n) {
-				//Nothing more to do
-				should_continue = false;
+				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
+				cout << endl;
 			}
 
-			start();
-			f.reduce(x);
-			double t_reduce = stop();
+			hocr_itr_bound = bound;
+			hocr_itr_labeled = labeled;
 
-			if (iters == 1) {
-				hocr_bound = bound;
-				hocr_labeled = new_labeled;
-				hocr_time = t_minimize;
-				hocr_itr_time = t_minimize + t_reduce;
-				COL = &DKRED;
+			f_hocrreduced = f;
+		}
+
+		
+		if (cmd_line.find("-lp") != cmd_line.end()) {
+
+			Petter::PseudoBoolean f;
+			if (cmd_line.find("-usehocr") != cmd_line.end()) {
+				//Start at the HOCR solution (for speed)
+				f = f_hocrreduced;
+				cout << "USING HOCR REDUCED" << endl;
 			}
 			else {
-				COL = &RED;
-				hocr_itr_time += t_minimize + t_reduce;
+				//Default
+				f = pb;
 			}
 
-			cout << "labeled : " << *COL << labeled << NORMAL << endl;
-			cout << "f_bound : " << *COL << bound << NORMAL << endl;
-			cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
-			cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;
-			cout << endl;
+			iters = 0;
+			labeled = 0;
 
-		} while (should_continue);
+			lp_time = 0;
+			do {
+				iters++;
 
-		if (labeled == n) {
-			cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
-			cout << endl;
-		}
+				Petter::SymmetricPseudoBoolean spb;
+				start();
+				spb.create_lp(f);
+				double t_create = stop();
 
-		hocr_itr_bound = bound;
-		hocr_itr_labeled = labeled;
+				int new_labeled = 0;
+				start();
+				bound = spb.minimize(x, new_labeled);
+				double t_minimize = stop();
+				should_continue = new_labeled > labeled;
+				labeled = new_labeled;
+				if (labeled == n) {
+					//Nothing more to do
+					should_continue = false;
+				}
 
-		f_hocrreduced = f;
-	}
+				start();
+				f.reduce(x);
+				double t_reduce = stop();
 
-		
-	if (cmd_line.find("-lp") != cmd_line.end()) {
+				if (cmd_line.find("-verbose") != cmd_line.end()) {
+					cout << "Relaxation g : " << spb << endl;
+					cout << "Solution   x = [";
+					for (int i=0;i<n && i<20;++i){
+						cout << x[i] << " ";
+					}
+					if (n>20) {
+						cout << " ... ";
+					}
+					cout << "]" << endl;
+				}
 
-		Petter::PseudoBoolean f;
-		if (cmd_line.find("-usehocr") != cmd_line.end()) {
-			//Start at the HOCR solution (for speed)
-			f = f_hocrreduced;
-			cout << "USING HOCR REDUCED" << endl;
-		}
-		else {
-			//Default
-			f = pb;
-		}
+				cout << "Labeled : "<< GREEN << labeled << NORMAL << endl;
+				cout << "Bound   : " << GREEN << bound << NORMAL << endl;
+				cout << "time (create)   : " << GREEN << t_create <<  NORMAL << endl;
+				cout << "time (minimize) : " << GREEN << t_minimize <<  NORMAL << endl;
+				cout << "time (reduce)   : " << GREEN << t_reduce <<  NORMAL << endl;
+				cout << endl;
 
-		iters = 0;
-		labeled = 0;
+				lp_time += t_create + t_minimize + t_reduce;
 
-		lp_time = 0;
-		do {
-			iters++;
+			} while (should_continue);
 
-			Petter::SymmetricPseudoBoolean spb;
-			start();
-			spb.create_lp(f);
-			double t_create = stop();
-
-			int new_labeled = 0;
-			start();
-			bound = spb.minimize(x, new_labeled);
-			double t_minimize = stop();
-			should_continue = new_labeled > labeled;
-			labeled = new_labeled;
 			if (labeled == n) {
-				//Nothing more to do
-				should_continue = false;
+				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
+				cout << endl;
 			}
 
-			start();
-			f.reduce(x);
-			double t_reduce = stop();
-
-			if (cmd_line.find("-verbose") != cmd_line.end()) {
-				cout << "Relaxation g : " << spb << endl;
-				cout << "Solution   x = [";
-				for (int i=0;i<n && i<20;++i){
-					cout << x[i] << " ";
-				}
-				if (n>20) {
-					cout << " ... ";
-				}
-				cout << "]" << endl;
-			}
-
-			cout << "Labeled : "<< GREEN << labeled << NORMAL << endl;
-			cout << "Bound   : " << GREEN << bound << NORMAL << endl;
-			cout << "time (create)   : " << GREEN << t_create <<  NORMAL << endl;
-			cout << "time (minimize) : " << GREEN << t_minimize <<  NORMAL << endl;
-			cout << "time (reduce)   : " << GREEN << t_reduce <<  NORMAL << endl;
-			cout << endl;
-
-			lp_time += t_create + t_minimize + t_reduce;
-
-		} while (should_continue);
-
-		if (labeled == n) {
-			cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
-			cout << endl;
+			lp_bound = bound;
+			lp_labeled = labeled;
 		}
 
-		lp_bound = bound;
-		lp_labeled = labeled;
-	}
-
 		
-	if (cmd_line.find("-heuristic") != cmd_line.end()) {
+		if (cmd_line.find("-heuristic") != cmd_line.end()) {
 
-		Petter::PseudoBoolean f = pb;
+			Petter::PseudoBoolean f = pb;
 
-		iters = 0;
-		labeled = 0;
-		heur_time = 0;
+			iters = 0;
+			labeled = 0;
+			heur_time = 0;
 
-		do {
-			iters++;
+			do {
+				iters++;
 
-			Petter::SymmetricPseudoBoolean spb;
-			start();
-			spb.create_heuristic(f);
-			double t_create = stop();
+				Petter::SymmetricPseudoBoolean spb;
+				start();
+				spb.create_heuristic(f);
+				double t_create = stop();
 
-			int new_labeled = 0;
-			start();
-			bound = spb.minimize(x, new_labeled);
-			double t_minimize = stop();
-			should_continue = new_labeled > labeled;
-			labeled = new_labeled;
+				int new_labeled = 0;
+				start();
+				bound = spb.minimize(x, new_labeled);
+				double t_minimize = stop();
+				should_continue = new_labeled > labeled;
+				labeled = new_labeled;
+				if (labeled == n) {
+					//Nothing more to do
+					should_continue = false;
+				}
+
+
+				//Test
+				if (n<=1000) {
+					vector<label> u(n,0);
+					vector<label> v(n,0);
+					for (int iter=0; iter<=100; ++iter) {
+						for (int i=0;i<n;++i) {
+							u[i] = rand()%2;
+							v[i] = 1-u[i];
+						}
+						double fval = f.eval(u);
+						double gval = spb.eval(u,v);
+						if ( absolute(fval-gval) > 1e-6 ) {
+							cout << "f = " << fval << endl;
+							cout << "g = " << gval << endl;
+							throw runtime_error("f(x) =/= g(x,bar(x)) for heuristic");
+						}
+					}
+				}
+
+				start();
+				f.reduce(x);
+				double t_reduce = stop();
+
+				if (cmd_line.find("-verbose") != cmd_line.end()) {
+					cout << "Relaxation g : " << spb << endl;
+				}
+
+				cout << "Labeled : "<< YELLOW << labeled << NORMAL << endl;
+				cout << "Bound   : " << YELLOW << bound << NORMAL << endl;
+				cout << "time (create)   : " << YELLOW << t_create <<  NORMAL << endl;
+				cout << "time (minimize) : " << YELLOW << t_minimize <<  NORMAL << endl;
+				cout << "time (reduce)   : " << YELLOW << t_reduce <<  NORMAL << endl;	
+				cout << endl;
+
+				heur_time += t_create + t_minimize + t_reduce;
+
+			} while (should_continue);
+
 			if (labeled == n) {
-				//Nothing more to do
-				should_continue = false;
+				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
 			}
 
-
-			//Test
-			vector<label> u(n,0);
-			vector<label> v(n,0);
-			for (int iter=0; iter<=100; ++iter) {
-				for (int i=0;i<n;++i) {
-					u[i] = rand()%2;
-					v[i] = 1-u[i];
-				}
-				double fval = f.eval(u);
-				double gval = spb.eval(u,v);
-				if ( absolute(fval-gval) > 1e-6 ) {
-					cout << "f = " << fval << endl;
-					cout << "g = " << gval << endl;
-					throw runtime_error("f(x) =/= g(x,bar(x)) for heuristic");
-				}
-			}
-
-			start();
-			f.reduce(x);
-			double t_reduce = stop();
-
-			if (cmd_line.find("-verbose") != cmd_line.end()) {
-				cout << "Relaxation g : " << spb << endl;
-			}
-
-			cout << "Labeled : "<< YELLOW << labeled << NORMAL << endl;
-			cout << "Bound   : " << YELLOW << bound << NORMAL << endl;
-			cout << "time (create)   : " << YELLOW << t_create <<  NORMAL << endl;
-			cout << "time (minimize) : " << YELLOW << t_minimize <<  NORMAL << endl;
-			cout << "time (reduce)   : " << YELLOW << t_reduce <<  NORMAL << endl;	
-			cout << endl;
-
-			heur_time += t_create + t_minimize + t_reduce;
-
-		} while (should_continue);
-
-		if (labeled == n) {
-			cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
+			heur_bound = bound;
+			heur_labeled = labeled;
 		}
-
-		heur_bound = bound;
-		heur_labeled = labeled;
 	}
-		
+	catch (...) {
+		// Save erroneous polynomial to temporary file
+		if (std::getenv("TEMP")) {
+			string tmp = std::getenv("TEMP");
+			pb.save_to_file(tmp + "/pb-error.txt");
+		}
+		throw;
+	}
+
+
 	// Write to log file
 	ofstream log("logfile.data", ios::app);
 	log << n                << '\t' // 0 

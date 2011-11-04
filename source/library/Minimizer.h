@@ -54,12 +54,12 @@ namespace Petter {
 	class Minimizer 
 	{
 	public:
-		Minimizer(int nVars_in) : terms1(2*nVars_in, 0)
+		Minimizer(int nvars=0) 
 		{
-			this->graph  = 0;
-			this->n      = nVars_in;
-			this->nVars  = nVars_in;
-			this->terms0 = 0;
+			this->graph    = 0;
+			this->n = nvars;
+			this->new_vars = 0;
+			this->terms0   = 0;
 		}
 
 		~Minimizer() 
@@ -71,8 +71,11 @@ namespace Petter {
 
 		void AddUnaryTerm(int i, real E0, real E1)
 		{
+			// Update number of variables
+			if (i+1>n) n=i+1;
+
 			terms0 += E0;
-			terms1.at(i) += E1-E0;
+			terms1[i] += E1-E0;
 		}
 
 		void AddPairwiseTerm(int i, int j, real E00, real E01, real E10, real E11)
@@ -81,6 +84,10 @@ namespace Petter {
 				AddPairwiseTerm(j,i, E00, E10, E01, E11);
 				return;
 			}
+
+			// Update number of variables
+			if (i+1>n) n=i+1;
+			if (j+1>n) n=j+1;
 
 			terms0 += E00;
 			real ai = E10 - E00;
@@ -109,6 +116,11 @@ namespace Petter {
 			int& j = ind[1];
 			int& k = ind[2];
 
+			// Update number of variables
+			if (i+1>n) n=i+1;
+			if (j+1>n) n=j+1;
+			if (k+1>n) n=k+1;
+
 			terms0 += E000;
 
 			real ai = E100 - E000;
@@ -128,27 +140,28 @@ namespace Petter {
 			terms2[unordered_pair(i,k)] += aik;
 			terms2[unordered_pair(j,k)] += ajk;
 
-			int l = nVars++;
-			terms1.push_back(0);
+			if (aijk != 0) {
+				int l = new_vars++;
 
-			if (aijk < 0) { 
-				// Use reduction
-				// -xi*xj*xk = min{z} z*(2-xi-xj-xk) 
-				terms2[ unordered_pair(i,l)] += aijk;
-				terms2[ unordered_pair(j,l)] += aijk;
-				terms2[ unordered_pair(k,l)] += aijk;
-				terms1[ l ] += -2*aijk;
-			}
-			else if (aijk > 0) { 
-				// Use reduction
-				// xi*xj*xk = min{z} z*(1-xi-xj-xk)  + xi*xj + xi*xk + xj*xk
-				terms2[ unordered_pair(i,l)] += -aijk;
-				terms2[ unordered_pair(j,l)] += -aijk;
-				terms2[ unordered_pair(k,l)] += -aijk;
-				terms1.at(l) += aijk;
-				terms2[ unordered_pair(i,j)] += aijk;
-				terms2[ unordered_pair(i,k)] += aijk;
-				terms2[ unordered_pair(j,k)] += aijk;
+				if (aijk < 0) { 
+					// Use reduction
+					// -xi*xj*xk = min{z} z*(2-xi-xj-xk) 
+					terms2_new[ std::make_pair(i,l)] += aijk;
+					terms2_new[ std::make_pair(j,l)] += aijk;
+					terms2_new[ std::make_pair(k,l)] += aijk;
+					terms1_new[ l ] += -2*aijk;
+				}
+				else if (aijk > 0) { 
+					// Use reduction
+					// xi*xj*xk = min{z} z*(1-xi-xj-xk)  + xi*xj + xi*xk + xj*xk
+					terms2_new[ std::make_pair(i,l)] += -aijk;
+					terms2_new[ std::make_pair(j,l)] += -aijk;
+					terms2_new[ std::make_pair(k,l)] += -aijk;
+					terms1_new[l] += aijk;
+					terms2[ unordered_pair(i,j)] += aijk;
+					terms2[ unordered_pair(i,k)] += aijk;
+					terms2[ unordered_pair(j,k)] += aijk;
+				}
 			}
 		}
 
@@ -158,16 +171,14 @@ namespace Petter {
 			using namespace std;
 
 			ASSERT(!graph);
-			graph = new Graph<real,real,real>(nVars,int(terms2.size()),error_function);
-			graph->add_node(nVars);
+			int n_nodes = n + new_vars;
+			graph = new Graph<real,real,real>(n_nodes,int(terms2.size()),error_function);
+			graph->add_node(n_nodes);
 
-			double frac = 0.0;
-
-			for (int i=0; i<nVars; ++i) {
+			// Add degree-1 terms
+			for (int i=0; i<n; ++i) {
 				real c = terms1[i];
-				//if (c!=0){ 
-				//	cout << c << " * x[" << i << "]\n";
-				//}
+
 				// c*x(i)
 				if (c >= 0) {
 					graph->add_tweights(i, c, 0);
@@ -176,31 +187,42 @@ namespace Petter {
 					terms0 += c;
 					graph->add_tweights(i, 0,  -c);
 				}
-
-				//real f = abs(c) - int(abs(c) + 0.5);
-				//if (f>0.5) f = 1.0-f;
-				//if (f>frac) frac=f;
+			}
+			// Add degree-1 terms for new variables
+			for (int ind=0; ind<new_vars; ++ind) {
+				real c = terms1_new[ind];
+				int i = n + ind;
+				if (c >= 0) {
+					graph->add_tweights(i, c, 0);
+				}
+				else {
+					terms0 += c;
+					graph->add_tweights(i, 0,  -c);
+				}
 			}
 
+			// Add degree-2 terms
 			for (auto itr = terms2.begin(); itr != terms2.end(); ++itr) {
 				int i,j;
 				std::tie(i,j) = itr->first;
-				real coef     = itr->second;
-				//if (coef!=0){ 
-				//	cout << coef << " * x[" << i << "] * x[" << j << "]\n";
-				//}
-				// Check submodularity
-				ASSERT(coef <= 1e-6);
-				coef = min(real(0),coef);
+				real coef     = submodular_coef(itr->second);
+
 				// Add to graph
 				terms0 += coef;
 				graph->add_tweights(j, 0,  -coef);
 				graph->add_edge(i,j, -coef, 0);
+			}
+			// Add degree-2 terms for new variables
+			for (auto itr = terms2_new.begin(); itr != terms2_new.end(); ++itr) {
+				int i,ind;
+				std::tie(i,ind) = itr->first;
+				real coef       = submodular_coef(itr->second);
+				int j = n+ind;
 
-				//real f = coef - int(coef + 0.5);
-				//if (f<0) f=-f;
-				//if (f>0.5) f = 1.0-f;
-				//if (f>frac) frac=f;
+				// Add to graph
+				terms0 += coef;
+				graph->add_tweights(j, 0,  -coef);
+				graph->add_edge(i,j, -coef, 0);
 			}
 
 			// Compute maximum flow
@@ -211,10 +233,6 @@ namespace Petter {
 			for (int i=0; i<n; ++i) {
 				x[i] = graph->what_segment(i, Graph<real,real,real>::SOURCE);
 			}
-
-			//std::cout << "Fractional part (graph): " << frac << "\n";
-			//cout << "terms0 : " << terms0 << endl;
-			//cout << "energy : " << energy << endl;
 
 			return terms0 + energy;
 		}
@@ -247,7 +265,9 @@ namespace Petter {
 				x.at(i) = graph->what_segment(i, Graph<real,real,real>::SOURCE);
 				x.at(j) = graph->what_segment(j, Graph<real,real,real>::SOURCE);
 
-				ASSERT(x[i]==0 || x[j]==0);
+				//std::cout << i << ',' << j << " : " << int(x[i]) << ',' << int(x[j]) << "  ";
+
+				//ASSERT(x[i]==0 || x[j]==0); // Should not happen, but might due to rounding errors
 
 				// If x[i]==0 and y[i]==0, we don't know whether there is another 
 				// solution where the two are different
@@ -267,6 +287,7 @@ namespace Petter {
 
 						if (x[j] == 0) {
 							// We found a solution where x[i]==1 and x[j]==0
+							// std::cout << "A\n";
 							continue;
 						}
 					}
@@ -287,10 +308,12 @@ namespace Petter {
 						x[j] = graph->what_segment(j, Graph<real,real,real>::SOURCE);
 						ASSERT(x[i]==0 && x[j]==1);
 						// We found a solution where x[i]==0 and x[j]==1
+						// std::cout << "B\n";
 						continue;
 					}
 
 					// Otherwise, we only have the solution where x[i]==0 and x[j]==0
+					// std::cout << "C\n";
 					x[i] = 0;
 					x[j] = 0;
 				}
@@ -300,15 +323,36 @@ namespace Petter {
 
 
 	protected:
+
+		inline real submodular_coef(real coef);
+
 		int n;
-		int nVars;
+		int new_vars;
 		real terms0;
-		std::vector<real> terms1;
+		std::map<int, real> terms1;
+		std::map<int, real>  terms1_new;
 		std::map< std::pair<int,int>, real> terms2;
+		std::map< std::pair<int,int>, real> terms2_new;
 		std::vector<char> x;
 		Graph<real,real,real>* graph;
 	};
 
+	
+	template<typename real>
+	inline real Minimizer<real>::submodular_coef(real coef)
+	{
+		// Check submodularity
+		ASSERT(coef <= 0);
+		return coef;
+	}
+
+	template<>
+	inline real Minimizer<double>::submodular_coef(real coef)
+	{
+		// Check submodularity
+		ASSERT(coef <= 1e-9);
+		return std::min(real(0),coef);
+	}
 }
 
 #endif

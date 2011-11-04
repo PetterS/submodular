@@ -823,7 +823,7 @@ namespace Petter
 			                        (1-y.at(i)) * x.at(j)     * x.at(k)     * (1-y.at(l)) );
 		}
 
-		return constant + 0.5*val;
+		return constant + val/real(2);
 	}
 
 	//////////////////////////////

@@ -175,8 +175,8 @@ namespace Petter
 		///////////////////////////////
 		// Submodularity constraints //
 		///////////////////////////////
-		const double zero = 1e-7; //Set to e.g. 1e-6 for margin
-		//const double zero = 0;
+		//const double zero = 1e-7; //Set to e.g. 1e-6 for margin
+		const double zero = 0;
 		map<pair,int> ind_to_con;
 
 		for (auto itr = pbf.aij.begin(); itr != pbf.aij.end(); ++itr) {

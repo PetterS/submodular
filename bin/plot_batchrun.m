@@ -3,6 +3,8 @@ function plot_batchrun(filename)
     disp(filename)
     figure
 
+	fprintf('Number of experiments: %d\n',size(data,1));
+	
     qpbo = data(:,3+1);
     lp  = data(:,5+1);
 
