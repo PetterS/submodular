@@ -12,7 +12,8 @@
 namespace Petter
 {
 
-	real PseudoBoolean::minimize(vector<label>& x, int& labeled, bool heuristic)
+	template<typename real>
+	real PseudoBoolean<real>::minimize(vector<label>& x, int& labeled, bool heuristic)
 	{
 		bool should_continue;
 		real bound;
@@ -22,7 +23,7 @@ namespace Petter
 		do {
 
 			// Create symmetric relaxation
-			SymmetricPseudoBoolean spb;
+			SymmetricPseudoBoolean<real> spb;
 			if (heuristic) {
 				spb.create_heuristic(*this);
 			}
@@ -50,3 +51,5 @@ namespace Petter
 		return bound;
 	}
 }
+
+#include "pb_instances.inc"

@@ -25,6 +25,7 @@ namespace Petter
 	// Converts a submodular quadratic pseudo-Boolean function into 
 	// a graph for minimization via maxflow
 	//
+	template<typename real>
 	real convert(Graph<real,real,real>& graph, PBF<real,2>& qpbf)
 	{
 		//The constant always seem to be zero
@@ -74,19 +75,22 @@ namespace Petter
 		throw std::runtime_error(msg);
 	}
 
-	real PseudoBoolean::minimize_reduction(vector<label>& x) const
+	template<typename real>
+	real PseudoBoolean<real>::minimize_reduction(vector<label>& x) const
 	{
 		int nlabelled;
 		return minimize_reduction(x,nlabelled);
 	}
-	real PseudoBoolean::minimize_reduction(vector<label>& x, int& nlabelled) const
+
+	template<typename real>
+	real PseudoBoolean<real>::minimize_reduction(vector<label>& x, int& nlabelled) const
 	{
 		index nVars = index( x.size() );
 		// Here it is important that all indices appear as pairs 
 		// in aij or ai
 		ASSERT_STR( nvars() <= nVars , "x too small");
 
-		PBF<double, 4> hocr;
+		PBF<real, 4> hocr;
 
 		for (auto itr=ai.begin(); itr != ai.end(); ++itr) {
 			int i = itr->first;
@@ -107,7 +111,7 @@ namespace Petter
 			int k = get_k(itr->first);
 			real a = itr->second;
 			int ind[] = {i,j,k};
-			double E[8] = {0,0,0,0, 0,0,0,0};
+			real E[8] = {0,0,0,0, 0,0,0,0};
 			E[7] = a;
 			hocr.AddHigherTerm(3, ind, E);
 		}
@@ -119,21 +123,22 @@ namespace Petter
 			int l = get_l(itr->first);
 			real a = itr->second;
 			int ind[] = {i,j,k,l};
-			double E[16] = {0,0,0,0, 0,0,0,0,
+			real   E[16] = {0,0,0,0, 0,0,0,0,
 			                0,0,0,0, 0,0,0,0};
 			E[15] = a;
 			hocr.AddHigherTerm(4, ind, E);
 		}
 
-		//Make sure all vars are used TODO
-		hocr.AddUnaryTerm(nVars-1,1e-100,0);
+		#ifdef USE_HOCR
+			//Make sure all vars are used TODO
+			hocr.AddUnaryTerm(nVars-1,1e-100,0);
+		#endif
 
 
-
-		PBF<double,2> qpbf;
+		PBF<real,2> qpbf;
 		hocr.toQuadratic(qpbf); 
 		hocr.clear(); 
-		QPBO<double> qpbo(nVars, qpbf.size(), err_function); 
+		QPBO<real> qpbo(nVars, qpbf.size(), err_function); 
 		convert(qpbo, qpbf);
 		qpbo.MergeParallelEdges();
 		qpbo.Solve();
@@ -147,34 +152,37 @@ namespace Petter
 			}
 		}
 
-		double energy = constant + qpbo.ComputeTwiceLowerBound()/2;
+		real energy = constant + qpbo.ComputeTwiceLowerBound()/2;
 		//double energy = eval(x); //Only when x is fully labelled
 		return energy;
 	}
 
 
-
-	typedef double opttype;
 #ifdef USE_HOCR
-	typedef PBF<opttype,3> OPTIMIZER;
+	//typedef PBF<opttype,3> OPTIMIZER;
+	#define OPTIMIZER(real) PBF<real,3>
 #else
-	typedef Minimizer<real> OPTIMIZER;
+	//typedef Minimizer<real> OPTIMIZER;
+	#define OPTIMIZER(real) Minimizer<real>
 #endif
-	void reduce_bijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr);
-	void reduce_cijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr);
-	void reduce_dijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr);
-	void reduce_eijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr);
-	void reduce_pijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr);
-	void reduce_qijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr);
-	void reduce_rijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr);
-	void reduce_sijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr);
+	template<typename real> void reduce_bijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr);
+	template<typename real> void reduce_cijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr);
+	template<typename real> void reduce_dijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr);
+	template<typename real> void reduce_eijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr);
+	template<typename real> void reduce_pijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr);
+	template<typename real> void reduce_qijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr);
+	template<typename real> void reduce_rijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr);
+	template<typename real> void reduce_sijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr);
 
-	real SymmetricPseudoBoolean::minimize(vector<label>& x) const
+	template<typename real>
+	real SymmetricPseudoBoolean<real>::minimize(vector<label>& x) const
 	{
 		int l;
 		return minimize(x,l);
 	}
-	real SymmetricPseudoBoolean::minimize(vector<label>& x, int& nlabelled) const
+
+	template<typename real>
+	real SymmetricPseudoBoolean<real>::minimize(vector<label>& x, int& nlabelled) const
 	{
 		index nVars = index( x.size() );
 
@@ -244,8 +252,8 @@ namespace Petter
 			int yj = xj + nVars;
 			int yk = xk + nVars;
 			real w = itr->second;
-			double vals1[] = {0,0,0,0,0,0,0,w}; //111 
-			double vals2[] = {w,0,0,0,0,0,0,0}; //000
+			real vals1[] = {0,0,0,0,0,0,0,w}; //111 
+			real vals2[] = {w,0,0,0,0,0,0,0}; //000
 			int vars1[] = {xi,xj,xk};
 			int vars2[] = {yi,yj,yk};
 
@@ -262,7 +270,7 @@ namespace Petter
 			int yj = xj + nVars;
 			int yk = xk + nVars;
 			real w = itr->second;
-			double val1[] = {0, //000
+			real   val1[] = {0, //000
 			                 0, //001
 			                 0, //010
 			                 0, //011
@@ -271,7 +279,7 @@ namespace Petter
 			                 w, //110
 			                 0  //111
 			                };
-			double val2[] = {0, //000
+			real   val2[] = {0, //000
 			                 w, //001
 			                 0, //010
 			                 0, //011
@@ -296,7 +304,7 @@ namespace Petter
 			int yj = xj + nVars;
 			int yk = xk + nVars;
 			real w = itr->second;
-			double val1[] = {0, //000
+			real   val1[] = {0, //000
 			                 0, //001
 			                 0, //010
 			                 0, //011
@@ -305,7 +313,7 @@ namespace Petter
 			                 0, //110
 			                 0  //111
 			                };
-			double val2[] = {0, //000
+			real   val2[] = {0, //000
 			                 0, //001
 			                 w, //010
 			                 0, //011
@@ -330,7 +338,7 @@ namespace Petter
 			int yj = xj + nVars;
 			int yk = xk + nVars;
 			real w = itr->second;
-			double val1[] = {0, //000
+			real   val1[] = {0, //000
 			                 0, //001
 			                 0, //010
 			                 w, //011
@@ -339,7 +347,7 @@ namespace Petter
 			                 0, //110
 			                 0  //111
 			                };
-			double val2[] = {0, //000
+			real   val2[] = {0, //000
 			                 0, //001
 			                 0, //010
 			                 0, //011
@@ -476,11 +484,13 @@ namespace Petter
 			reduce_sijkl(xi,xj,xk,xl,yi,yj,yk,yl, w, var, hocr);
 		}
 
-		double maxflowconstant;
-		double energy2;
+		
+		real energy2;
 		vector<label> y(nVars,0);
 
 #ifdef USE_HOCR
+
+		real maxflowconstant;
 
 		//Make sure all vars are used
 		hocr.AddUnaryTerm(2*nVars-1,1e-100,0);
@@ -560,7 +570,7 @@ namespace Petter
 
 
 		//Calculate energy from solution
-		double energy = eval(x,y);
+		real energy = eval(x,y);
 
 		// Make sure the two computed energies agree
 		// If this assertion fails, it might be due to floating-point rounding
@@ -585,8 +595,8 @@ namespace Petter
 
 
 
-
-	void reduce_bijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr)
+	template<typename real> 
+	void reduce_bijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr)
 	{
 		if (a > 0) {
 			//Extra variables needed
@@ -638,7 +648,8 @@ namespace Petter
 		}
 	}
 
-	void reduce_cijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr)
+	template<typename real> 
+	void reduce_cijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr)
 	{
 		if (a > 0) {
 			//Extra variables needed
@@ -651,7 +662,7 @@ namespace Petter
 			hocr.AddPairwiseTerm(x3, z, 0,0,0, -abs(a));
 			hocr.AddPairwiseTerm(y4, z, 0,0,0, -abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = a; //E111
 			int ind[3] = {x1,x2,x3};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -662,7 +673,7 @@ namespace Petter
 			hocr.AddPairwiseTerm(y3, w, -abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(x4, w, -abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = a; //E000
 			int ind[3] = {y1,y2,y3};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -684,7 +695,7 @@ namespace Petter
 			hocr.AddPairwiseTerm(x2,y4, 0,0,0, abs(a));
 			hocr.AddPairwiseTerm(x3,y4, 0,0,0, abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = -abs(a); //E111
 			int ind[3] = {x1,x2,x3};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -702,14 +713,15 @@ namespace Petter
 			hocr.AddPairwiseTerm(y2,x4, abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(y3,x4, abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = -abs(a); //E000
 			int ind[3] = {y1,y2,y3};
 			hocr.AddHigherTerm(3, ind, E);}
 		}
 	}
 
-	void reduce_dijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr)
+	template<typename real> 
+	void reduce_dijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr)
 	{
 		if (a > 0) {
 			//Extra variables needed
@@ -722,7 +734,7 @@ namespace Petter
 			hocr.AddPairwiseTerm(y3, z, 0,0,0, -abs(a));
 			hocr.AddPairwiseTerm(x4, z, 0,0,0, -abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = a; //E111
 			int ind[3] = {x1,x2,x4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -733,7 +745,7 @@ namespace Petter
 			hocr.AddPairwiseTerm(x3, w, -abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(y4, w, -abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = a; //E000
 			int ind[3] = {y1,y2,y4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -755,7 +767,7 @@ namespace Petter
 			hocr.AddPairwiseTerm(x2,x4, 0,0,0, abs(a));
 			hocr.AddPairwiseTerm(y3,x4, 0,0,0, abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = -abs(a); //E111
 			int ind[3] = {x1,x2,x4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -773,14 +785,15 @@ namespace Petter
 			hocr.AddPairwiseTerm(y2,y4, abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(x3,y4, abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = -abs(a); //E000
 			int ind[3] = {y1,y2,y4};
 			hocr.AddHigherTerm(3, ind, E);}
 		}
 	}
 
-	void reduce_eijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr)
+	template<typename real> 
+	void reduce_eijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr)
 	{
 		if (a > 0) {
 			//Extra variables needed
@@ -793,7 +806,7 @@ namespace Petter
 			hocr.AddPairwiseTerm(x3, z, 0,0,0, -abs(a));
 			hocr.AddPairwiseTerm(x4, z, 0,0,0, -abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = a; //E111
 			int ind[3] = {x1,x3,x4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -804,7 +817,7 @@ namespace Petter
 			hocr.AddPairwiseTerm(y3, w, -abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(y4, w, -abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = a; //E000
 			int ind[3] = {y1,y3,y4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -826,7 +839,7 @@ namespace Petter
 			hocr.AddPairwiseTerm(y2,x4, 0,0,0, abs(a));
 			hocr.AddPairwiseTerm(x3,x4, 0,0,0, abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = -abs(a); //E111
 			int ind[3] = {x1,x3,x4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -844,14 +857,15 @@ namespace Petter
 			hocr.AddPairwiseTerm(x2,y4, abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(y3,y4, abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = -abs(a); //E000
 			int ind[3] = {y1,y3,y4};
 			hocr.AddHigherTerm(3, ind, E);}
 		}
 	}
 
-	void reduce_pijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr)
+	template<typename real> 
+	void reduce_pijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr)
 	{
 		if (a > 0) {
 			//Extra variables needed
@@ -864,7 +878,7 @@ namespace Petter
 			hocr.AddPairwiseTerm(x3, z, 0,0,0, -abs(a));
 			hocr.AddPairwiseTerm(x4, z, 0,0,0, -abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = abs(a); //E111
 			int ind[3] = {x2,x3,x4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -875,7 +889,7 @@ namespace Petter
 			hocr.AddPairwiseTerm(y3, w, -abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(y4, w, -abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = abs(a); //E000
 			int ind[3] = {y2,y3,y4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -897,7 +911,7 @@ namespace Petter
 			hocr.AddPairwiseTerm(x2,x4, 0,0,0, abs(a));
 			hocr.AddPairwiseTerm(x3,x4, 0,0,0, abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = -abs(a); //E111
 			int ind[3] = {x2,x3,x4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -915,14 +929,15 @@ namespace Petter
 			hocr.AddPairwiseTerm(y2,y4, abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(y3,y4, abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = -abs(a); //E000
 			int ind[3] = {y2,y3,y4};
 			hocr.AddHigherTerm(3, ind, E);}
 		}
 	}
 
-	void reduce_qijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr)
+	template<typename real> 
+	void reduce_qijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr)
 	{
 		if (a > 0) {
 			//Extra variables needed
@@ -942,12 +957,12 @@ namespace Petter
 			hocr.AddPairwiseTerm(x2,y4, 0,0,0, abs(a));
 			hocr.AddPairwiseTerm(y3,y4, 0,0,0, abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = -abs(a); //E111
 			int ind[3] = {x1,x2,y3};
 			hocr.AddHigherTerm(3, ind, E);}
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = -abs(a); //E111
 			int ind[3] = {x1,x2,y4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -969,12 +984,12 @@ namespace Petter
 			hocr.AddPairwiseTerm(y2,x4, abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(x3,x4, abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = -abs(a); //E000
 			int ind[3] = {y1,y2,x3};
 			hocr.AddHigherTerm(3, ind, E);}
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = -abs(a); //E000
 			int ind[3] = {y1,y2,x4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -992,12 +1007,12 @@ namespace Petter
 			hocr.AddPairwiseTerm(y3,z, 0,0,0, -abs(a));
 			hocr.AddPairwiseTerm(y4,z, 0,0,0, -abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = abs(a); //E111
 			int ind[3] = {x1,x2,y3};
 			hocr.AddHigherTerm(3, ind, E);}
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = abs(a); //E111
 			int ind[3] = {x1,x2,y4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -1011,12 +1026,12 @@ namespace Petter
 			hocr.AddPairwiseTerm(x3,w, -abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(x4,w, -abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = abs(a); //E000
 			int ind[3] = {y1,y2,x3};
 			hocr.AddHigherTerm(3, ind, E);}
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = abs(a); //E000
 			int ind[3] = {y1,y2,x4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -1025,7 +1040,8 @@ namespace Petter
 		}
 	}
 
-	void reduce_rijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr)
+	template<typename real> 
+	void reduce_rijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr)
 	{
 		if (a > 0) {
 			//Extra variables needed
@@ -1045,12 +1061,12 @@ namespace Petter
 			hocr.AddPairwiseTerm(y2,y4, 0,0,0, abs(a));
 			hocr.AddPairwiseTerm(x3,y4, 0,0,0, abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = -abs(a); //E111
 			int ind[3] = {x1,y2,x3};
 			hocr.AddHigherTerm(3, ind, E);}
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = -abs(a); //E111
 			int ind[3] = {x1,x3,y4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -1072,12 +1088,12 @@ namespace Petter
 			hocr.AddPairwiseTerm(x2,x4, abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(y3,x4, abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = -abs(a); //E000
 			int ind[3] = {y1,x2,y3};
 			hocr.AddHigherTerm(3, ind, E);}
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = -abs(a); //E000
 			int ind[3] = {y1,y3,x4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -1095,12 +1111,12 @@ namespace Petter
 			hocr.AddPairwiseTerm(x3, z, 0,0,0, -abs(a));
 			hocr.AddPairwiseTerm(y4, z, 0,0,0, -abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = abs(a); //E111
 			int ind[3] = {x1,y2,x3};
 			hocr.AddHigherTerm(3, ind, E);}
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = abs(a); //E111
 			int ind[3] = {x1,x3,y4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -1115,12 +1131,12 @@ namespace Petter
 			hocr.AddPairwiseTerm(y3, w, -abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(x4, w, -abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = abs(a); //E000
 			int ind[3] = {y1,x2,y3};
 			hocr.AddHigherTerm(3, ind, E);}
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = abs(a); //E000
 			int ind[3] = {y1,y3,x4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -1129,7 +1145,8 @@ namespace Petter
 		}
 	}
 
-	void reduce_sijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER& hocr)
+	template<typename real> 
+	void reduce_sijkl(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr)
 	{
 		if (a > 0) {
 			//Extra variables needed
@@ -1149,12 +1166,12 @@ namespace Petter
 			hocr.AddPairwiseTerm(y2,x4, 0,0,0, abs(a));
 			hocr.AddPairwiseTerm(y3,x4, 0,0,0, abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = -abs(a); //E111
 			int ind[3] = {x1,y2,x4};
 			hocr.AddHigherTerm(3, ind, E);}
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = -abs(a); //E111
 			int ind[3] = {x1,y3,x4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -1176,12 +1193,12 @@ namespace Petter
 			hocr.AddPairwiseTerm(x2,y4, abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(x3,y4, abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = -abs(a); //E000
 			int ind[3] = {y1,x2,y4};
 			hocr.AddHigherTerm(3, ind, E);}
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = -abs(a); //E000
 			int ind[3] = {y1,x3,y4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -1199,12 +1216,12 @@ namespace Petter
 			hocr.AddPairwiseTerm(y3, z, 0,0,0, -abs(a));
 			hocr.AddPairwiseTerm(x4, z, 0,0,0, -abs(a));
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = abs(a); //E111
 			int ind[3] = {x1,y2,x4};
 			hocr.AddHigherTerm(3, ind, E);}
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[7] = abs(a); //E111
 			int ind[3] = {x1,y3,x4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -1217,12 +1234,12 @@ namespace Petter
 			hocr.AddPairwiseTerm(x3, w, -abs(a), 0,0,0);
 			hocr.AddPairwiseTerm(y4, w, -abs(a), 0,0,0);
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = abs(a); //E000
 			int ind[3] = {y1,x2,y4};
 			hocr.AddHigherTerm(3, ind, E);}
 
-			{opttype E[8]={0,0,0,0, 0,0,0,0};
+			{real E[8]={0,0,0,0, 0,0,0,0};
 			E[0] = abs(a); //E000
 			int ind[3] = {y1,x3,y4};
 			hocr.AddHigherTerm(3, ind, E);}
@@ -1230,5 +1247,27 @@ namespace Petter
 			hocr.AddPairwiseTerm(y1,y4, -abs(a), 0,0,0);
 		}
 	}
+
+
+
+
+
+//TODO: change this into nicer code
+#define INSTANTIATE_REDUCTIONS(real) \
+	template void reduce_bijkl<real>(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr); \
+	template void reduce_cijkl<real>(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr); \
+	template void reduce_dijkl<real>(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr); \
+	template void reduce_eijkl<real>(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr); \
+	template void reduce_pijkl<real>(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr); \
+	template void reduce_qijkl<real>(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr); \
+	template void reduce_rijkl<real>(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr); \
+	template void reduce_sijkl<real>(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, real a, int& var, OPTIMIZER(real)& hocr);
+
+INSTANTIATE_REDUCTIONS(int);
+INSTANTIATE_REDUCTIONS(double);
+
 }
 
+
+
+#include "pb_instances.inc"

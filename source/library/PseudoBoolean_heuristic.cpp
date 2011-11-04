@@ -20,6 +20,7 @@ namespace Petter
 	// [1 0 1] [x2] = [b2]
 	// [1 1 0] [x3]   [b3]
 	//
+	template<typename real>
 	void solve_system(real& x1, real& x2, real& x3, real b1, real b2, real b3) 
 	{
 		//arma::mat33 A;
@@ -35,7 +36,8 @@ namespace Petter
 		x3 = ( b1 + b2 - b3) / 2;
 	}
 
-	void SymmetricPseudoBoolean::create_heuristic(PseudoBoolean& pbf)
+	template<typename real>
+	void SymmetricPseudoBoolean<real>::create_heuristic(PseudoBoolean<real>& pbf)
 	{
 		using namespace std;
 
@@ -56,7 +58,7 @@ namespace Petter
 			int i = get_i(ind);
 			int j = get_j(ind);
 			int k = get_k(ind);
-			double a123 = itr->second;
+			real a123 = itr->second;
 		
 			if (a123 > 0) {
 
@@ -67,7 +69,7 @@ namespace Petter
 				real bcanuse = max(m01+m02+m12 - a123, real(0)) / 2;
 				real bmargin = min(m01, min(m02,m12));
 				if (bmargin > 0) {
-					double m = min(bmargin, min(a123, bcanuse));
+					real m = min(bmargin, min(a123, bcanuse));
 					bijk[ind] +=  m;
 					a123 -= m;
 					m01 -= m;
@@ -81,21 +83,21 @@ namespace Petter
 
 				while (a123 > 0 && (m01>0 || m02>0 || m12>0) ) {  
 					if (m01 > 0) {
-						double m = min(m01, a123);
+						real m = min(m01, a123);
 						cijk[ind] += m;
 						a123 -= m;
 						m01  -= m;
 						bRHS[make_pair(i,j)] -= m;
 					}
 					else if (m02 > 0) {
-						double m = min(m02, a123);
+						real m = min(m02, a123);
 						dijk[ind] +=  m;
 						a123 -= m;
 						m02  -= m;
 						bRHS[make_pair(i,k)] -= m;
 					}
 					else if (m12 > 0) {
-						double m = min(m12, a123);
+						real m = min(m12, a123);
 						eijk[ind] +=  m;
 						a123 -= m;
 						m12  -= m;
@@ -184,7 +186,7 @@ namespace Petter
 		// TODO: make this a little more sophisticated :-)
 		for (auto itr = pbf.aijkl.begin(); itr != pbf.aijkl.end(); ++itr) {
 			quad ijkl = itr->first;
-			double a0123 = itr->second;
+			real a0123 = itr->second;
 
 			if (a0123 > 0) {
 				dijkl[ijkl] = a0123;
@@ -308,3 +310,6 @@ namespace Petter
 
 
 } //namespace Petter
+
+
+#include "pb_instances.inc"

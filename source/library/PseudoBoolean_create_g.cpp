@@ -5,6 +5,7 @@
 // Creates a submodular relaxation g(x,y) using linear programming. Clp is required.
 //
 
+#include <typeinfo>
 
 #include "PseudoBoolean.h"
 
@@ -12,8 +13,27 @@
 
 namespace Petter
 {
-	void SymmetricPseudoBoolean::create_lp(const PseudoBoolean& pbf) 
+	//
+	// The default behaviour is to raise an error message
+	//
+	template<typename real>
+	void SymmetricPseudoBoolean<real>::create_lp(const PseudoBoolean<real>& pbf) 
 	{
+		auto& id = typeid(real);
+		std::string msg = "Linear programming not available for type ";
+		msg += id.name();
+		throw std::runtime_error(msg);
+	}
+
+	//
+	// For doubles, LP is available
+	//
+	template<>
+	void SymmetricPseudoBoolean<double>::create_lp(const PseudoBoolean<double>& pbf) 
+	{
+		// Convenient to have this name available
+		typedef double real;
+
 		clear();
 		constant = pbf.constant;
 
@@ -447,3 +467,5 @@ namespace Petter
 
 	}
 }
+
+#include "pb_instances.inc"

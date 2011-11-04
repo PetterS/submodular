@@ -14,4 +14,7 @@
     <ClInclude Include="..\..\source\library\PseudoBoolean.h" />
     <ClInclude Include="..\..\source\library\Minimizer.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\source\library\pb_instances.inc" />
+  </ItemGroup>
 </Project>

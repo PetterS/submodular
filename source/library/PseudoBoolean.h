@@ -34,7 +34,6 @@ namespace Petter
 	using std::map;
 	using std::vector;
 
-	typedef double real;
 	typedef signed short label;
 	typedef int index; 
 
@@ -61,13 +60,15 @@ namespace Petter
 	int get_k(const quad& q);
 	int get_l(const quad& q);
 
+	template<typename real>
 	class SymmetricPseudoBoolean;
 
+	template<typename real>
 	class PseudoBoolean
 	{
 	public:
-		friend class SymmetricPseudoBoolean;
-		friend std::ostream& operator<<(std::ostream& out, const PseudoBoolean& pbf);
+		friend class SymmetricPseudoBoolean<real>;
+		void print_helper(std::ostream& out) const;
 
 		PseudoBoolean(); //Creates the zero polynomial
 		PseudoBoolean(std::string filename); //Reads f from a file
@@ -120,13 +121,15 @@ namespace Petter
 		map<quad  , real> aijkl;
 	};
 
-	std::ostream& operator<<(std::ostream& out, const PseudoBoolean& pbf);
+	template<typename real>
+	std::ostream& operator<<(std::ostream& out, const PseudoBoolean<real>& pbf);
 
+	template<typename real>
 	class SymmetricPseudoBoolean
 	{
 	public:
-		friend class PseudoBoolean;
-		friend std::ostream& operator<<(std::ostream& out, SymmetricPseudoBoolean& pbf);
+		friend class PseudoBoolean<real>;
+		void print_helper(std::ostream& out);
 
 		SymmetricPseudoBoolean();
 		void clear();
@@ -134,9 +137,9 @@ namespace Petter
 		real eval(const vector<label>& x, const vector<label>& y) const;
 
 		// Create using LP
-		void create_lp(const PseudoBoolean& pbf);
+		void create_lp(const PseudoBoolean<real>& pbf);
 		// Create using heuristics
-		void create_heuristic(PseudoBoolean& pbf);
+		void create_heuristic(PseudoBoolean<real>& pbf);
 
 		// Minimize; requires submodularity
 		real minimize(vector<label>& x) const;
@@ -203,7 +206,8 @@ namespace Petter
 		map<quad  , int> indbijkl,indcijkl,inddijkl,indeijkl,indpijkl,indqijkl,indrijkl,indsijkl;
 	};
 
-	std::ostream& operator<<(std::ostream& out, SymmetricPseudoBoolean& pbf);
+	template<typename real>
+	std::ostream& operator<<(std::ostream& out, SymmetricPseudoBoolean<real>& pbf);
 
 }
 

@@ -22,11 +22,14 @@ namespace Petter
 	}
 
 
-	PseudoBoolean::PseudoBoolean()
+	template<typename real>
+	PseudoBoolean<real>::PseudoBoolean()
 	{
 		constant = 0;
 	}
-	PseudoBoolean::PseudoBoolean(std::string filename)
+
+	template<typename real>
+	PseudoBoolean<real>::PseudoBoolean(std::string filename)
 	{
 		constant = 0;
 		std::ifstream fin(filename.c_str());
@@ -75,7 +78,8 @@ namespace Petter
 		ASSERT_STR(fin,"Could not read degree 4 monomials");
 	}
 	
-	void PseudoBoolean::save_to_file(std::string filename)
+	template<typename real>
+	void PseudoBoolean<real>::save_to_file(std::string filename)
 	{
 		std::ofstream fout(filename.c_str());
 		ASSERT(fout);
@@ -118,7 +122,8 @@ namespace Petter
 		fout << std::endl;
 	}
 
-	void PseudoBoolean::clear()
+	template<typename real>
+	void PseudoBoolean<real>::clear()
 	{
 		constant = 0;
 		ai.clear();
@@ -126,7 +131,9 @@ namespace Petter
 		aijk.clear();
 		aijkl.clear();
 	}
-	int  PseudoBoolean::nvars() const
+
+	template<typename real>
+	int  PseudoBoolean<real>::nvars() const
 	{
 		int nVars = -1;
 		// Here it is important that all indices appear as pairs 
@@ -142,8 +149,18 @@ namespace Petter
 		return nVars;
 	}
 
-	std::ostream& operator<<(std::ostream& out, const PseudoBoolean& pbf)
+	template<typename real>
+	std::ostream& operator<<(std::ostream& out, const PseudoBoolean<real>& pbf)
 	{
+		pbf.print_helper(out);
+		return out;
+	}
+
+	template<typename real>
+	void PseudoBoolean<real>::print_helper(std::ostream& out) const
+	{
+		const PseudoBoolean<real>& pbf = *this;
+
 		size_t limit = 7;
 		size_t size = pbf.ai.size();
 
@@ -259,20 +276,27 @@ namespace Petter
 			c++;
 		}
 
+	}
+
+	template<typename real>
+	std::ostream& operator<<(std::ostream& out, SymmetricPseudoBoolean<real>& pbf)
+	{
+		pbf.print_helper(out);
 		return out;
 	}
 
-	std::ostream& operator<<(std::ostream& out, SymmetricPseudoBoolean& pbf)
+	template<typename real>
+	void SymmetricPseudoBoolean<real>::print_helper(std::ostream& out) 
 	{
 		size_t limit = 7;
-		size_t size = pbf.bi.size();
+		size_t size = bi.size();
 
-		if (pbf.constant != 0) {
-			out << "C = " << pbf.constant << " ";
+		if (constant != 0) {
+			out << "C = " << constant << " ";
 		}
 
 		size_t c=0;
-		for (auto itr = pbf.bi.begin(); itr != pbf.bi.end(); ++itr) {
+		for (auto itr = bi.begin(); itr != bi.end(); ++itr) {
 			if (c<limit || c==size-1) {
 				out << "b(" << itr->first << ") = " << itr->second << "  ";
 			}
@@ -283,12 +307,12 @@ namespace Petter
 		}
 		out << std::endl;
 		c =0;
-		for (auto itr = pbf.bij.begin(); itr != pbf.bij.end(); ++itr) {
+		for (auto itr = bij.begin(); itr != bij.end(); ++itr) {
 			int i = get_i(itr->first);
 			int j = get_j(itr->first);
 			if (c<limit || c==size-1) {
 				out << "{b,c}(" << i << "," << j << ") = {" 
-					<< pbf.bij[itr->first]  << "," << pbf.cij[itr->first]
+					<< bij[itr->first]  << "," << cij[itr->first]
 					<< "}  ";
 			}
 			else if (c==limit) {
@@ -298,14 +322,14 @@ namespace Petter
 		}
 		out << std::endl;
 		c=0;
-		for (auto itr = pbf.bijk.begin(); itr != pbf.bijk.end(); ++itr) {
+		for (auto itr = bijk.begin(); itr != bijk.end(); ++itr) {
 			int i = get_i(itr->first);
 			int j = get_j(itr->first);
 			int k = get_k(itr->first);
 			if (c<limit || c==size-1) {
 				out << "{b,c,d,e}(" << i << "," << j << "," << k << ") = {" 
-					<< pbf.bijk[itr->first] << "," << pbf.cijk[itr->first] << ","
-					<< pbf.dijk[itr->first] << "," << pbf.eijk[itr->first] 
+					<< bijk[itr->first] << "," << cijk[itr->first] << ","
+					<< dijk[itr->first] << "," << eijk[itr->first] 
 					<< "}  ";
 			}
 			else if (c==limit) {
@@ -315,17 +339,17 @@ namespace Petter
 		}
 		out << std::endl;
 		c=0;
-		for (auto itr = pbf.bijkl.begin(); itr != pbf.bijkl.end(); ++itr) {
+		for (auto itr = bijkl.begin(); itr != bijkl.end(); ++itr) {
 			int i = get_i(itr->first);
 			int j = get_j(itr->first);
 			int k = get_k(itr->first);
 			int l = get_l(itr->first);
 			if (c<limit || c==size-1) {
 				out << "{b,c,d,e,p,q,r,s}(" << i << "," << j << "," << k << "," << l <<") = {" 
-					<< pbf.bijkl[itr->first] << "," << pbf.cijkl[itr->first] << ","
-					<< pbf.dijkl[itr->first] << "," << pbf.eijkl[itr->first] << ","
-					<< pbf.pijkl[itr->first] << "," << pbf.qijkl[itr->first] << ","
-					<< pbf.rijkl[itr->first] << "," << pbf.sijkl[itr->first] 
+					<< bijkl[itr->first] << "," << cijkl[itr->first] << ","
+					<< dijkl[itr->first] << "," << eijkl[itr->first] << ","
+					<< pijkl[itr->first] << "," << qijkl[itr->first] << ","
+					<< rijkl[itr->first] << "," << sijkl[itr->first] 
 					<< "}  ";
 			}
 			else if (c==limit) {
@@ -333,7 +357,6 @@ namespace Petter
 			}
 			c++;
 		}
-		return out;
 	}
 
 
@@ -447,17 +470,20 @@ namespace Petter
 	//
 	// Monomials
 	//
-	void PseudoBoolean::add_monomial(int i, real a)
+	template<typename real>
+	void PseudoBoolean<real>::add_monomial(int i, real a)
 	{
 		ASSERT(i>=0);
 		ai[i] += a;
 	}
-	void PseudoBoolean::add_monomial(int i, int j, real a)
+	template<typename real>
+	void PseudoBoolean<real>::add_monomial(int i, int j, real a)
 	{
 		ASSERT(0<=i && i<j);
 		aij[ make_pair(i,j) ] += a;
 	}
-	void PseudoBoolean::add_monomial(int i, int j, int k, real a)
+	template<typename real>
+	void PseudoBoolean<real>::add_monomial(int i, int j, int k, real a)
 	{
 		ASSERT(0<=i && i<j && j<k);
 		aijk[ make_triple(i,j,k) ] += a;
@@ -466,7 +492,8 @@ namespace Petter
 		add_monomial(i,k, 0);
 		add_monomial(j,k, 0);
 	}
-	void PseudoBoolean::add_monomial(int i, int j, int k, int l, real a)
+	template<typename real>
+	void PseudoBoolean<real>::add_monomial(int i, int j, int k, int l, real a)
 	{
 		ASSERT(0<=i && i<j && j<k && k<l);
 		aijkl[ make_quad(i,j,k,l) ] += a;
@@ -480,7 +507,8 @@ namespace Petter
 	//
 	// Order-1 clique
 	//
-	void PseudoBoolean::add_clique(int i, real E0, real E1)
+	template<typename real>
+	void PseudoBoolean<real>::add_clique(int i, real E0, real E1)
 	{
 		ASSERT(0<=i);
 
@@ -491,7 +519,8 @@ namespace Petter
 	//
 	// Order-2 clique
 	//
-	void PseudoBoolean::add_clique(int i, int j, real E00, real E01, real E10, real E11)
+	template<typename real>
+	void PseudoBoolean<real>::add_clique(int i, int j, real E00, real E01, real E10, real E11)
 	{
 		ASSERT(0<=i && i<j);
 
@@ -507,16 +536,18 @@ namespace Petter
 	//
 	// Order-3 clique
 	//
-	void PseudoBoolean::add_clique(int i, int j, int k, const vector<real>& E)
+	template<typename real>
+	void PseudoBoolean<real>::add_clique(int i, int j, int k, const vector<real>& E)
 	{
 		add_clique(i,j,k, E.at(0), E.at(1), E.at(2), E.at(3), E.at(4),
 		                  E.at(5), E.at(6), E.at(7));
 	}
-	void PseudoBoolean::add_clique(int i, int j, int k, real E000, real E001, real E010, real E011,
-	                                                    real E100, real E101, real E110, real E111)
+	template<typename real>
+	void PseudoBoolean<real>::add_clique(int i, int j, int k, real E000, real E001, real E010, real E011,
+	                                                          real E100, real E101, real E110, real E111)
 	{
 		//ASSERT(0<=i && i<j && j<k);
-    ASSERT(0<=i);
+		ASSERT(0<=i);
 
 		this->constant += E000;
 
@@ -542,19 +573,22 @@ namespace Petter
 	//
 	// Order 4 clique
 	//
-	void PseudoBoolean::add_clique(int i, int j, int k, int l, const vector<real>& E)
+	template<typename real>
+	void PseudoBoolean<real>::add_clique(int i, int j, int k, int l, const vector<real>& E)
 	{
 		add_clique(i,j,k,l, E.at(0), E.at(1), E.at(2), E.at(3), E.at(4),
 		                    E.at(5), E.at(6), E.at(7), E.at(8), E.at(9),
 		                    E.at(10), E.at(11), E.at(12), E.at(13), E.at(14), E.at(15));
 	}
-	void PseudoBoolean::add_clique(int i, int j, int k, int l, real E0000, real E0001, real E0010, real E0011,
-	                                                           real E0100, real E0101, real E0110, real E0111,
-	                                                           real E1000, real E1001, real E1010, real E1011,
-	                                                           real E1100, real E1101, real E1110, real E1111)
+
+	template<typename real>
+	void PseudoBoolean<real>::add_clique(int i, int j, int k, int l, real E0000, real E0001, real E0010, real E0011,
+	                                                                 real E0100, real E0101, real E0110, real E0111,
+	                                                                 real E1000, real E1001, real E1010, real E1011,
+	                                                                 real E1100, real E1101, real E1110, real E1111)
 	{
 		//ASSERT(0<=i && i<j && j<k && k<l);
-    ASSERT(0<=i);
+		ASSERT(0<=i);
 
 		this->constant += E0000;
 
@@ -602,7 +636,8 @@ namespace Petter
 	//
 	// Evaluation
 	//
-	real PseudoBoolean::eval(const vector<label>& x) const
+	template<typename real>
+	real PseudoBoolean<real>::eval(const vector<label>& x) const
 	{
 		real val = constant;
 		for (auto itr = ai.begin(); itr != ai.end(); ++itr) {
@@ -632,15 +667,16 @@ namespace Petter
 
 
 
-
-	SymmetricPseudoBoolean::SymmetricPseudoBoolean()
+	template<typename real>
+	SymmetricPseudoBoolean<real>::SymmetricPseudoBoolean()
 	{
 		nlpvars = 0;
 		constant = 0;
 		maxflow_graph = 0;
 	}
 
-	void SymmetricPseudoBoolean::clear()
+	template<typename real>
+	void SymmetricPseudoBoolean<real>::clear()
 	{
 		nlpvars = 0;
 		constant = 0;
@@ -679,7 +715,8 @@ namespace Petter
 		indsijkl.clear();			
 	}
 
-	real SymmetricPseudoBoolean::eval(const vector<label>& x, const vector<label>& y) const
+	template<typename real>
+	real SymmetricPseudoBoolean<real>::eval(const vector<label>& x, const vector<label>& y) const
 	{
 		real val = 0;
 		// bi
@@ -830,20 +867,20 @@ namespace Petter
 	// Functions to get indices //
 	//////////////////////////////
 	//int SymmetricPseudoBoolean::ib(int i) { return getindex(indbi, i); }
-	int SymmetricPseudoBoolean::ib(int i, int j){ return getindex(indbij, make_pair(i,j)); }
-	int SymmetricPseudoBoolean::ic(int i, int j){ return getindex(indcij, make_pair(i,j)); }
-	int SymmetricPseudoBoolean::ib(int i, int j, int k){ return getindex(indbijk, make_triple(i,j,k)); }
-	int SymmetricPseudoBoolean::ic(int i, int j, int k){ return getindex(indcijk, make_triple(i,j,k)); }
-	int SymmetricPseudoBoolean::id(int i, int j, int k){ return getindex(inddijk, make_triple(i,j,k)); }
-	int SymmetricPseudoBoolean::ie(int i, int j, int k){ return getindex(indeijk, make_triple(i,j,k)); }
-	int SymmetricPseudoBoolean::ib(int i, int j, int k, int l){ return getindex(indbijkl, make_quad(i,j,k,l)); }
-	int SymmetricPseudoBoolean::ic(int i, int j, int k, int l){ return getindex(indcijkl, make_quad(i,j,k,l)); }
-	int SymmetricPseudoBoolean::id(int i, int j, int k, int l){ return getindex(inddijkl, make_quad(i,j,k,l)); }
-	int SymmetricPseudoBoolean::ie(int i, int j, int k, int l){ return getindex(indeijkl, make_quad(i,j,k,l)); }
-	int SymmetricPseudoBoolean::ip(int i, int j, int k, int l){ return getindex(indpijkl, make_quad(i,j,k,l)); }
-	int SymmetricPseudoBoolean::iq(int i, int j, int k, int l){ return getindex(indqijkl, make_quad(i,j,k,l)); }
-	int SymmetricPseudoBoolean::ir(int i, int j, int k, int l){ return getindex(indrijkl, make_quad(i,j,k,l)); }
-	int SymmetricPseudoBoolean::is(int i, int j, int k, int l){ return getindex(indsijkl, make_quad(i,j,k,l)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::ib(int i, int j){ return getindex(indbij, make_pair(i,j)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::ic(int i, int j){ return getindex(indcij, make_pair(i,j)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::ib(int i, int j, int k){ return getindex(indbijk, make_triple(i,j,k)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::ic(int i, int j, int k){ return getindex(indcijk, make_triple(i,j,k)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::id(int i, int j, int k){ return getindex(inddijk, make_triple(i,j,k)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::ie(int i, int j, int k){ return getindex(indeijk, make_triple(i,j,k)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::ib(int i, int j, int k, int l){ return getindex(indbijkl, make_quad(i,j,k,l)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::ic(int i, int j, int k, int l){ return getindex(indcijkl, make_quad(i,j,k,l)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::id(int i, int j, int k, int l){ return getindex(inddijkl, make_quad(i,j,k,l)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::ie(int i, int j, int k, int l){ return getindex(indeijkl, make_quad(i,j,k,l)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::ip(int i, int j, int k, int l){ return getindex(indpijkl, make_quad(i,j,k,l)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::iq(int i, int j, int k, int l){ return getindex(indqijkl, make_quad(i,j,k,l)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::ir(int i, int j, int k, int l){ return getindex(indrijkl, make_quad(i,j,k,l)); }
+	template<typename real> int SymmetricPseudoBoolean<real>::is(int i, int j, int k, int l){ return getindex(indsijkl, make_quad(i,j,k,l)); }
 
 
 
@@ -859,12 +896,14 @@ namespace Petter
 		return maxval;
 	}
 
-	void SymmetricPseudoBoolean::test()
+	template<typename real>
+	void SymmetricPseudoBoolean<real>::test()
 	{
 
 	}
 
-	void SymmetricPseudoBoolean::test_clear()
+	template<typename real>
+	void SymmetricPseudoBoolean<real>::test_clear()
 	{
 		clear();
 
@@ -931,3 +970,13 @@ namespace Petter
 		ASSERT( maxval == nlpvars );
 	}
 }
+
+
+//TODO: change this into nicer code
+#define INSTANTIATE_OSTREAM(c) \
+	template std::ostream& Petter::operator<< <c>(std::ostream& out, const Petter::PseudoBoolean<c>& pbf); \
+	template std::ostream& Petter::operator<< <c>(std::ostream& out, Petter::SymmetricPseudoBoolean<c>& pbf);
+INSTANTIATE_OSTREAM(double);
+INSTANTIATE_OSTREAM(int);
+
+#include "pb_instances.inc"

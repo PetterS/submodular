@@ -26,7 +26,6 @@ using namespace std;
 #include "PseudoBoolean.h"
 using namespace Petter;
 
-#include "QPBO.h"
 #include "HOCR.h"
 #include "graph.h"
 
@@ -63,8 +62,6 @@ void create_function(MINIMIZER& minimizer)
 
 void test_minimize()
 {
-	const int n = 100;
-
 	PBF<int,3> hocr;
 	Petter::Minimizer<int> minimizer;
 
@@ -126,6 +123,7 @@ void test_minimize()
 }
 
 
+template<typename real>
 void test_pseudoboolean()
 {
 
@@ -133,12 +131,12 @@ void test_pseudoboolean()
 	// Order-2 //
 	/////////////
 	{
-		Petter::PseudoBoolean pb;
+		Petter::PseudoBoolean<real> pb;
 
-		double E00 = 1000-rand()%2001;
-		double E01 = 1000-rand()%2001;
-		double E10 = 1000-rand()%2001;
-		double E11 = 1000-rand()%2001;
+		real E00 = 1000-rand()%2001;
+		real E01 = 1000-rand()%2001;
+		real E10 = 1000-rand()%2001;
+		real E11 = 1000-rand()%2001;
 
 		pb.add_clique(0,1, E00, E01, E10, E11);
 		vector<label> x(2);
@@ -157,9 +155,9 @@ void test_pseudoboolean()
 	// Order-3 //
 	/////////////
 	{
-		Petter::PseudoBoolean pb;
+		Petter::PseudoBoolean<real> pb;
 
-		vector<double> E(8,0);
+		vector<real> E(8,0);
 		for (int i=0;i<8;++i) {
 			E[i] = 1000-rand()%2001;
 		}
@@ -171,8 +169,8 @@ void test_pseudoboolean()
 		for (x[0]=0;x[0]<=1;++x[0]) {
 		for (x[1]=0;x[1]<=1;++x[1]) {
 		for (x[2]=0;x[2]<=1;++x[2]) {
-			double f = pb.eval(x);
-			double e = 2*E[4*x[0] + 2*x[1] + x[2]];
+			real f = pb.eval(x);
+			real e = 2*E[4*x[0] + 2*x[1] + x[2]];
 			if ( absolute(f-e) > 1e-10 ) {
 				throw runtime_error("f =/= E for order 3");
 			}
@@ -183,9 +181,9 @@ void test_pseudoboolean()
 	// Order-4 //
 	/////////////
 	{
-		Petter::PseudoBoolean pb;
+		Petter::PseudoBoolean<real> pb;
 
-		vector<double> E(16,0);
+		vector<real> E(16,0);
 		for (int i=0;i<16;++i) {
 			E[i] = 1000-rand()%2001;
 		}
@@ -198,8 +196,8 @@ void test_pseudoboolean()
 		for (x[1]=0;x[1]<=1;++x[1]) {
 		for (x[2]=0;x[2]<=1;++x[2]) {
 		for (x[3]=0;x[3]<=1;++x[3]) {
-			double f = pb.eval(x);
-			double e = 2*E[8*x[0] + 4*x[1] + 2*x[2] + x[3]];
+			real f = pb.eval(x);
+			real e = 2*E[8*x[0] + 4*x[1] + 2*x[2] + x[3]];
 			if ( absolute(f-e) > 1e-10 ) {
 				throw runtime_error("f =/= E for order 4");
 			}
@@ -213,13 +211,13 @@ void test_pseudoboolean()
 	// Relaxation //
 	////////////////
 	{
-		Petter::SymmetricPseudoBoolean spbf;
+		Petter::SymmetricPseudoBoolean<real> spbf;
 		spbf.test_clear();
 		spbf.test_clear();
 
-		Petter::PseudoBoolean pb;
+		Petter::PseudoBoolean<real> pb;
 
-		vector<double> E(8,0);
+		vector<real> E(8,0);
 		for (int i=0;i<8;++i) {
 			E[i] = 1000-rand()%2001;
 		}
@@ -246,13 +244,13 @@ void test_pseudoboolean()
 		for (x[1]=0;x[1]<=1;++x[1]) {
 		for (x[2]=0;x[2]<=1;++x[2]) {
 		for (x[3]=0;x[3]<=1;++x[3]) {
-			double f = pb.eval(x);
+			real f = pb.eval(x);
 			vector<label> y(6);
 			y[0] = 1-x[0];
 			y[1] = 1-x[1];
 			y[2] = 1-x[2];
 			y[3] = 1-x[3];
-			double g = spbf.eval(x,y);
+			real g = spbf.eval(x,y);
 			if ( absolute(f-g) > 1e-10 ) {
 				cout << endl;
 				for (int i=0;i<4;++i) {
@@ -269,13 +267,13 @@ void test_pseudoboolean()
 	// Relaxation //
 	////////////////
 	{
-		Petter::SymmetricPseudoBoolean spbf;
+		Petter::SymmetricPseudoBoolean<real> spbf;
 		spbf.test_clear();
 		spbf.test_clear();
 
-		Petter::PseudoBoolean pb;
+		Petter::PseudoBoolean<real> pb;
 
-		vector<double> E(16,0);
+		vector<real> E(16,0);
 		for (int i=0;i<16;++i) {
 			E[i] = 1000-rand()%2001;
 		}
@@ -304,7 +302,7 @@ void test_pseudoboolean()
 		for (x[3]=0;x[3]<=1;++x[3]) {
 		for (x[4]=0;x[4]<=1;++x[4]) {
 		for (x[5]=0;x[5]<=1;++x[5]) {
-			double f = pb.eval(x);
+			real f = pb.eval(x);
 			vector<label> y(6);
 			y[0] = 1-x[0];
 			y[1] = 1-x[1];
@@ -312,7 +310,7 @@ void test_pseudoboolean()
 			y[3] = 1-x[3];
 			y[4] = 1-x[4];
 			y[5] = 1-x[5];
-			double g = spbf.eval(x,y);
+			real g = spbf.eval(x,y);
 			if ( absolute(f-g) > 1e-10 ) {
 				cout << endl;
 				for (int i=0;i<6;++i) {
@@ -329,7 +327,7 @@ void test_pseudoboolean()
 	// Larger //
 	////////////
 	{
-		Petter::PseudoBoolean pb;
+		Petter::PseudoBoolean<real> pb;
 
 		int nTerms = 100;
 		int nVars = 100;
@@ -362,7 +360,7 @@ void test_pseudoboolean()
 				random_value(),random_value(),random_value(),random_value());
 		}
 
-		Petter::SymmetricPseudoBoolean spbf;
+		Petter::SymmetricPseudoBoolean<real> spbf;
 
 		spbf.create_lp(pb);
 
@@ -372,8 +370,8 @@ void test_pseudoboolean()
 				x[i] = rand()%2;
 				y[i] = 1-x[i];
 			}
-			double f = pb.eval(x);
-			double g = spbf.eval(x,y);
+			real f = pb.eval(x);
+			real g = spbf.eval(x,y);
 			if ( absolute(f-g) > 1e-6 ) {
 				cout << "f = " << f << endl;
 				cout << "g = " << g << endl;
@@ -399,7 +397,7 @@ void test_pseudoboolean()
 	// Reduction //
 	///////////////
 	{
-		Petter::PseudoBoolean pb;
+		Petter::PseudoBoolean<real> pb;
 		
 		int nTerms = 100;
 		int nVars = 100;
@@ -450,7 +448,7 @@ void test_pseudoboolean()
 		x[i3]=x3;
 		x[i4]=x4;
 		x[i5]=x5;
-		Petter::PseudoBoolean pb2 = pb;
+		Petter::PseudoBoolean<real> pb2 = pb;
 
 		pb2.reduce(x);
 
@@ -460,7 +458,7 @@ void test_pseudoboolean()
 			for (int i=0;i<nVars;++i) {
 				x[i] = rand()%2;
 			}
-			double f2 = pb2.eval(x);
+			real f2 = pb2.eval(x);
 
 			// Compute the original value
 			x[i1]=x1;
@@ -468,7 +466,7 @@ void test_pseudoboolean()
 			x[i3]=x3;
 			x[i4]=x4;
 			x[i5]=x5;
-			double f1 = pb.eval(x);	
+			real f1 = pb.eval(x);	
 			if ( absolute(f1-f2) > 1e-6 ) {
 				cout << "f1 = " << f1 << endl;
 				cout << "f2 = " << f2 << endl;
@@ -477,7 +475,10 @@ void test_pseudoboolean()
 		}
 	}
 
-	 
 	
 }
+
+// Instantiate
+template void test_pseudoboolean<double>();
+template void test_pseudoboolean<int>();
 

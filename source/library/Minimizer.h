@@ -347,11 +347,11 @@ namespace Petter {
 	}
 
 	template<>
-	inline real Minimizer<double>::submodular_coef(real coef)
+	inline double Minimizer<double>::submodular_coef(double coef)
 	{
 		// Check submodularity
 		ASSERT(coef <= 1e-9);
-		return std::min(real(0),coef);
+		return std::min(double(0),coef);
 	}
 }
 

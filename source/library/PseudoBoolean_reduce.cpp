@@ -10,7 +10,8 @@
 
 namespace Petter
 {
-	void PseudoBoolean::reduce(const vector<label>& x)
+	template<typename real>
+	void PseudoBoolean<real>::reduce(const vector<label>& x)
 	{
 		//
 		// Reduce degree 4 monomials
@@ -256,3 +257,5 @@ namespace Petter
 
 
 } //namespace Petter
+
+#include "pb_instances.inc"

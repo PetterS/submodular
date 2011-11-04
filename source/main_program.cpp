@@ -35,7 +35,7 @@ namespace {
 
 // Function running some quick tests
 // In: submodular_tests.cpp
-void test_pseudoboolean();
+template<typename real> void test_pseudoboolean();
 void test_minimize();
 
 
@@ -67,12 +67,16 @@ int main_program(int num_args, char** args)
 	using namespace std;
 	using namespace Petter;
 
+	// Need doubles for linear programming
+	typedef double real;
+
 	if (num_args == 1) {
 		// Run some tests
 		statusTry("Testing minimization...");
 		test_minimize();
 		statusTry("Testing pseudo-Boolean functions...");
-		test_pseudoboolean();
+		test_pseudoboolean<double>();
+		//test_pseudoboolean<int>(); // Does not have LP and therefore fails
 		statusOK();
 
 		cerr << "Possible choices : " << endl;
@@ -115,13 +119,13 @@ int main_program(int num_args, char** args)
 	int nterms = convert_string<int>(cmd_line["-nterms"]);
 	int griddim = 0;
 
-	Petter::PseudoBoolean pb;
+	Petter::PseudoBoolean<real> pb;
 
 	////////////////////
 	// Read from file //
 	////////////////////
 	if  (cmd_line.find("-file") != cmd_line.end() ) {
-		pb = PseudoBoolean(cmd_line["-file"]);
+		pb = PseudoBoolean<real>(cmd_line["-file"]);
 		n = pb.nvars();
 	}
 	///////////////
@@ -447,10 +451,10 @@ int main_program(int num_args, char** args)
 	int lp_labeled = -1;
 	int heur_labeled = -1;
 
-	Petter::real hocr_bound = 100;
-	Petter::real hocr_itr_bound = 100;
-	Petter::real lp_bound = 100;
-	Petter::real heur_bound = 100;
+	real hocr_bound = 100;
+	real hocr_itr_bound = 100;
+	real lp_bound = 100;
+	real heur_bound = 100;
 
 	double hocr_time = -1;
 	double hocr_itr_time = -1;
@@ -482,12 +486,12 @@ int main_program(int num_args, char** args)
 		int labeled = 0;
 		bool should_continue;
 
-		Petter::PseudoBoolean f_hocrreduced;
+		Petter::PseudoBoolean<real> f_hocrreduced;
 
 		bool run_hocr = true;
 		if (run_hocr) {
 
-			Petter::PseudoBoolean f = pb;
+			Petter::PseudoBoolean<real> f = pb;
 
 			const Petter::Color* COL = &RED;
 
@@ -544,7 +548,7 @@ int main_program(int num_args, char** args)
 		
 		if (cmd_line.find("-lp") != cmd_line.end()) {
 
-			Petter::PseudoBoolean f;
+			Petter::PseudoBoolean<real> f;
 			if (cmd_line.find("-usehocr") != cmd_line.end()) {
 				//Start at the HOCR solution (for speed)
 				f = f_hocrreduced;
@@ -562,7 +566,7 @@ int main_program(int num_args, char** args)
 			do {
 				iters++;
 
-				Petter::SymmetricPseudoBoolean spb;
+				Petter::SymmetricPseudoBoolean<real> spb;
 				start();
 				spb.create_lp(f);
 				double t_create = stop();
@@ -617,7 +621,7 @@ int main_program(int num_args, char** args)
 		
 		if (cmd_line.find("-heuristic") != cmd_line.end()) {
 
-			Petter::PseudoBoolean f = pb;
+			Petter::PseudoBoolean<real> f = pb;
 
 			iters = 0;
 			labeled = 0;
@@ -626,7 +630,7 @@ int main_program(int num_args, char** args)
 			do {
 				iters++;
 
-				Petter::SymmetricPseudoBoolean spb;
+				Petter::SymmetricPseudoBoolean<real> spb;
 				start();
 				spb.create_heuristic(f);
 				double t_create = stop();
