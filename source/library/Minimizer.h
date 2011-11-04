@@ -5,6 +5,9 @@
 // Minimizes a submodular function of degree <= 3. Each term does not have to 
 // be submodular, but the complete function has to be.
 //
+// The code is suited for general purposes, except for resolve_different(), 
+// which is used for minimizing symmetric g(x,y)
+//
 
 #ifndef PETTER_MINIMIZER_H
 #define PETTER_MINIMIZER_H
@@ -14,6 +17,8 @@
 #include <stdexcept>
 #include <algorithm>
 #include <sstream>
+#include <iostream>
+#include <iomanip>
 
 // Vladimir Kolmogorov's maximum flow code
 #include "graph.h"
@@ -49,10 +54,19 @@ namespace Petter {
 	class Minimizer 
 	{
 	public:
-		Minimizer(int nVars) : n(2*nVars), terms0(0), terms1(2*nVars, 0)
+		Minimizer(int nVars_in) : terms1(2*nVars_in, 0)
 		{
-			this->nVars = nVars;
-			terms1.reserve(4*nVars);
+			this->graph  = 0;
+			this->n      = nVars_in;
+			this->nVars  = nVars_in;
+			this->terms0 = 0;
+		}
+
+		~Minimizer() 
+		{
+			if (graph) {
+				delete graph;
+			}
 		}
 
 		void AddUnaryTerm(int i, real E0, real E1)
@@ -81,7 +95,6 @@ namespace Petter {
 		void AddHigherTerm(int nvars_add, int ind[], real E[])
 		{
 			ASSERT(nvars_add==3);
-
 
 			real& E000 = E[0];
 			real& E001 = E[1];
@@ -144,8 +157,11 @@ namespace Petter {
 		{
 			using namespace std;
 
-			Graph<real,real,real> graph(nVars,int(terms2.size()),error_function);
-			graph.add_node(nVars);
+			ASSERT(!graph);
+			graph = new Graph<real,real,real>(nVars,int(terms2.size()),error_function);
+			graph->add_node(nVars);
+
+			double frac = 0.0;
 
 			for (int i=0; i<nVars; ++i) {
 				real c = terms1[i];
@@ -154,12 +170,16 @@ namespace Petter {
 				//}
 				// c*x(i)
 				if (c >= 0) {
-					graph.add_tweights(i, c, 0);
+					graph->add_tweights(i, c, 0);
 				}
 				else {
 					terms0 += c;
-					graph.add_tweights(i, 0,  -c);
+					graph->add_tweights(i, 0,  -c);
 				}
+
+				//real f = abs(c) - int(abs(c) + 0.5);
+				//if (f>0.5) f = 1.0-f;
+				//if (f>frac) frac=f;
 			}
 
 			for (auto itr = terms2.begin(); itr != terms2.end(); ++itr) {
@@ -174,29 +194,110 @@ namespace Petter {
 				coef = min(real(0),coef);
 				// Add to graph
 				terms0 += coef;
-				graph.add_tweights(j, 0,  -coef);
-				graph.add_edge(i,j, -coef, 0);
+				graph->add_tweights(j, 0,  -coef);
+				graph->add_edge(i,j, -coef, 0);
+
+				//real f = coef - int(coef + 0.5);
+				//if (f<0) f=-f;
+				//if (f>0.5) f = 1.0-f;
+				//if (f>frac) frac=f;
 			}
 
 			// Compute maximum flow
-			real energy = graph.maxflow();
+			real energy = graph->maxflow();
 
 			// Extract solution
 			x.resize(n);
 			for (int i=0; i<n; ++i) {
-				x[i] = graph.what_segment(i);
+				x[i] = graph->what_segment(i, Graph<real,real,real>::SOURCE);
 			}
 
+			//std::cout << "Fractional part (graph): " << frac << "\n";
 			//cout << "terms0 : " << terms0 << endl;
 			//cout << "energy : " << energy << endl;
 
 			return terms0 + energy;
 		}
 
+
 		char get_solution(int i)
 		{
 			return x.at(i);
 		}
+
+
+
+		//
+		// Takes a list of pairs (i,j) and tries to find a solution where
+		// x[i] != x[j]. The function is assumed to be symmetric, i.e. 
+		// (1,1) is never a unique optimal solution.
+		//
+		void resolve_different(const std::vector<std::pair<int,int> >& pairs)
+		{
+			ASSERT(graph);
+
+			real infinity = 100; //Does not have to be big
+
+			// Fix the first element of the pair
+			for (auto itr=pairs.begin(); itr != pairs.end(); ++itr) {
+				int i = itr->first;
+				int j = itr->second;
+
+				// Extract solution
+				x.at(i) = graph->what_segment(i, Graph<real,real,real>::SOURCE);
+				x.at(j) = graph->what_segment(j, Graph<real,real,real>::SOURCE);
+
+				ASSERT(x[i]==0 || x[j]==0);
+
+				// If x[i]==0 and y[i]==0, we don't know whether there is another 
+				// solution where the two are different
+				if (x[i]==0 && x[j]==0) {
+
+					// Is there also an optimal solution for which x[i]==1?
+					if (graph->what_segment(i, Graph<real,real,real>::SINK) == 1) {
+						// Then fix x[i] to 1
+						graph->add_tweights(i, 0, infinity);
+						graph->mark_node(i);
+						// Resolve the graph
+						graph->maxflow(true);
+						// Extract solution; different if possible
+						x[i] = graph->what_segment(i, Graph<real,real,real>::SOURCE);
+						x[j] = graph->what_segment(j, Graph<real,real,real>::SOURCE);
+						ASSERT(x[i] == 1)
+
+						if (x[j] == 0) {
+							// We found a solution where x[i]==1 and x[j]==0
+							continue;
+						}
+					}
+
+					// Now fix x[i] to 0
+					graph->add_tweights(i, 2*infinity, 0);
+					graph->mark_node(i);
+					// Resolve the graph
+					graph->maxflow(true);
+					// Does there then exist a solution for which x[j]==1?
+					if (graph->what_segment(j, Graph<real,real,real>::SINK) == 1) {
+						// Then use that solution
+						graph->add_tweights(j, 0, infinity);
+						graph->mark_node(j);
+						// Resolve the graph
+						graph->maxflow(true);
+						x[i] = graph->what_segment(i, Graph<real,real,real>::SOURCE);
+						x[j] = graph->what_segment(j, Graph<real,real,real>::SOURCE);
+						ASSERT(x[i]==0 && x[j]==1);
+						// We found a solution where x[i]==0 and x[j]==1
+						continue;
+					}
+
+					// Otherwise, we only have the solution where x[i]==0 and x[j]==0
+					x[i] = 0;
+					x[j] = 0;
+				}
+			}
+
+		}
+
 
 	protected:
 		int n;
@@ -205,6 +306,7 @@ namespace Petter {
 		std::vector<real> terms1;
 		std::map< std::pair<int,int>, real> terms2;
 		std::vector<char> x;
+		Graph<real,real,real>* graph;
 	};
 
 }
