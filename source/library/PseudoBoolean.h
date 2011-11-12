@@ -111,8 +111,8 @@ namespace Petter
 		real minimize_reduction(vector<label>& x, int& nlabelled) const;
 
 		// Minimize using Fix et al., ICCV 2011
-		real minimize_reduction_iccv11(vector<label>& x) const;
-		real minimize_reduction_iccv11(vector<label>& x, int& nlabelled) const;
+		real minimize_reduction_fixetal(vector<label>& x) const;
+		real minimize_reduction_fixetal(vector<label>& x, int& nlabelled) const;
 		
 		// Minimizing using a symmetric function g(x,y)
 		// NOTE: will change (reduce) *this

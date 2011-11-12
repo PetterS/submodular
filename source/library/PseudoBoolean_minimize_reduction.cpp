@@ -99,18 +99,16 @@ namespace Petter
 	}
 
 
-	//
-	// TODO: These reductions are not performed very efficiently!
-	//
+	
 	template<typename real>
-	real PseudoBoolean<real>::minimize_reduction_iccv11(vector<label>& x) const
+	real PseudoBoolean<real>::minimize_reduction_fixetal(vector<label>& x) const
 	{
 		int nlabelled;
-		return minimize_reduction_iccv11(x,nlabelled);
+		return minimize_reduction_fixetal(x,nlabelled);
 	}
 
 	template<typename real>
-	real PseudoBoolean<real>::minimize_reduction_iccv11(vector<label>& x, int& nlabelled) const
+	real PseudoBoolean<real>::minimize_reduction_fixetal(vector<label>& x, int& nlabelled) const
 	{
 		int n = index( x.size() );
 
@@ -122,75 +120,153 @@ namespace Petter
 		QPBO<real> qpbo(n + aijkl.size() + aijk.size() + 1000, nedges, err_function_qpbo);
 		qpbo.AddNode(n);
 
+
+		//
+		// Step 1: reduce all positive higher-degree terms
+		//
+
 		// Go through the variables one by one and perform the 
 		// reductions of the quartic terms
-		for (int ind=0; ind<n; ++ind) {
+		//
+		// TODO: These reductions are not performed very efficiently!
+		//
 
-			// Collect all terms with positive coefficients
-			// containing variable i
-			real alpha_sum = 0;
+		//for (int ind=0; ind<n; ++ind) {
 
-			// Holds new var
-			int y = -1;
+		//	// Collect all terms with positive coefficients
+		//	// containing variable i
+		//	real alpha_sum = 0;
 
-			for (auto itr=aijkl.begin(); itr != aijkl.end(); ++itr) {
-				int i = get_i(itr->first);
-				int j = get_j(itr->first);
-				int k = get_k(itr->first);
-				int l = get_l(itr->first);
-				real a = itr->second;
+		//	// Holds new var
+		//	int y = -1;
 
-				// We only have to test for ind==i because of the 
-				// order we process the indices
-				if (ind==i && a > 0) {
-					alpha_sum += a;
+		//	for (auto itr=aijkl.begin(); itr != aijkl.end(); ++itr) {
+		//		int i = get_i(itr->first);
+		//		int j = get_j(itr->first);
+		//		int k = get_k(itr->first);
+		//		int l = get_l(itr->first);
+		//		real a = itr->second;
 
-					// Add term of degree 3
-					aijk[ make_triple(j,k,l) ]  += a;
+		//		// We only have to test for ind==i because of the 
+		//		// order we process the indices
+		//		if (ind==i && a > 0) {
+		//			alpha_sum += a;
 
-					// Add negative term of degree 4
-					// -a*y*xj*xk*xl
-					if (y<0) y = qpbo.AddNode();
-					int z = qpbo.AddNode();
-					qpbo.AddUnaryTerm(z, 0, 3*a);
-					qpbo.AddPairwiseTerm(z,y, 0,0,0, -a);
-					qpbo.AddPairwiseTerm(z,j, 0,0,0, -a);
-					qpbo.AddPairwiseTerm(z,k, 0,0,0, -a);
-					qpbo.AddPairwiseTerm(z,l, 0,0,0, -a);
-				}
-			}
+		//			// Add term of degree 3
+		//			aijk[ make_triple(j,k,l) ]  += a;
 
-			for (auto itr=aijk.begin(); itr != aijk.end(); ++itr) {
-				int i = get_i(itr->first);
-				int j = get_j(itr->first);
-				int k = get_k(itr->first);
-				real a = itr->second;
+		//			// Add negative term of degree 4
+		//			// -a*y*xj*xk*xl
+		//			if (y<0) y = qpbo.AddNode();
+		//			int z = qpbo.AddNode();
+		//			qpbo.AddUnaryTerm(z, 0, 3*a);
+		//			qpbo.AddPairwiseTerm(z,y, 0,0,0, -a);
+		//			qpbo.AddPairwiseTerm(z,j, 0,0,0, -a);
+		//			qpbo.AddPairwiseTerm(z,k, 0,0,0, -a);
+		//			qpbo.AddPairwiseTerm(z,l, 0,0,0, -a);
+		//		}
+		//	}
 
-				// We only have to test for ind==i because of the 
-				// order we process the indices
-				if (ind==i && a > 0) {
-					alpha_sum += a;
+		//	for (auto itr=aijk.begin(); itr != aijk.end(); ++itr) {
+		//		int i = get_i(itr->first);
+		//		int j = get_j(itr->first);
+		//		int k = get_k(itr->first);
+		//		real a = itr->second;
 
-					// Add term of degree 2
-					qpbo.AddPairwiseTerm(j,k, 0,0,0, a);
+		//		// We only have to test for ind==i because of the 
+		//		// order we process the indices
+		//		if (ind==i && a > 0) {
+		//			alpha_sum += a;
 
-					// Add negative term of degree 3
-					// -a*y*xj*xk
-					if (y<0) y = qpbo.AddNode();
-					int z = qpbo.AddNode();
-					qpbo.AddUnaryTerm(z, 0, 2*a);
-					qpbo.AddPairwiseTerm(z,y, 0,0,0, -a);
-					qpbo.AddPairwiseTerm(z,j, 0,0,0, -a);
-					qpbo.AddPairwiseTerm(z,k, 0,0,0, -a);
-				}
-			}
+		//			// Add term of degree 2
+		//			qpbo.AddPairwiseTerm(j,k, 0,0,0, a);
 
-			if (alpha_sum > 0) {
-				// Add the new quadratic term
-				qpbo.AddPairwiseTerm(y,ind, 0,0,0, alpha_sum);
+		//			// Add negative term of degree 3
+		//			// -a*y*xj*xk
+		//			if (y<0) y = qpbo.AddNode();
+		//			int z = qpbo.AddNode();
+		//			qpbo.AddUnaryTerm(z, 0, 2*a);
+		//			qpbo.AddPairwiseTerm(z,y, 0,0,0, -a);
+		//			qpbo.AddPairwiseTerm(z,j, 0,0,0, -a);
+		//			qpbo.AddPairwiseTerm(z,k, 0,0,0, -a);
+		//		}
+		//	}
+
+		//	if (alpha_sum > 0) {
+		//		// Add the new quadratic term
+		//		qpbo.AddPairwiseTerm(y,ind, 0,0,0, alpha_sum);
+		//	}
+		//}
+
+		//
+		// This code should be equivalent to the commented
+		// block above, but faster
+		//
+
+		vector<real> alpha_sum(n, 0);
+		vector<int>  y(n, -1);
+
+		for (auto itr=aijkl.begin(); itr != aijkl.end(); ++itr) {
+			int i = get_i(itr->first);
+			int j = get_j(itr->first);
+			int k = get_k(itr->first);
+			int l = get_l(itr->first);
+			real a = itr->second;
+
+			if (a > 0) {
+				alpha_sum[i] += a;
+
+				// Add term of degree 3
+				aijk[ make_triple(j,k,l) ]  += a;
+
+				// Add negative term of degree 4
+				// -a*y*xj*xk*xl
+				if (y[i]<0) y[i] = qpbo.AddNode();
+				int z = qpbo.AddNode();
+				qpbo.AddUnaryTerm(z, 0, 3*a);
+				qpbo.AddPairwiseTerm(z,y[i], 0,0,0, -a);
+				qpbo.AddPairwiseTerm(z,j, 0,0,0, -a);
+				qpbo.AddPairwiseTerm(z,k, 0,0,0, -a);
+				qpbo.AddPairwiseTerm(z,l, 0,0,0, -a);
 			}
 		}
 
+		for (auto itr=aijk.begin(); itr != aijk.end(); ++itr) {
+			int i = get_i(itr->first);
+			int j = get_j(itr->first);
+			int k = get_k(itr->first);
+			real a = itr->second;
+
+			// We only have to test for ind==i because of the 
+			// order we process the indices
+			if (a > 0) {
+				alpha_sum[i] += a;
+
+				// Add term of degree 2
+				qpbo.AddPairwiseTerm(j,k, 0,0,0, a);
+
+				// Add negative term of degree 3
+				// -a*y*xj*xk
+				if (y[i]<0) y[i] = qpbo.AddNode();
+				int z = qpbo.AddNode();
+				qpbo.AddUnaryTerm(z, 0, 2*a);
+				qpbo.AddPairwiseTerm(z,y[i], 0,0,0, -a);
+				qpbo.AddPairwiseTerm(z,j, 0,0,0, -a);
+				qpbo.AddPairwiseTerm(z,k, 0,0,0, -a);
+			}
+		}
+
+		for (int i=0;i<n;++i) {
+			if (alpha_sum[i] > 0) {
+				// Add the new quadratic term
+				qpbo.AddPairwiseTerm(y[i],i, 0,0,0, alpha_sum[i]);
+			}
+		}
+
+
+		//
+		// Done with reducing all positive higher-degree terms
+		//
 
 		// Add all negative quartic terms
 		for (auto itr=aijkl.begin(); itr != aijkl.end(); ++itr) {
@@ -202,11 +278,11 @@ namespace Petter
 				int l = get_l(itr->first);
 
 				int z = qpbo.AddNode();
-				qpbo.AddUnaryTerm(z, 0, 3*a);
-				qpbo.AddPairwiseTerm(z,i, 0,0,0, -a);
-				qpbo.AddPairwiseTerm(z,j, 0,0,0, -a);
-				qpbo.AddPairwiseTerm(z,k, 0,0,0, -a);
-				qpbo.AddPairwiseTerm(z,l, 0,0,0, -a);
+				qpbo.AddUnaryTerm(z, 0, -3*a);
+				qpbo.AddPairwiseTerm(z,i, 0,0,0, a);
+				qpbo.AddPairwiseTerm(z,j, 0,0,0, a);
+				qpbo.AddPairwiseTerm(z,k, 0,0,0, a);
+				qpbo.AddPairwiseTerm(z,l, 0,0,0, a);
 			}
 		}
 

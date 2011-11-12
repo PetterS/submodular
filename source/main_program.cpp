@@ -85,7 +85,7 @@ int main_program(int num_args, char** args)
 		cerr << "  " << args[0] << " -file <str>                      : read polynomial from file" << endl;
 		cerr << "  " << args[0] << " -sat <str>                       : read SAT problem from file" << endl;
 		cerr << endl;
-		cerr << "    -iccv11                          : use reductions from Fix et al." << endl;
+		cerr << "    -fixetal                         : use reductions from Fix et al." << endl;
 		cerr << "    -lp                              : use linear programming" << endl;
 		cerr << "    -heuristic                       : use heuristics" << endl;
 		cerr << endl;
@@ -458,22 +458,22 @@ int main_program(int num_args, char** args)
 
 	int hocr_labeled = -1;
 	int hocr_itr_labeled = -1;
-	int iccv11_labeled = -1;
-	int iccv11_itr_labeled = -1;
+	int fixetal_labeled = -1;
+	int fixetal_itr_labeled = -1;
 	int lp_labeled = -1;
 	int heur_labeled = -1;
 
 	real hocr_bound = 100;
 	real hocr_itr_bound = 100;
-	real iccv11_bound = 100;
-	real iccv11_itr_bound = 100;
+	real fixetal_bound = 100;
+	real fixetal_itr_bound = 100;
 	real lp_bound = 100;
 	real heur_bound = 100;
 
 	double hocr_time = -1;
 	double hocr_itr_time = -1;
-	double iccv11_time = -1;
-	double iccv11_itr_time = -1;
+	double fixetal_time = -1;
+	double fixetal_itr_time = -1;
 	double lp_time = -1;
 	double heur_time = -1;
 
@@ -481,7 +481,7 @@ int main_program(int num_args, char** args)
 	if (iterate_reduction_methods) {
 		cout << RED << "RED" << NORMAL << " is iterated HOCR" << endl;
 	}
-	if (cmd_line.find("-iccv11") != cmd_line.end()) {
+	if (cmd_line.find("-fixetal") != cmd_line.end()) {
 		cout << DKBLUE << "DKBLUE" << NORMAL << " is Fix et al. from ICCV 2011" << endl;
 		if (iterate_reduction_methods) {
 			cout << BLUE << "BLUE" << NORMAL << " is Fix et al. iterated" << endl;
@@ -571,7 +571,7 @@ int main_program(int num_args, char** args)
 		}
 
 
-		if (cmd_line.find("-iccv11") != cmd_line.end()) {
+		if (cmd_line.find("-fixetal") != cmd_line.end()) {
 
 			int iters = 0;
 			double bound = 0;
@@ -586,7 +586,7 @@ int main_program(int num_args, char** args)
 
 				int new_labeled = 0;
 				start();
-				bound = f.minimize_reduction_iccv11(x,new_labeled);
+				bound = f.minimize_reduction_fixetal(x,new_labeled);
 				double t_minimize = stop();
 
 				should_continue = new_labeled > labeled;
@@ -601,15 +601,15 @@ int main_program(int num_args, char** args)
 				double t_reduce = stop();
 
 				if (iters == 1) {
-					iccv11_bound = bound;
-					iccv11_labeled = new_labeled;
-					iccv11_time = t_minimize;
-					iccv11_itr_time = t_minimize + t_reduce;
+					fixetal_bound = bound;
+					fixetal_labeled = new_labeled;
+					fixetal_time = t_minimize;
+					fixetal_itr_time = t_minimize + t_reduce;
 					COL = &DKBLUE;
 				}
 				else {
 					COL = &BLUE;
-					iccv11_itr_time += t_minimize + t_reduce;
+					fixetal_itr_time += t_minimize + t_reduce;
 				}
 
 				cout << "labeled : " << *COL << labeled << NORMAL << endl;
@@ -625,8 +625,8 @@ int main_program(int num_args, char** args)
 				cout << endl;
 			}
 
-			iccv11_itr_bound = bound;
-			iccv11_itr_labeled = labeled;
+			fixetal_itr_bound = bound;
+			fixetal_itr_labeled = labeled;
 
 			f_hocrreduced = f;
 		}
@@ -815,12 +815,12 @@ int main_program(int num_args, char** args)
 		<< hocr_itr_time    << '\t' // 12
 		<< lp_time          << '\t' // 13
 		<< heur_time        << '\t' // 14
-		<< iccv11_labeled   << '\t' // 15
-	  << iccv11_itr_labeled << '\t' // 16
-		<< iccv11_bound     << '\t' // 17
-		<< iccv11_itr_bound << '\t' // 18
-		<< iccv11_time      << '\t' // 19
-		<< iccv11_itr_time  << endl;// 20
+		<< fixetal_labeled  << '\t' // 15
+	 << fixetal_itr_labeled << '\t' // 16
+		<< fixetal_bound    << '\t' // 17
+		<< fixetal_itr_bound<< '\t' // 18
+		<< fixetal_time     << '\t' // 19
+		<< fixetal_itr_time << endl;// 20
 
 	//cin.get();
 

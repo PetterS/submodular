@@ -30,12 +30,14 @@ function plot_batchrun_new(filename)
     clf;
     hold on
     
-    plot_hist(hocr,      edges,[1 0 0]);
-    plot_hist(fixetal,   edges,[0 1 0]);
-    plot_hist(heuristic, edges,[0 0 1]);
-    plot_hist(optimal,   edges,[0 0 0]);
+    h1 = plot_hist(hocr,      edges,[1 0 0]);
+    h2 = plot_hist(fixetal,   edges,[0 1 0]);
+    h3 = plot_hist(heuristic, edges,[0 0 1]);
+    h4 = plot_hist(optimal,   edges,[0 0 0]);
     
-    legend({'HOCR','Fix et al.','Heuristic','Optimal'});
+    xlim([0,data(1,1)]);
+    
+    legend([h1 h2 h3 h4], {'HOCR','Fix et al.','Heuristic','Optimal'});
     xlabel('Number of persistencies');
     ylabel('Frequency');
    
@@ -49,7 +51,9 @@ function print_bound(opt, bnd)
     fprintf('min/med/max : %f  %f  %f\n',minrelbound,medianrelbound,maxrelbound);
 end
 
-function plot_hist(lab,edges,color)
+function h = plot_hist(lab,edges,color)
     N1 = histc(lab,edges);
-    stairs(edges,N1,'LineWidth',3,'Color',color);
+    h = bar(edges,N1,'histc');
+    set(h,'FaceColor','none');
+    h = stairs(edges,N1,'LineWidth',3,'Color',color);
 end

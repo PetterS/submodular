@@ -1,7 +1,11 @@
+%
+% Plots the histograms as they appear in the previously
+% published articles
+% 
 function plot_batchrun(filename)
     data = load(filename);
     disp(filename)
-    figure
+    clf
 
 	fprintf('Number of experiments: %d\n',size(data,1));
 	
