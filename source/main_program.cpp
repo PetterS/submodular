@@ -33,7 +33,7 @@ namespace {
 	mt19937 engine(unsigned(time(0)&0xffffffff));
 }
 
-// Function running some quick tests
+// Functions running some quick tests
 // In: submodular_tests.cpp
 template<typename real> void test_pseudoboolean();
 void test_minimize();
@@ -85,8 +85,11 @@ int main_program(int num_args, char** args)
 		cerr << "  " << args[0] << " -file <str>                      : read polynomial from file" << endl;
 		cerr << "  " << args[0] << " -sat <str>                       : read SAT problem from file" << endl;
 		cerr << endl;
+		cerr << "    -iccv11                          : use reductions from Fix et al." << endl;
 		cerr << "    -lp                              : use linear programming" << endl;
 		cerr << "    -heuristic                       : use heuristics" << endl;
+		cerr << endl;
+		cerr << "    -iterate                         : also iterate reduction methods" << endl;
 		cerr << endl;
 		cerr << "    -verbose                         : print polynomials" << endl;
 		cerr << endl;
@@ -433,6 +436,8 @@ int main_program(int num_args, char** args)
 		cout << "Number of used variables : " << used.size() << endl;
 	}
 
+	pb.add_monomial(0,1,2, +52);
+
 	cout << "Polynomial : " << pb << endl;
 	cout << WHITE;
 	cout << "n = " << n << endl;
@@ -446,23 +451,42 @@ int main_program(int num_args, char** args)
 	// Solve using different methods //
 	///////////////////////////////////
 
+	bool iterate_reduction_methods = false;
+	if (cmd_line.find("-iterate") != cmd_line.end()) {
+		iterate_reduction_methods = true;
+	}
+
 	int hocr_labeled = -1;
 	int hocr_itr_labeled = -1;
+	int iccv11_labeled = -1;
+	int iccv11_itr_labeled = -1;
 	int lp_labeled = -1;
 	int heur_labeled = -1;
 
 	real hocr_bound = 100;
 	real hocr_itr_bound = 100;
+	real iccv11_bound = 100;
+	real iccv11_itr_bound = 100;
 	real lp_bound = 100;
 	real heur_bound = 100;
 
 	double hocr_time = -1;
 	double hocr_itr_time = -1;
+	double iccv11_time = -1;
+	double iccv11_itr_time = -1;
 	double lp_time = -1;
 	double heur_time = -1;
 
 	cout << DKRED << "DKRED" << NORMAL << " is HOCR" << endl;
-	cout << RED << "RED" << NORMAL << " is iterated HOCR" << endl;
+	if (iterate_reduction_methods) {
+		cout << RED << "RED" << NORMAL << " is iterated HOCR" << endl;
+	}
+	if (cmd_line.find("-iccv11") != cmd_line.end()) {
+		cout << DKBLUE << "DKBLUE" << NORMAL << " is Fix et al. from ICCV 2011" << endl;
+		if (iterate_reduction_methods) {
+			cout << BLUE << "BLUE" << NORMAL << " is Fix et al. iterated" << endl;
+		}
+	}
 	if (cmd_line.find("-lp") != cmd_line.end()) {
 		cout << GREEN << "GREEN" << NORMAL << " is LP optimal relaxation" << endl;
 	}
@@ -481,16 +505,17 @@ int main_program(int num_args, char** args)
 
 		vector<label> x(n,0),x1(n,0),x2(n,0);
 
-		int iters = 0;
-		double bound = 0;
-		int labeled = 0;
-		bool should_continue;
+		
 
 		Petter::PseudoBoolean<real> f_hocrreduced;
 
 		bool run_hocr = true;
 		if (run_hocr) {
 
+			int iters = 0;
+			double bound = 0;
+			int labeled = 0;
+			bool should_continue;
 			Petter::PseudoBoolean<real> f = pb;
 
 			const Petter::Color* COL = &RED;
@@ -505,7 +530,7 @@ int main_program(int num_args, char** args)
 
 				should_continue = new_labeled > labeled;
 				labeled = new_labeled;
-				if (labeled == n) {
+				if (labeled == n || !iterate_reduction_methods) {
 					//Nothing more to do
 					should_continue = false;
 				}
@@ -545,10 +570,76 @@ int main_program(int num_args, char** args)
 			f_hocrreduced = f;
 		}
 
+
+		if (cmd_line.find("-iccv11") != cmd_line.end()) {
+
+			int iters = 0;
+			double bound = 0;
+			int labeled = 0;
+			bool should_continue;
+			Petter::PseudoBoolean<real> f = pb;
+
+			const Petter::Color* COL = &BLUE;
+
+			do {
+				iters++;
+
+				int new_labeled = 0;
+				start();
+				bound = f.minimize_reduction_iccv11(x,new_labeled);
+				double t_minimize = stop();
+
+				should_continue = new_labeled > labeled;
+				labeled = new_labeled;
+				if (labeled == n || !iterate_reduction_methods) {
+					//Nothing more to do
+					should_continue = false;
+				}
+
+				start();
+				f.reduce(x);
+				double t_reduce = stop();
+
+				if (iters == 1) {
+					iccv11_bound = bound;
+					iccv11_labeled = new_labeled;
+					iccv11_time = t_minimize;
+					iccv11_itr_time = t_minimize + t_reduce;
+					COL = &DKBLUE;
+				}
+				else {
+					COL = &BLUE;
+					iccv11_itr_time += t_minimize + t_reduce;
+				}
+
+				cout << "labeled : " << *COL << labeled << NORMAL << endl;
+				cout << "f_bound : " << *COL << bound << NORMAL << endl;
+				cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
+				cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;
+				cout << endl;
+
+			} while (should_continue);
+
+			if (labeled == n) {
+				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
+				cout << endl;
+			}
+
+			iccv11_itr_bound = bound;
+			iccv11_itr_labeled = labeled;
+
+			f_hocrreduced = f;
+		}
+
 		
 		if (cmd_line.find("-lp") != cmd_line.end()) {
 
+			int iters = 0;
+			double bound = 0;
+			int labeled = 0;
+			bool should_continue;
 			Petter::PseudoBoolean<real> f;
+
 			if (cmd_line.find("-usehocr") != cmd_line.end()) {
 				//Start at the HOCR solution (for speed)
 				f = f_hocrreduced;
@@ -558,9 +649,6 @@ int main_program(int num_args, char** args)
 				//Default
 				f = pb;
 			}
-
-			iters = 0;
-			labeled = 0;
 
 			lp_time = 0;
 			do {
@@ -626,10 +714,12 @@ int main_program(int num_args, char** args)
 			//
 			typedef int heurreal;
 
+			int iters = 0;
+			double bound = 0;
+			int labeled = 0;
+			bool should_continue;
 			Petter::PseudoBoolean<real> f = pb;
 
-			iters = 0;
-			labeled = 0;
 			heur_time = 0;
 
 			do {
@@ -724,7 +814,13 @@ int main_program(int num_args, char** args)
 		<< hocr_time        << '\t' // 11
 		<< hocr_itr_time    << '\t' // 12
 		<< lp_time          << '\t' // 13
-		<< heur_time        << endl;// 14
+		<< heur_time        << '\t' // 14
+		<< iccv11_labeled   << '\t' // 15
+	  << iccv11_itr_labeled << '\t' // 16
+		<< iccv11_bound     << '\t' // 17
+		<< iccv11_itr_bound << '\t' // 18
+		<< iccv11_time      << '\t' // 19
+		<< iccv11_itr_time  << endl;// 20
 
 	//cin.get();
 

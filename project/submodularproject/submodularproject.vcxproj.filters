@@ -9,6 +9,7 @@
     <ClCompile Include="..\..\source\main_program.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_complete.cpp" />
+    <ClCompile Include="..\..\source\library\PseudoBoolean_minimize_reduction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\library\PseudoBoolean.h" />

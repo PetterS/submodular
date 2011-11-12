@@ -1,5 +1,6 @@
 //
-//
+// Petter Strandmark 2011
+// petter@maths.lth.se
 //
 // class PseudoBoolean : represents a pseudo-boolean polynomial of degree <= 4
 // 
@@ -7,6 +8,10 @@
 //                                with special features, such as keeping a linear index for all
 //                                coefficients (for LP solving).
 // 
+// The template argument to the classes specifies the underlying type. The double type is prone to
+// rounding errors, although there is code to prevent that. But floating-point number is required
+// to use linear programming. If only heuristics is required, int can be used instead.
+//
 //
 #ifndef PETTER_PSEUDOBOOLEAN_H
 #define PETTER_PSEUDOBOOLEAN_H
@@ -45,7 +50,6 @@ namespace Petter
 	// otherwise, the following typedefs would have been nice:
 	//typedef std::tuple<int,int,int> triple;
 	//typedef std::tuple<int,int,int,int> quad;
-	
 
 	pair make_pair(int i, int j);
 	triple make_triple(int i, int j, int k);
@@ -102,10 +106,14 @@ namespace Petter
 		// Reduce the function given a partial labeling
 		void reduce(const vector<label>& x);
 
-		// Minimize using higher-order clique reduction
+		// Minimize using higher-order clique reduction (HOCR, Ishikawa 2011)
 		real minimize_reduction(vector<label>& x) const;
 		real minimize_reduction(vector<label>& x, int& nlabelled) const;
 
+		// Minimize using Fix et al., ICCV 2011
+		real minimize_reduction_iccv11(vector<label>& x) const;
+		real minimize_reduction_iccv11(vector<label>& x, int& nlabelled) const;
+		
 		// Minimizing using a symmetric function g(x,y)
 		// NOTE: will change (reduce) *this
 		real minimize(vector<label>& x, int& labeled, bool heuristic = false);

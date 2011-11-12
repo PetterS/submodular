@@ -69,94 +69,11 @@ namespace Petter
 	}
 #endif
 
-	// This is the error function used by the QPBO and Graph classes
+	// This is the error function used by the graph class
 	void err_function(char* msg)
 	{
 		throw std::runtime_error(msg);
 	}
-
-	template<typename real>
-	real PseudoBoolean<real>::minimize_reduction(vector<label>& x) const
-	{
-		int nlabelled;
-		return minimize_reduction(x,nlabelled);
-	}
-
-	template<typename real>
-	real PseudoBoolean<real>::minimize_reduction(vector<label>& x, int& nlabelled) const
-	{
-		index nVars = index( x.size() );
-		// Here it is important that all indices appear as pairs 
-		// in aij or ai
-		ASSERT_STR( nvars() <= nVars , "x too small");
-
-		PBF<real, 4> hocr;
-
-		for (auto itr=ai.begin(); itr != ai.end(); ++itr) {
-			int i = itr->first;
-			real a = itr->second;
-			hocr.AddUnaryTerm(i, 0, a);
-		}
-
-		for (auto itr=aij.begin(); itr != aij.end(); ++itr) {
-			int i = get_i(itr->first);
-			int j = get_j(itr->first);
-			real a = itr->second;
-			hocr.AddPairwiseTerm(i,j, 0,0,0, a);
-		}
-
-		for (auto itr=aijk.begin(); itr != aijk.end(); ++itr) {
-			int i = get_i(itr->first);
-			int j = get_j(itr->first);
-			int k = get_k(itr->first);
-			real a = itr->second;
-			int ind[] = {i,j,k};
-			real E[8] = {0,0,0,0, 0,0,0,0};
-			E[7] = a;
-			hocr.AddHigherTerm(3, ind, E);
-		}
-
-		for (auto itr=aijkl.begin(); itr != aijkl.end(); ++itr) {
-			int i = get_i(itr->first);
-			int j = get_j(itr->first);
-			int k = get_k(itr->first);
-			int l = get_l(itr->first);
-			real a = itr->second;
-			int ind[] = {i,j,k,l};
-			real   E[16] = {0,0,0,0, 0,0,0,0,
-			                0,0,0,0, 0,0,0,0};
-			E[15] = a;
-			hocr.AddHigherTerm(4, ind, E);
-		}
-
-		#ifdef USE_HOCR
-			//Make sure all vars are used TODO
-			hocr.AddUnaryTerm(nVars-1,1e-100,0);
-		#endif
-
-
-		PBF<real,2> qpbf;
-		hocr.toQuadratic(qpbf); 
-		hocr.clear(); 
-		QPBO<real> qpbo(nVars, qpbf.size(), err_function); 
-		convert(qpbo, qpbf);
-		qpbo.MergeParallelEdges();
-		qpbo.Solve();
-		qpbo.ComputeWeakPersistencies();
-
-		nlabelled = 0;
-		for (int i=0; i<nVars; ++i) {
-			x[i] = qpbo.GetLabel(i);
-			if (x[i] >= 0) {
-				nlabelled++;
-			}
-		}
-
-		real energy = constant + qpbo.ComputeTwiceLowerBound()/2;
-		//double energy = eval(x); //Only when x is fully labelled
-		return energy;
-	}
-
 
 #ifdef USE_HOCR
 	//typedef PBF<opttype,3> OPTIMIZER;
