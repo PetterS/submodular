@@ -436,8 +436,6 @@ int main_program(int num_args, char** args)
 		cout << "Number of used variables : " << used.size() << endl;
 	}
 
-	pb.add_monomial(0,1,2, +52);
-
 	cout << "Polynomial : " << pb << endl;
 	cout << WHITE;
 	cout << "n = " << n << endl;

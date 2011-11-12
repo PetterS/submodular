@@ -150,13 +150,6 @@ namespace Petter
 	}
 
 	template<typename real>
-	std::ostream& operator<<(std::ostream& out, const PseudoBoolean<real>& pbf)
-	{
-		pbf.print_helper(out);
-		return out;
-	}
-
-	template<typename real>
 	void PseudoBoolean<real>::print_helper(std::ostream& out) const
 	{
 		const PseudoBoolean<real>& pbf = *this;
@@ -276,13 +269,6 @@ namespace Petter
 			c++;
 		}
 
-	}
-
-	template<typename real>
-	std::ostream& operator<<(std::ostream& out, SymmetricPseudoBoolean<real>& pbf)
-	{
-		pbf.print_helper(out);
-		return out;
 	}
 
 	template<typename real>
@@ -971,12 +957,5 @@ namespace Petter
 	}
 }
 
-
-//TODO: change this into nicer code
-#define INSTANTIATE_OSTREAM(c) \
-	template std::ostream& Petter::operator<< <c>(std::ostream& out, const Petter::PseudoBoolean<c>& pbf); \
-	template std::ostream& Petter::operator<< <c>(std::ostream& out, Petter::SymmetricPseudoBoolean<c>& pbf);
-INSTANTIATE_OSTREAM(double);
-INSTANTIATE_OSTREAM(int);
 
 #include "pb_instances.inc"

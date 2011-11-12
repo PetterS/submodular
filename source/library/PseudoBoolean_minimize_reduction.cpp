@@ -127,9 +127,6 @@ namespace Petter
 
 		// Go through the variables one by one and perform the 
 		// reductions of the quartic terms
-		//
-		// TODO: These reductions are not performed very efficiently!
-		//
 
 		//for (int ind=0; ind<n; ++ind) {
 

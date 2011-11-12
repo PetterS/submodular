@@ -130,7 +130,11 @@ namespace Petter
 	};
 
 	template<typename real>
-	std::ostream& operator<<(std::ostream& out, const PseudoBoolean<real>& pbf);
+	std::ostream& operator<<(std::ostream& out, const PseudoBoolean<real>& pbf)
+	{
+		pbf.print_helper(out);
+		return out;
+	}
 
 	template<typename real>
 	class SymmetricPseudoBoolean
@@ -218,7 +222,11 @@ namespace Petter
 	};
 
 	template<typename real>
-	std::ostream& operator<<(std::ostream& out, SymmetricPseudoBoolean<real>& pbf);
+	std::ostream& operator<<(std::ostream& out, SymmetricPseudoBoolean<real>& pbf)
+	{
+		pbf.print_helper(out);
+		return out;
+	}
 
 }
 

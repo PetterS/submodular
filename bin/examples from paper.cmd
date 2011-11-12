@@ -1,4 +1,4 @@
-submodular -file ../tests/cubic_paper.txt -lp
+submodular -file ../tests/cubic_paper.txt -fixetal -lp
 pause
-submodular -file ../tests/quartic_paper.txt -lp
+submodular -file ../tests/quartic_paper.txt -fixetal -lp
 pause
