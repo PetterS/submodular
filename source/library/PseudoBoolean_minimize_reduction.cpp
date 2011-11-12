@@ -99,7 +99,9 @@ namespace Petter
 	}
 
 
-
+	//
+	// TODO: These reductions are not performed very efficiently!
+	//
 	template<typename real>
 	real PseudoBoolean<real>::minimize_reduction_iccv11(vector<label>& x) const
 	{
