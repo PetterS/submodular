@@ -114,6 +114,9 @@ namespace Petter
 
 		// Work with a copy of the coefficients
 		map<triple, real> aijk  = this->aijk;
+		map<pair, real> aij  = this->aij;
+		map<int, real> ai  = this->ai;
+		real constant = this->constant;
 
 		// The quadratic function we are reducing to
 		int nedges = aij.size() + aijk.size() + aijkl.size() + 1000;
@@ -240,18 +243,66 @@ namespace Petter
 				alpha_sum[i] += a;
 
 				// Add term of degree 2
-				qpbo.AddPairwiseTerm(j,k, 0,0,0, a);
+				//qpbo.AddPairwiseTerm(j,k, 0,0,0, a);
+				aij[ make_pair(j,k) ] += a;
 
 				// Add negative term of degree 3
 				// -a*y*xj*xk
 				if (y[i]<0) y[i] = qpbo.AddNode();
-				int z = qpbo.AddNode();
+				/*int z = qpbo.AddNode();
 				qpbo.AddUnaryTerm(z, 0, 2*a);
 				qpbo.AddPairwiseTerm(z,y[i], 0,0,0, -a);
 				qpbo.AddPairwiseTerm(z,j, 0,0,0, -a);
-				qpbo.AddPairwiseTerm(z,k, 0,0,0, -a);
+				qpbo.AddPairwiseTerm(z,k, 0,0,0, -a);*/
+				aijk[ make_triple(y[i],j,k) ] += -a;
 			}
 		}
+
+		for (auto itr=aij.begin(); itr != aij.end(); ++itr) {
+			int i = get_i(itr->first);
+			int j = get_j(itr->first);
+			real& a = itr->second;
+
+			// We only have to test for ind==i because of the 
+			// order we process the indices
+			if (a > 0) {
+				alpha_sum[i] += a;
+
+				// Add term of degree 1
+				ai[ j ] += a;
+
+				// Add negative term of degree 2
+				// -a*y*xj
+				if (y[i]<0) y[i] = qpbo.AddNode();
+				aij[ make_pair(y[i],j) ] += -a;
+
+				// Now remove this term
+				a = 0;
+			}
+		}
+
+		for (auto itr=ai.begin(); itr != ai.end(); ++itr) {
+			int i =itr->first;
+			real& a = itr->second;
+
+			// We only have to test for ind==i because of the 
+			// order we process the indices
+			if (a > 0) {
+				alpha_sum[i] += a;
+
+				// Add term of degree 0
+				constant += a;
+
+				// Add negative term of degree 1
+				// -a*y*xj
+				if (y[i]<0) y[i] = qpbo.AddNode();
+				ai[ y[i] ] += -a;
+
+				// Now remove this term
+				a = 0;
+			}
+		}
+
 
 		for (int i=0;i<n;++i) {
 			if (alpha_sum[i] > 0) {
