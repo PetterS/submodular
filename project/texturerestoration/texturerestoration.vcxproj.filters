@@ -32,6 +32,9 @@
     <ClCompile Include="..\..\source\image_denoising.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\library\PseudoBoolean_minimize_reduction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\library\PseudoBoolean.h">

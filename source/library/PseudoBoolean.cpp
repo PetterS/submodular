@@ -383,7 +383,7 @@ namespace Petter
 	quad make_quad(int i, int j, int k, int l)
 	{
 		//
-		// We only want quads where i<j<k, so we
+		// We only want quads where i<j<k<l, so we
 		// permute accordingly
 		//
 		if (j<i) {
@@ -465,13 +465,13 @@ namespace Petter
 	template<typename real>
 	void PseudoBoolean<real>::add_monomial(int i, int j, real a)
 	{
-		ASSERT(0<=i && i<j);
+		ASSERT(0<=i && 0<=j);
 		aij[ make_pair(i,j) ] += a;
 	}
 	template<typename real>
 	void PseudoBoolean<real>::add_monomial(int i, int j, int k, real a)
 	{
-		ASSERT(0<=i && i<j && j<k);
+		ASSERT(0<=i && 0<=j && 0<=k);
 		aijk[ make_triple(i,j,k) ] += a;
 		//It is important to also add the lower order monomials
 		add_monomial(i,j, 0);
@@ -481,7 +481,7 @@ namespace Petter
 	template<typename real>
 	void PseudoBoolean<real>::add_monomial(int i, int j, int k, int l, real a)
 	{
-		ASSERT(0<=i && i<j && j<k && k<l);
+		ASSERT(0<=i && 0<=<j && 0<=<k && 0<=<l);
 		aijkl[ make_quad(i,j,k,l) ] += a;
 		//It is important to also add the lower order monomials
 		add_monomial(i,j,k, 0);
@@ -508,7 +508,7 @@ namespace Petter
 	template<typename real>
 	void PseudoBoolean<real>::add_clique(int i, int j, real E00, real E01, real E10, real E11)
 	{
-		ASSERT(0<=i && i<j);
+		ASSERT(0<=i && 0<=j);
 
 		this->constant += E00;
 		real ai = E10 - E00;
@@ -532,8 +532,7 @@ namespace Petter
 	void PseudoBoolean<real>::add_clique(int i, int j, int k, real E000, real E001, real E010, real E011,
 	                                                          real E100, real E101, real E110, real E111)
 	{
-		//ASSERT(0<=i && i<j && j<k);
-		ASSERT(0<=i);
+		ASSERT(0<=i && 0<=<j && 0<=<k);
 
 		this->constant += E000;
 
@@ -573,7 +572,7 @@ namespace Petter
 	                                                                 real E1000, real E1001, real E1010, real E1011,
 	                                                                 real E1100, real E1101, real E1110, real E1111)
 	{
-		//ASSERT(0<=i && i<j && j<k && k<l);
+		ASSERT(0<=i && 0<=<j && 0<=<k && 0<=<l);
 		ASSERT(0<=i);
 
 		this->constant += E0000;

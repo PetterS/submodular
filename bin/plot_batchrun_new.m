@@ -1,4 +1,8 @@
-function plot_batchrun_new(filename)
+function plot_batchrun_new(filename,nedges)
+    if nargin<2
+        nedges=20;
+    end
+
     data = load(filename);
     disp(filename)
     
@@ -25,15 +29,16 @@ function plot_batchrun_new(filename)
     print_bound(optimalbound, heuristicbound);
     
     
-    edges = linspace(0,data(1,1),20);
+    edges = linspace(0,data(1,1),nedges);
 
     clf;
     hold on
     
-    h1 = plot_hist(hocr,      edges,[1 0 0]);
-    h2 = plot_hist(fixetal,   edges,[0 1 0]);
-    h3 = plot_hist(heuristic, edges,[0 0 1]);
-    h4 = plot_hist(optimal,   edges,[0 0 0]);
+%     c = colorspiral;
+    h1 = plot_hist(hocr,      edges,[ 0.9526    0.5773    0.8113],'-');
+    h2 = plot_hist(fixetal,   edges,[ 0.1722    0.7860    0.7948],'-');
+    h3 = plot_hist(heuristic, edges,[ 0.6857    0.4521    0.0270],'-');
+    h4 = plot_hist(optimal,   edges,[0 0 0],'-');
     
     xlim([0,data(1,1)]);
     
@@ -51,9 +56,15 @@ function print_bound(opt, bnd)
     fprintf('min/med/max : %f  %f  %f\n',minrelbound,medianrelbound,maxrelbound);
 end
 
-function h = plot_hist(lab,edges,color)
+function h = plot_hist(lab,edges,color,type)
     N1 = histc(lab,edges);
     h = bar(edges,N1,'histc');
     set(h,'FaceColor','none');
-    h = stairs(edges,N1,'LineWidth',3,'Color',color);
+    N2 = N1;
+    for i = 2:length(N1)-1
+        if N1(i-1)==0 && N1(i)==0 && N1(i+1)==0
+            N2(i)=nan;
+        end
+    end
+    h = stairs(edges,N2,type,'LineWidth',3,'Color',color);
 end

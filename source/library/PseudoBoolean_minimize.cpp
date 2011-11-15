@@ -480,6 +480,9 @@ namespace Petter
 			else {
 				// This variable is not part of the polynomial,
 				// therefore labelled
+				if (x[i]<0) {
+					x[i]=0;
+				}
 				nlabelled++;
 			}
 		}

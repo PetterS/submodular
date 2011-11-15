@@ -32,6 +32,7 @@
     <ClCompile Include="..\..\source\library\PseudoBoolean_create_g.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_heuristic.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_minimize.cpp" />
+    <ClCompile Include="..\..\source\library\PseudoBoolean_minimize_reduction.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_reduce.cpp" />
     <ClCompile Include="..\..\source\image_denoising.cpp" />
   </ItemGroup>
