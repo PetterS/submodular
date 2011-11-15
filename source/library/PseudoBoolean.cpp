@@ -481,7 +481,7 @@ namespace Petter
 	template<typename real>
 	void PseudoBoolean<real>::add_monomial(int i, int j, int k, int l, real a)
 	{
-		ASSERT(0<=i && 0<=<j && 0<=<k && 0<=<l);
+		ASSERT(0<=i && 0<=j && 0<=k && 0<=l);
 		aijkl[ make_quad(i,j,k,l) ] += a;
 		//It is important to also add the lower order monomials
 		add_monomial(i,j,k, 0);
@@ -532,7 +532,7 @@ namespace Petter
 	void PseudoBoolean<real>::add_clique(int i, int j, int k, real E000, real E001, real E010, real E011,
 	                                                          real E100, real E101, real E110, real E111)
 	{
-		ASSERT(0<=i && 0<=<j && 0<=<k);
+		ASSERT(0<=i && 0<=j && 0<=k);
 
 		this->constant += E000;
 
@@ -572,7 +572,7 @@ namespace Petter
 	                                                                 real E1000, real E1001, real E1010, real E1011,
 	                                                                 real E1100, real E1101, real E1110, real E1111)
 	{
-		ASSERT(0<=i && 0<=<j && 0<=<k && 0<=<l);
+		ASSERT(0<=i && 0<=j && 0<=k && 0<=l);
 		ASSERT(0<=i);
 
 		this->constant += E0000;
