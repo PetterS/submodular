@@ -2,7 +2,9 @@
 // Petter Strandmark 2011
 // petter@maths.lth.se
 //
-// Functions to minimize a general f(x) and a submodular g(x,y) using reductions
+// Functions to minimize a general f(x) with an LP relaxation
+//
+// This is work in progress. You can leave this file out while compiling.
 //
 
 #include <iomanip>
