@@ -86,10 +86,13 @@ int main_program(int num_args, char** args)
 		cerr << "  " << args[0] << " -sat <str>                       : read SAT problem from file" << endl;
 		cerr << endl;
 		cerr << "    -fixetal                         : use reductions from Fix et al." << endl;
-		cerr << "    -lp                              : use linear programming" << endl;
+		cerr << "    -optimal                         : use linear programming" << endl;
 		cerr << "    -heuristic                       : use heuristics" << endl;
+		cerr << "    -exhaustive                      : use exhaustive search (n<=30)" << endl;
 		cerr << endl;
 		cerr << "    -iterate                         : also iterate reduction methods" << endl;
+		cerr << endl;
+		cerr << "    -lprelax                         : compute LP relaxation" << endl;
 		cerr << endl;
 		cerr << "    -verbose                         : print polynomials" << endl;
 		cerr << endl;
@@ -121,6 +124,38 @@ int main_program(int num_args, char** args)
 	int n = convert_string<int>(cmd_line["-n"]);
 	int nterms = convert_string<int>(cmd_line["-nterms"]);
 	int griddim = 0;
+
+
+
+	bool do_hocr = true;
+	bool do_optimal = false;
+	bool do_fixetal = false;
+	bool do_exhaustive = false;
+	bool do_heuristic = false;
+	bool do_lprelax = false;
+	bool iterate_reduction_methods = false;
+	if (cmd_line.find("-optimal") != cmd_line.end()) {
+		do_optimal = true;
+	}
+	if (cmd_line.find("-fixetal") != cmd_line.end()) {
+		do_fixetal = true;
+	}
+	if (cmd_line.find("-heuristic") != cmd_line.end()) {
+		do_heuristic = true;
+	}
+	if (cmd_line.find("-lprelax") != cmd_line.end()) {
+		do_lprelax = true;
+	}
+	if (cmd_line.find("-exhaustive") != cmd_line.end()) {
+		do_exhaustive = true;
+	}
+	if (cmd_line.find("-iterate") != cmd_line.end()) {
+		iterate_reduction_methods = true;
+	}
+
+	bool verbose = cmd_line.find("-verbose") != cmd_line.end();
+
+
 
 	Petter::PseudoBoolean<real> pb;
 
@@ -222,7 +257,7 @@ int main_program(int num_args, char** args)
 			m = max(m, (int)vars.size());
 		}
 
-		if (cmd_line.find("-verbose") != cmd_line.end()) {
+		if (verbose) {
 			for (auto itr=clauses.begin(); itr != clauses.end(); ++itr) {
 				vector<variable>& vars = *itr;
 
@@ -449,10 +484,7 @@ int main_program(int num_args, char** args)
 	// Solve using different methods //
 	///////////////////////////////////
 
-	bool iterate_reduction_methods = false;
-	if (cmd_line.find("-iterate") != cmd_line.end()) {
-		iterate_reduction_methods = true;
-	}
+	
 
 	int hocr_labeled = -1;
 	int hocr_itr_labeled = -1;
@@ -475,26 +507,102 @@ int main_program(int num_args, char** args)
 	double lp_time = -1;
 	double heur_time = -1;
 
+	if (do_exhaustive) {
+		cout << WHITE << "WHITE" << NORMAL << " is global optimum" << endl;
+	}
+	if (do_lprelax) {
+		cout << WHITE << "WHITE" << NORMAL << " is an LP relaxation (Rhys form)" << endl;
+	}
 	cout << DKRED << "DKRED" << NORMAL << " is HOCR" << endl;
 	if (iterate_reduction_methods) {
 		cout << RED << "RED" << NORMAL << " is iterated HOCR" << endl;
 	}
-	if (cmd_line.find("-fixetal") != cmd_line.end()) {
+	if (do_fixetal) {
 		cout << DKBLUE << "DKBLUE" << NORMAL << " is Fix et al. from ICCV 2011" << endl;
 		if (iterate_reduction_methods) {
 			cout << BLUE << "BLUE" << NORMAL << " is Fix et al. iterated" << endl;
 		}
 	}
-	if (cmd_line.find("-lp") != cmd_line.end()) {
-		cout << GREEN << "GREEN" << NORMAL << " is LP optimal relaxation" << endl;
+	if (do_optimal) {
+		cout << GREEN << "GREEN" << NORMAL << " is optimal generalized roof duality (using LP)" << endl;
 	}
-	if (cmd_line.find("-heuristic") != cmd_line.end()) {
-		cout << YELLOW << "YELLOW" << NORMAL << " is heuristic relaxation" << endl;
+	if (do_heuristic) {
+		cout << YELLOW << "YELLOW" << NORMAL << " is heuristic submodular relaxation" << endl;
 	}
 	cout << endl;
 
 	
 	try {
+
+		if (do_exhaustive) {
+			ASSERT(n<=30); // Otherwise too big
+			cout << "Exhaustive search: " << endl;
+
+			vector<label> x(n,0);
+			real best_energy = pb.eval(x);
+			while (true) {
+				x[0]++;
+				int i=0;
+				while (x[i]>1) {
+					x[i]=0;
+					i++;
+					if (i==n) {
+						break;
+					}
+					x[i]+=1;
+				}
+				if (i==n) {
+					break;
+				}
+			
+				real energy = pb.eval(x);
+				if (energy < best_energy) {
+					best_energy = energy;
+				}
+			}
+
+			for (int i=0;i<n;++i) { x[i] = 0; }
+
+			x[0]=-1;
+			while (true) {
+				x[0]++;
+				int i=0;
+				while (x[i]>1) {
+					x[i]=0;
+					i++;
+					if (i==n) {
+						break;
+					}
+					x[i]+=1;
+				}
+				if (i==n) {
+					break;
+				}
+			
+				real energy = pb.eval(x);
+				if (energy == best_energy) {
+					cout << "Global minimum f(";
+					for (i=0;i<n;++i) {
+						cout << x[i];
+					}
+					cout << ") = ";
+					cout << WHITE << energy << NORMAL << endl;
+				}
+
+			}
+
+			cout << endl;
+		}
+
+
+
+		if (do_lprelax) {
+			cout << "LP relaxation : " << WHITE << pb.minimize_lp(verbose) << NORMAL << endl;
+			cout << endl;
+		}
+
+
+	
 
 		// For timing
 		clock_t t_raw;
@@ -507,8 +615,7 @@ int main_program(int num_args, char** args)
 
 		Petter::PseudoBoolean<real> f_hocrreduced;
 
-		bool run_hocr = true;
-		if (run_hocr) {
+		if (do_hocr) {
 
 			int iters = 0;
 			double bound = 0;
@@ -569,7 +676,7 @@ int main_program(int num_args, char** args)
 		}
 
 
-		if (cmd_line.find("-fixetal") != cmd_line.end()) {
+		if (do_fixetal) {
 
 			int iters = 0;
 			double bound = 0;
@@ -630,7 +737,7 @@ int main_program(int num_args, char** args)
 		}
 
 		
-		if (cmd_line.find("-lp") != cmd_line.end()) {
+		if (do_optimal) {
 
 			int iters = 0;
 			double bound = 0;
@@ -672,11 +779,16 @@ int main_program(int num_args, char** args)
 				f.reduce(x);
 				double t_reduce = stop();
 
-				if (cmd_line.find("-verbose") != cmd_line.end()) {
+				if (verbose) {
 					cout << "Relaxation g : " << spb << endl;
 					cout << "Solution   x = [";
 					for (int i=0;i<n && i<20;++i){
-						cout << x[i] << " ";
+						if (x[i]>=0) {
+							cout << x[i];
+						}
+						else {
+							cout << '?';
+						}
 					}
 					if (n>20) {
 						cout << " ... ";
@@ -705,7 +817,7 @@ int main_program(int num_args, char** args)
 		}
 
 		
-		if (cmd_line.find("-heuristic") != cmd_line.end()) {
+		if (do_heuristic) {
 			//
 			// For the heuristic relaxations, we use
 			// integer arithmetic
@@ -763,7 +875,7 @@ int main_program(int num_args, char** args)
 				f.reduce(x);
 				double t_reduce = stop();
 
-				if (cmd_line.find("-verbose") != cmd_line.end()) {
+				if (verbose) {
 					cout << "Relaxation g : " << spb << endl;
 				}
 
@@ -792,6 +904,7 @@ int main_program(int num_args, char** args)
 			string tmp = std::getenv("TEMP");
 			pb.save_to_file(tmp + "/pb-error.txt");
 		}
+		// Rethrow exception
 		throw;
 	}
 

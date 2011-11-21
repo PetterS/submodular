@@ -10,6 +10,7 @@
     <ClCompile Include="..\..\source\library\PseudoBoolean.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_complete.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_minimize_reduction.cpp" />
+    <ClCompile Include="..\..\source\library\PseudoBoolean_minimize_lp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\library\PseudoBoolean.h" />

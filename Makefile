@@ -16,7 +16,7 @@ TARGET  = bin/submodular_gcc.exe
 
 ##################################################################################
 
-SUBMOBJ = $(OBJDIR)PseudoBoolean.o $(OBJDIR)PseudoBoolean_create_g.o $(OBJDIR)PseudoBoolean_heuristic.o $(OBJDIR)PseudoBoolean_minimize.o $(OBJDIR)PseudoBoolean_reduce.o $(OBJDIR)PseudoBoolean_complete.o
+SUBMOBJ = $(OBJDIR)PseudoBoolean.o $(OBJDIR)PseudoBoolean_create_g.o $(OBJDIR)PseudoBoolean_heuristic.o $(OBJDIR)PseudoBoolean_minimize.o $(OBJDIR)PseudoBoolean_minimize_lp.o $(OBJDIR)PseudoBoolean_minimize_reduction.o $(OBJDIR)PseudoBoolean_reduce.o $(OBJDIR)PseudoBoolean_complete.o
 QPBOOBJ = $(OBJDIR)QPBO.o $(OBJDIR)QPBO_extra.o $(OBJDIR)QPBO_maxflow.o $(OBJDIR)QPBO_postprocessing.o 
 MAXFLOWOBJ = $(OBJDIR)graph.o $(OBJDIR)maxflow.o 
 LIBDIR = $(OBJDIR)

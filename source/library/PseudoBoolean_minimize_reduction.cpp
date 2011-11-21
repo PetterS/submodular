@@ -114,13 +114,14 @@ namespace Petter
 
 		// Work with a copy of the coefficients
 		map<triple, real> aijk  = this->aijk;
-		map<pair, real> aij  = this->aij;
-		map<int, real> ai  = this->ai;
-		real constant = this->constant;
+		//map<pair, real> aij  = this->aij;
+		//map<int, real> ai  = this->ai;
+		//real constant = this->constant;
 
 		// The quadratic function we are reducing to
-		int nedges = aij.size() + aijk.size() + aijkl.size() + 1000;
-		QPBO<real> qpbo(n + aijkl.size() + aijk.size() + 1000, nedges, err_function_qpbo);
+		int nedges = int( aij.size() + aijk.size() + aijkl.size() + 1000 );
+		int nvars  = int( n + aijkl.size() + aijk.size() + 1000 );
+		QPBO<real> qpbo(nvars, nedges, err_function_qpbo);
 		qpbo.AddNode(n);
 
 
@@ -237,14 +238,12 @@ namespace Petter
 			int k = get_k(itr->first);
 			real a = itr->second;
 
-			// We only have to test for ind==i because of the 
-			// order we process the indices
 			if (a > 0) {
 				alpha_sum[i] += a;
 
 				// Add term of degree 2
-				//qpbo.AddPairwiseTerm(j,k, 0,0,0, a);
-				aij[ make_pair(j,k) ] += a;
+				qpbo.AddPairwiseTerm(j,k, 0,0,0, a);
+				//aij[ make_pair(j,k) ] += a;
 
 				// Add negative term of degree 3
 				// -a*y*xj*xk
@@ -258,50 +257,48 @@ namespace Petter
 			}
 		}
 
-		for (auto itr=aij.begin(); itr != aij.end(); ++itr) {
-			int i = get_i(itr->first);
-			int j = get_j(itr->first);
-			real& a = itr->second;
+		// No need to continue with the lower degree terms
 
-			// We only have to test for ind==i because of the 
-			// order we process the indices
-			if (a > 0) {
-				alpha_sum[i] += a;
+		//for (auto itr=aij.begin(); itr != aij.end(); ++itr) {
+		//	int i = get_i(itr->first);
+		//	int j = get_j(itr->first);
+		//	real& a = itr->second;
 
-				// Add term of degree 1
-				ai[ j ] += a;
+		//	if (a > 0) {
+		//		alpha_sum[i] += a;
 
-				// Add negative term of degree 2
-				// -a*y*xj
-				if (y[i]<0) y[i] = qpbo.AddNode();
-				aij[ make_pair(y[i],j) ] += -a;
+		//		// Add term of degree 1
+		//		ai[ j ] += a;
 
-				// Now remove this term
-				a = 0;
-			}
-		}
+		//		// Add negative term of degree 2
+		//		// -a*y*xj
+		//		if (y[i]<0) y[i] = qpbo.AddNode();
+		//		aij[ make_pair(y[i],j) ] += -a;
 
-		for (auto itr=ai.begin(); itr != ai.end(); ++itr) {
-			int i =itr->first;
-			real& a = itr->second;
+		//		// Now remove this term
+		//		a = 0;
+		//	}
+		//}
 
-			// We only have to test for ind==i because of the 
-			// order we process the indices
-			if (a > 0) {
-				alpha_sum[i] += a;
+		//for (auto itr=ai.begin(); itr != ai.end(); ++itr) {
+		//	int i =itr->first;
+		//	real& a = itr->second;
 
-				// Add term of degree 0
-				constant += a;
+		//	if (a > 0) {
+		//		alpha_sum[i] += a;
 
-				// Add negative term of degree 1
-				// -a*y*xj
-				if (y[i]<0) y[i] = qpbo.AddNode();
-				ai[ y[i] ] += -a;
+		//		// Add term of degree 0
+		//		constant += a;
 
-				// Now remove this term
-				a = 0;
-			}
-		}
+		//		// Add negative term of degree 1
+		//		// -a*y*xj
+		//		if (y[i]<0) y[i] = qpbo.AddNode();
+		//		ai[ y[i] ] += -a;
+
+		//		// Now remove this term
+		//		a = 0;
+		//	}
+		//}
 
 
 		for (int i=0;i<n;++i) {

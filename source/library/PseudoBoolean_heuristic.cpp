@@ -38,7 +38,7 @@ namespace Petter
 		using namespace std;
 
 		// There is no freedom in picking these
-		constant = pbf.constant;
+		constant = real(pbf.constant);
 		for (auto itr=pbf.ai.begin(); itr != pbf.ai.end(); ++itr) {
 			bi[itr->first] = static_cast<real>( itr->second );
 		}	
@@ -48,7 +48,7 @@ namespace Petter
 		map<pair,real> cRHS;
 		for (auto itr=pbf.aij.begin(); itr != pbf.aij.end(); ++itr) {
 			bRHS[itr->first]  = 0;
-			cRHS[itr->first] = itr->second;
+			cRHS[itr->first] = real(itr->second);
 		}
 
 		for (auto itr = pbf.aijk.begin(); itr != pbf.aijk.end(); ++itr) {
@@ -56,7 +56,7 @@ namespace Petter
 			int i = get_i(ind);
 			int j = get_j(ind);
 			int k = get_k(ind);
-			real a123 = itr->second;
+			real a123 = real(itr->second);
 		
 			if (a123 > 0) {
 
@@ -184,7 +184,7 @@ namespace Petter
 		// TODO: make this a little more sophisticated :-)
 		for (auto itr = pbf.aijkl.begin(); itr != pbf.aijkl.end(); ++itr) {
 			quad ijkl = itr->first;
-			real a0123 = itr->second;
+			real a0123 = real(itr->second);
 
 			if (a0123 > 0) {
 				dijkl[ijkl] = a0123;
@@ -199,7 +199,7 @@ namespace Petter
 		cRHS.clear();
 		for (auto itr=pbf.aij.begin(); itr != pbf.aij.end(); ++itr) {
 			bRHS[itr->first]  = 0;
-			cRHS[itr->first] = itr->second;
+			cRHS[itr->first] = real(itr->second);
 		}
 
 		for (auto itr = pbf.aijk.begin(); itr != pbf.aijk.end(); ++itr) {
@@ -298,7 +298,7 @@ namespace Petter
 
 		for (auto itr = pbf.aij.begin(); itr != pbf.aij.end(); ++itr) {
 			pair ind = itr->first;
-			real aij = itr->second;
+			real aij = real(itr->second);
 
 			bij[ind] = min( bRHS[ind], cRHS[ind] );
 			cij[ind] = aij - bij[ind];

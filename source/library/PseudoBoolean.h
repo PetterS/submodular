@@ -114,7 +114,11 @@ namespace Petter
 		real minimize_reduction_fixetal(vector<label>& x) const;
 		real minimize_reduction_fixetal(vector<label>& x, int& nlabelled) const;
 		
-		// Minimizing using a symmetric function g(x,y)
+		// Minimize using LP relaxation
+		real minimize_lp(bool verbose=false) const;
+
+
+		// Minimizing using a symmetric, submodular function g(x,y)
 		// NOTE: will change (reduce) *this
 		real minimize(vector<label>& x, int& labeled, bool heuristic = false);
 
