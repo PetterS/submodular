@@ -560,7 +560,7 @@ int main_program(int num_args, char** args)
 	double fixetal_itr_time = -1;
 	double optimal_time = -1;
 	double heur_time = -1;
-  double packing_time = -1;
+	double packing_time = -1;
 
 	if (do_exhaustive) {
 		cout << WHITE << "WHITE" << NORMAL << " is global optimum" << endl;
@@ -590,7 +590,7 @@ int main_program(int num_args, char** args)
 	cout << endl;
 
 
-  // For timing
+	// For timing
 	clock_t t_raw;
 	auto start = [&t_raw]() { t_raw = clock(); };
 	auto stop  = [&t_raw]() -> double { return double(clock()-t_raw) / double(CLOCKS_PER_SEC); };
