@@ -25,8 +25,6 @@
 
 #include <sstream>
 
-#include "graph.h" //maxflow-v3.01
-
 #define ASSERT(cond) if (!(cond)) { std::stringstream sout; \
                                     sout << "Error (line " << __LINE__ << " in " << __FILE__ << "): " << #cond; \
                                     throw std::runtime_error(sout.str()); }
@@ -72,6 +70,7 @@ namespace Petter
 	{
 	public:
 		template<typename real2> friend class SymmetricPseudoBoolean;
+		template<typename real2,int degree> friend class Posiform;
 		void print_helper(std::ostream& out) const;
 
 		PseudoBoolean(); //Creates the zero polynomial
@@ -79,7 +78,9 @@ namespace Petter
 
 		void save_to_file(std::string filename); // Saves f to file
 
+		//Resests the function to the zero functions
 		void clear();
+		// Returns the maximum index used + 1
 		int nvars() const;
 
 		// Add monomials
@@ -115,8 +116,9 @@ namespace Petter
 		real minimize_reduction_fixetal(vector<label>& x, int& nlabelled) const;
 		
 		// Minimize using LP relaxation
-		real minimize_lp(bool verbose=false) const;
-
+		// (persistency does not hold in general)
+		// mostly for testing purposes
+		real minimize_lp(vector<label>& x,bool verbose=false) const;
 
 		// Minimizing using a symmetric, submodular function g(x,y)
 		// NOTE: will change (reduce) *this
@@ -210,11 +212,6 @@ namespace Petter
 		int iq(int i, int j, int k, int l);
 		int ir(int i, int j, int k, int l);
 		int is(int i, int j, int k, int l);
-
-		//////////////////////////////
-		// Graph (for minimization) //
-		//////////////////////////////
-		Graph<real,real,real>* maxflow_graph;
 
 	private:
 		//These are not to be modified directly

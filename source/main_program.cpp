@@ -25,19 +25,26 @@ using namespace std;
 
 #include "Petter-Color.h"
 #include "PseudoBoolean.h"
+#include "Posiform.h"
 using namespace Petter;
 
 
 // Random number generator
 namespace {
-	mt19937 engine(unsigned(time(0)&0xffffffff));
+	#ifdef WIN32
+		// Time Stamp Counter gives better seeds than seconds
+		// when many small problems are generated consecutively
+		mt19937 engine(__rdtsc()); 
+	#else
+		mt19937 engine(unsigned(time(0)));
+	#endif
 }
 
 // Functions running some quick tests
 // In: submodular_tests.cpp
 template<typename real> void test_pseudoboolean();
 void test_minimize();
-
+template<typename real> void test_posiform();
 
 //Simple routine for conversion of strings
 //used for the command line
@@ -59,6 +66,33 @@ T absolute(const T t)
 	return t < 0 ? -t : t;
 }
 
+void print_x(const std::vector<label>& x)
+{
+	int n = x.size();
+	for (int i=0;i<n&&i<20;++i) {
+		if (x[i]>=0) {
+			cout << x[i];
+		}
+		else {
+			cout << '-';
+		}
+	}
+	if (n>20) {
+		cout << " ... ";
+	}
+}
+
+template<typename real>
+void print_info(std::string name, const std::vector<label>& x, real bound, int labeled, Petter::Color color)
+{
+	using namespace std;
+	cout << left << setw(15) << name << "f(";
+	print_x(x);
+	cout << ") = " << color << right << setw(8) << bound << NORMAL;
+	cout << ",   labeled : " << color << labeled << NORMAL << endl;
+}
+
+
 //
 // Main program
 //
@@ -77,6 +111,10 @@ int main_program(int num_args, char** args)
 		statusTry("Testing pseudo-Boolean functions...");
 		test_pseudoboolean<double>();
 		//test_pseudoboolean<int>(); // Does not have LP and therefore fails
+		statusTry("Testing posiform (double)...");
+		test_posiform<double>();
+		statusTry("Testing posiform (int)...");
+		test_posiform<int>();
 		statusOK();
 
 		cerr << "Possible choices : " << endl;
@@ -92,6 +130,7 @@ int main_program(int num_args, char** args)
 		cerr << endl;
 		cerr << "    -iterate                         : also iterate reduction methods" << endl;
 		cerr << endl;
+		cerr << "    -packing                         : compute solution using vertex packing" << endl;
 		cerr << "    -lprelax                         : compute LP relaxation" << endl;
 		cerr << endl;
 		cerr << "    -verbose                         : print polynomials" << endl;
@@ -133,6 +172,7 @@ int main_program(int num_args, char** args)
 	bool do_exhaustive = false;
 	bool do_heuristic = false;
 	bool do_lprelax = false;
+	bool do_packing = false;
 	bool iterate_reduction_methods = false;
 	if (cmd_line.find("-optimal") != cmd_line.end()) {
 		do_optimal = true;
@@ -149,9 +189,15 @@ int main_program(int num_args, char** args)
 	if (cmd_line.find("-exhaustive") != cmd_line.end()) {
 		do_exhaustive = true;
 	}
+	if (cmd_line.find("-packing") != cmd_line.end()) {
+		do_packing = true;
+	}
 	if (cmd_line.find("-iterate") != cmd_line.end()) {
 		iterate_reduction_methods = true;
 	}
+
+
+	bool submodular = cmd_line.find("-submodular") != cmd_line.end();
 
 	bool verbose = cmd_line.find("-verbose") != cmd_line.end();
 
@@ -376,15 +422,18 @@ int main_program(int num_args, char** args)
 
 		statusTry("Generating random polynomial...");
 
-		uniform_int_distribution<int> coef_distribution(-100, 100);
-		auto random_coef = bind(coef_distribution, engine);
-		uniform_int_distribution<int> index_distribution(0, n-1);
-		auto random_index = bind(index_distribution, engine);
+		auto random_coef  = bind(uniform_int_distribution<int>(-100,100), engine);
+		real upper = 100;
+		if (submodular) {
+			upper = 0;
+		}
+		auto random_coef2 = bind(uniform_int_distribution<int>(-100,upper), engine);
+		auto random_index = bind(uniform_int_distribution<int>(0,n-1), engine);
 
 		map< quad, bool> exists;
 		map< int, bool > used;
 
-		auto add_term = [&nterms,&used,&exists,&pb,&random_coef,m,n](int i, int j, int k, int l) 
+		auto add_term = [&nterms,&used,&exists,&pb,&random_coef,&random_coef2,m,n](int i, int j, int k, int l) 
 		{
 			if (m<4) {
 				l = 3*n;
@@ -406,22 +455,22 @@ int main_program(int num_args, char** args)
 
 				pb.add_monomial(i, random_coef());
 				pb.add_monomial(j, random_coef());
-				pb.add_monomial(i,j, random_coef());
+				pb.add_monomial(i,j, random_coef2());
 				if (m >= 3) {
 					pb.add_monomial(k, random_coef());
-					pb.add_monomial(i,k, random_coef());
-					pb.add_monomial(j,k, random_coef());
-					pb.add_monomial(i,j,k, random_coef());
+					pb.add_monomial(i,k, random_coef2());
+					pb.add_monomial(j,k, random_coef2());
+					pb.add_monomial(i,j,k, random_coef2());
 				}
 				if (m >= 4) {
 					pb.add_monomial(l, random_coef());
-					pb.add_monomial(i,l, random_coef());
-					pb.add_monomial(j,l, random_coef());
-					pb.add_monomial(k,l, random_coef());
-					pb.add_monomial(i,j,l, random_coef());
-					pb.add_monomial(i,k,l, random_coef());
-					pb.add_monomial(j,k,l, random_coef());
-					pb.add_monomial(i,j,k,l, random_coef());
+					pb.add_monomial(i,l, random_coef2());
+					pb.add_monomial(j,l, random_coef2());
+					pb.add_monomial(k,l, random_coef2());
+					pb.add_monomial(i,j,l, random_coef2());
+					pb.add_monomial(i,k,l, random_coef2());
+					pb.add_monomial(j,k,l, random_coef2());
+					pb.add_monomial(i,j,k,l, random_coef2());
 				}
 
 				//cout << i << ' ' << j << ' ' << k << ' ' << l << endl;
@@ -471,6 +520,7 @@ int main_program(int num_args, char** args)
 		cout << "Number of used variables : " << used.size() << endl;
 	}
 
+
 	cout << "Polynomial : " << pb << endl;
 	cout << WHITE;
 	cout << "n = " << n << endl;
@@ -490,28 +540,36 @@ int main_program(int num_args, char** args)
 	int hocr_itr_labeled = -1;
 	int fixetal_labeled = -1;
 	int fixetal_itr_labeled = -1;
-	int lp_labeled = -1;
+	int optimal_labeled = -1;
 	int heur_labeled = -1;
+	int packing_labeled = -1;
 
 	real hocr_bound = 100;
 	real hocr_itr_bound = 100;
 	real fixetal_bound = 100;
 	real fixetal_itr_bound = 100;
-	real lp_bound = 100;
+	real optimal_bound = 100;
 	real heur_bound = 100;
+	real lp_bound = 100;
+	real packing_bound = 100;
+	real packing_itr_bound = 100;
 
 	double hocr_time = -1;
 	double hocr_itr_time = -1;
 	double fixetal_time = -1;
 	double fixetal_itr_time = -1;
-	double lp_time = -1;
+	double optimal_time = -1;
 	double heur_time = -1;
+  double packing_time = -1;
 
 	if (do_exhaustive) {
 		cout << WHITE << "WHITE" << NORMAL << " is global optimum" << endl;
 	}
+	if (do_packing) {
+		cout << BROWN << "BROWN" << NORMAL << " is using vertex packing" << endl;
+	}
 	if (do_lprelax) {
-		cout << WHITE << "WHITE" << NORMAL << " is an LP relaxation (Rhys form)" << endl;
+		cout << NORMAL << "GRAY" << NORMAL << " is an LP relaxation (Rhys form)" << endl;
 	}
 	cout << DKRED << "DKRED" << NORMAL << " is HOCR" << endl;
 	if (iterate_reduction_methods) {
@@ -531,8 +589,16 @@ int main_program(int num_args, char** args)
 	}
 	cout << endl;
 
+
+  // For timing
+	clock_t t_raw;
+	auto start = [&t_raw]() { t_raw = clock(); };
+	auto stop  = [&t_raw]() -> double { return double(clock()-t_raw) / double(CLOCKS_PER_SEC); };
 	
 	try {
+
+		//Holds optimal solutions
+		vector< vector<label> > optimal_solutions;
 
 		if (do_exhaustive) {
 			ASSERT(n<=30); // Otherwise too big
@@ -581,12 +647,12 @@ int main_program(int num_args, char** args)
 			
 				real energy = pb.eval(x);
 				if (energy == best_energy) {
-					cout << "Global minimum f(";
-					for (i=0;i<n;++i) {
-						cout << x[i];
-					}
-					cout << ") = ";
-					cout << WHITE << energy << NORMAL << endl;
+
+					optimal_solutions.push_back(x);
+
+					print_info("Global minimum",x,energy,n,WHITE);
+
+
 				}
 
 			}
@@ -594,21 +660,103 @@ int main_program(int num_args, char** args)
 			cout << endl;
 		}
 
+		if (do_packing) {		
+			packing_bound = -1000000000;
+			for (int num_tests=1;num_tests<=10;++num_tests) {
+
+				double bound = 0;
+				double first_bound = 0;
+				int labeled = 0;
+				bool should_continue;
+				Petter::PseudoBoolean<real> f = pb;
+				vector<label> x(n,0);
+
+				cout << " *** " << endl;
+				bool first_time = true;
+        
+        packing_time = 0;
+				do {
+					// Create posiform for -pb
+					Posiform<real,4> phi(f,true); 
+
+          start();
+					// Maximize it	
+					real bound = -phi.maximize(x);
+					int new_labeled=0;
+					for (int i=0;i<n;++i) {
+						if (x.at(i) >= 0) {
+							new_labeled++;
+						}
+					}
+
+					f.reduce(x);
+          packing_time += stop();
+
+					should_continue = new_labeled > labeled;
+					labeled = new_labeled;
+					if (labeled == n ) {
+						//Nothing more to do
+						should_continue = false;
+					}
+					if (first_time) {
+						first_bound = bound;
+						first_time = false;
+					}
+
+					// Print solution
+					print_info("Vertex packing",x,bound,new_labeled,BROWN);
+				} while (should_continue);
 
 
-		if (do_lprelax) {
-			cout << "LP relaxation : " << WHITE << pb.minimize_lp(verbose) << NORMAL << endl;
+				if (first_bound > packing_bound) {
+					packing_bound = first_bound;
+				}
+				if (bound > packing_itr_bound) {
+					packing_itr_bound = bound;
+				}
+				if (labeled > packing_labeled) {
+					packing_labeled = labeled;
+				}
+
+				// If we know the optimal solution, we can verify 
+				// that the persistencies are correct
+				if (do_exhaustive) {
+					bool any_ok = false;
+					for (auto itr = optimal_solutions.begin(); itr != optimal_solutions.end(); ++itr) {
+						bool this_ok = true;
+						for (int i=0;i<n;++i) {
+							if (x.at(i) >= 0 && x.at(i) != itr->at(i)) {
+								this_ok = false;
+							}
+						}
+						if (this_ok) {
+							any_ok = true;
+							break;
+						}
+					}
+					if (!any_ok) {
+						// Persistency did not hold for this solution
+
+						pb.save_to_file("packing-error.txt");
+						throw runtime_error("Vertex packing solution without persistency");
+					}
+				}
+
+			}
+      if (verbose) {
+        cout << "Vertex packing time : " << BROWN << packing_time << NORMAL << endl;
+      }
 			cout << endl;
 		}
 
+		if (do_lprelax) {
+			vector<label> x_lp(n);
+			lp_bound = pb.minimize_lp(x_lp,verbose);
+			print_info("LP relaxation",x_lp,lp_bound,0,NORMAL);
+			cout << endl;
+		}
 
 	
-
-		// For timing
-		clock_t t_raw;
-		auto start = [&t_raw]() { t_raw = clock(); };
-		auto stop  = [&t_raw]() -> double { return double(clock()-t_raw) / double(CLOCKS_PER_SEC); };
-
 		vector<label> x(n,0),x1(n,0),x2(n,0);
 
 		
@@ -656,18 +804,18 @@ int main_program(int num_args, char** args)
 					hocr_itr_time += t_minimize + t_reduce;
 				}
 
-				cout << "labeled : " << *COL << labeled << NORMAL << endl;
-				cout << "f_bound : " << *COL << bound << NORMAL << endl;
-				cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
-				cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;
-				cout << endl;
+				print_info("HOCR",x,bound,labeled,*COL);
+				if (verbose) {
+					cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
+					cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;
+				}
 
 			} while (should_continue);
 
 			if (labeled == n) {
 				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
-				cout << endl;
 			}
+			cout << endl;
 
 			hocr_itr_bound = bound;
 			hocr_itr_labeled = labeled;
@@ -717,18 +865,18 @@ int main_program(int num_args, char** args)
 					fixetal_itr_time += t_minimize + t_reduce;
 				}
 
-				cout << "labeled : " << *COL << labeled << NORMAL << endl;
-				cout << "f_bound : " << *COL << bound << NORMAL << endl;
-				cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
-				cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;
-				cout << endl;
+				print_info("Fix et al.",x,bound,labeled,*COL);
+				if (verbose) {
+					cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
+					cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;
+				}
 
 			} while (should_continue);
 
 			if (labeled == n) {
 				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
-				cout << endl;
 			}
+			cout << endl;
 
 			fixetal_itr_bound = bound;
 			fixetal_itr_labeled = labeled;
@@ -755,7 +903,7 @@ int main_program(int num_args, char** args)
 				f = pb;
 			}
 
-			lp_time = 0;
+			optimal_time = 0;
 			do {
 				iters++;
 
@@ -781,39 +929,26 @@ int main_program(int num_args, char** args)
 
 				if (verbose) {
 					cout << "Relaxation g : " << spb << endl;
-					cout << "Solution   x = [";
-					for (int i=0;i<n && i<20;++i){
-						if (x[i]>=0) {
-							cout << x[i];
-						}
-						else {
-							cout << '?';
-						}
-					}
-					if (n>20) {
-						cout << " ... ";
-					}
-					cout << "]" << endl;
+				}
+	
+				print_info("GRD solution",x,bound,labeled,GREEN);
+				if (verbose) {
+					cout << "time (create)   : " << GREEN << t_create <<  NORMAL << endl;
+					cout << "time (minimize) : " << GREEN << t_minimize <<  NORMAL << endl;
+					cout << "time (reduce)   : " << GREEN << t_reduce <<  NORMAL << endl;
 				}
 
-				cout << "Labeled : "<< GREEN << labeled << NORMAL << endl;
-				cout << "Bound   : " << GREEN << bound << NORMAL << endl;
-				cout << "time (create)   : " << GREEN << t_create <<  NORMAL << endl;
-				cout << "time (minimize) : " << GREEN << t_minimize <<  NORMAL << endl;
-				cout << "time (reduce)   : " << GREEN << t_reduce <<  NORMAL << endl;
-				cout << endl;
-
-				lp_time += t_create + t_minimize + t_reduce;
+				optimal_time += t_create + t_minimize + t_reduce;
 
 			} while (should_continue);
 
 			if (labeled == n) {
 				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
-				cout << endl;
 			}
+			cout << endl;
 
-			lp_bound = bound;
-			lp_labeled = labeled;
+			optimal_bound = bound;
+			optimal_labeled = labeled;
 		}
 
 		
@@ -879,12 +1014,13 @@ int main_program(int num_args, char** args)
 					cout << "Relaxation g : " << spb << endl;
 				}
 
-				cout << "Labeled : "<< YELLOW << labeled << NORMAL << endl;
-				cout << "Bound   : " << YELLOW << bound << NORMAL << endl;
-				cout << "time (create)   : " << YELLOW << t_create <<  NORMAL << endl;
-				cout << "time (minimize) : " << YELLOW << t_minimize <<  NORMAL << endl;
-				cout << "time (reduce)   : " << YELLOW << t_reduce <<  NORMAL << endl;	
-				cout << endl;
+				print_info("Heuristics",x,bound,labeled,YELLOW);
+				if (verbose) {
+					cout << "time (create)   : " << YELLOW << t_create <<  NORMAL << endl;
+					cout << "time (minimize) : " << YELLOW << t_minimize <<  NORMAL << endl;
+					cout << "time (reduce)   : " << YELLOW << t_reduce <<  NORMAL << endl;	
+				}
+				
 
 				heur_time += t_create + t_minimize + t_reduce;
 
@@ -894,6 +1030,7 @@ int main_program(int num_args, char** args)
 				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
 			}
 
+			cout << endl;
 			heur_bound = bound;
 			heur_labeled = labeled;
 		}
@@ -908,31 +1045,31 @@ int main_program(int num_args, char** args)
 		throw;
 	}
 
-
 	// Write to log file
-	ofstream log("logfile.data", ios::app);
-	log << n                << '\t' // 0 
-		<< nterms           << '\t' // 1
-		<< griddim          << '\t' // 2
-		<< hocr_labeled     << '\t' // 3
-		<< hocr_itr_labeled << '\t' // 4
-		<< lp_labeled       << '\t' // 5
-		<< heur_labeled     << '\t' // 6
-		<< hocr_bound       << '\t' // 7
-		<< hocr_itr_bound   << '\t' // 8
-		<< lp_bound         << '\t' // 9
-		<< heur_bound       << '\t' // 10
-		<< hocr_time        << '\t' // 11
-		<< hocr_itr_time    << '\t' // 12
-		<< lp_time          << '\t' // 13
-		<< heur_time        << '\t' // 14
-		<< fixetal_labeled  << '\t' // 15
-	 << fixetal_itr_labeled << '\t' // 16
-		<< fixetal_bound    << '\t' // 17
-		<< fixetal_itr_bound<< '\t' // 18
-		<< fixetal_time     << '\t' // 19
-		<< fixetal_itr_time << endl;// 20
-
+	if (cmd_line.find("-nolog") == cmd_line.end()) {
+		ofstream log("logfile.data", ios::app);
+		log << n                << '\t' // 0 
+			<< nterms           << '\t' // 1
+			<< griddim          << '\t' // 2
+			<< hocr_labeled     << '\t' // 3
+			<< hocr_itr_labeled << '\t' // 4
+			<< optimal_labeled  << '\t' // 5
+			<< heur_labeled     << '\t' // 6
+			<< hocr_bound       << '\t' // 7
+			<< hocr_itr_bound   << '\t' // 8
+			<< optimal_bound    << '\t' // 9
+			<< heur_bound       << '\t' // 10
+			<< hocr_time        << '\t' // 11
+			<< hocr_itr_time    << '\t' // 12
+			<< optimal_time     << '\t' // 13
+			<< heur_time        << '\t' // 14
+			<< fixetal_labeled  << '\t' // 15
+		 << fixetal_itr_labeled << '\t' // 16
+			<< fixetal_bound    << '\t' // 17
+			<< fixetal_itr_bound<< '\t' // 18
+			<< fixetal_time     << '\t' // 19
+			<< fixetal_itr_time << endl;// 20
+	}
 	//cin.get();
 
 	return 0;

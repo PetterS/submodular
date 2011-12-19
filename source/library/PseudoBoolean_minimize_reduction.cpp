@@ -37,11 +37,13 @@ namespace Petter
 		ASSERT_STR( nvars() <= nVars , "x too small");
 
 		PBF<real, 4> hocr;
+		map<int,bool> var_used;
 
 		for (auto itr=ai.begin(); itr != ai.end(); ++itr) {
 			int i = itr->first;
 			real a = itr->second;
 			hocr.AddUnaryTerm(i, 0, a);
+			var_used[i] = true;
 		}
 
 		for (auto itr=aij.begin(); itr != aij.end(); ++itr) {
@@ -49,6 +51,8 @@ namespace Petter
 			int j = get_j(itr->first);
 			real a = itr->second;
 			hocr.AddPairwiseTerm(i,j, 0,0,0, a);
+			var_used[i] = true;
+			var_used[j] = true;
 		}
 
 		for (auto itr=aijk.begin(); itr != aijk.end(); ++itr) {
@@ -60,6 +64,9 @@ namespace Petter
 			real E[8] = {0,0,0,0, 0,0,0,0};
 			E[7] = a;
 			hocr.AddHigherTerm(3, ind, E);
+			var_used[i] = true;
+			var_used[j] = true;
+			var_used[k] = true;
 		}
 
 		for (auto itr=aijkl.begin(); itr != aijkl.end(); ++itr) {
@@ -73,6 +80,10 @@ namespace Petter
 			                0,0,0,0, 0,0,0,0};
 			E[15] = a;
 			hocr.AddHigherTerm(4, ind, E);
+			var_used[i] = true;
+			var_used[j] = true;
+			var_used[k] = true;
+			var_used[l] = true;
 		}
 
 
@@ -87,7 +98,9 @@ namespace Petter
 
 		nlabelled = 0;
 		for (int i=0; i<nVars; ++i) {
-			x[i] = qpbo.GetLabel(i);
+			if (var_used[i] || x.at(i)<0) {
+				x[i] = qpbo.GetLabel(i);
+			}
 			if (x[i] >= 0) {
 				nlabelled++;
 			}

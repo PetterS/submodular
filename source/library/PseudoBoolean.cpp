@@ -657,7 +657,6 @@ namespace Petter
 	{
 		nlpvars = 0;
 		constant = 0;
-		maxflow_graph = 0;
 	}
 
 	template<typename real>
@@ -665,7 +664,6 @@ namespace Petter
 	{
 		nlpvars = 0;
 		constant = 0;
-		maxflow_graph = 0;
 
 		bi.clear();
 		bij.clear();

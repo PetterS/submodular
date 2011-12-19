@@ -21,12 +21,13 @@ namespace Petter
 {
 
 	template<typename real>
-	real PseudoBoolean<real>::minimize_lp(bool verbose) const
+	real PseudoBoolean<real>::minimize_lp(vector<label>& x, bool verbose) const
 	{
 		using namespace std;
 
 		// TODO
 		int n = nvars();
+		x.resize(n);
 		int nLPVars = n + aij.size() + aijk.size() + aijkl.size();
 		size_t nConstraints = 3*(aij.size() + aijk.size() + aijkl.size());
 		size_t nEntries = 100000;
@@ -206,22 +207,39 @@ namespace Petter
 
 		double* lpvars = lpSolver.primalColumnSolution();
 
+		const double th = 0.999;
+
+		for (int i=0;i<n;++i) {
+			if (lpvars[i] < 1-th) {
+				x[i]=0;
+			}
+			else if (lpvars[i] > th) {
+				x[i] = 1;
+			}
+			else {
+				x[i] = -1;
+			}
+		}
+
+
 		if (verbose) {
 
-			const double th = 0.999;
-
+			var = n;
 			// Linear terms
-			cout << "xi    : ";
-			for (auto itr=ai.begin(); itr != ai.end(); ++itr) {
-				int i = itr->first;
-				cout  << lpvars[i] << ' ';
+			cout << "yi    : ";
+			int i=0;
+			for (int i=0;i<n && i<20;++i) {
+				cout << lpvars[i]<< ' ';
+			}
+			if (i==20) {
+				cout << " ... ";
 			}
 			cout << endl;
-			var = n;
 
 			// Quadratic terms
 			cout << "yij   : ";
-			for (auto itr=aij.begin(); itr != aij.end(); ++itr) {
+			i=0;
+			for (auto itr=aij.begin(); itr != aij.end() && i<20; ++itr, ++i) {
 				int i = get_i(itr->first);
 				int j = get_j(itr->first);
 				real a = itr->second;
@@ -238,11 +256,15 @@ namespace Petter
 
 				cout << lpvars[u] << ' ';
 			}
+			if (i==20) {
+				cout << " ... ";
+			}
 			cout << endl;
 
 			// Cubic terms
 			cout << "yijk  : ";
-			for (auto itr=aijk.begin(); itr != aijk.end(); ++itr) {
+			i=0;
+			for (auto itr=aijk.begin(); itr != aijk.end() && i<20; ++itr, ++i) {
 				int i = get_i(itr->first);
 				int j = get_j(itr->first);
 				int k = get_k(itr->first);
@@ -260,11 +282,15 @@ namespace Petter
 
 				cout << lpvars[u] << ' ';
 			}
+			if (i==20) {
+				cout << " ... ";
+			}
 			cout << endl;
 
 			// Quartic terms
 			cout << "yijkl : ";
-			for (auto itr=aijkl.begin(); itr != aijkl.end(); ++itr) {
+			i=0;
+			for (auto itr=aijkl.begin(); itr != aijkl.end() && i<20; ++itr, ++i) {
 				int i = get_i(itr->first);
 				int j = get_j(itr->first);
 				int k = get_k(itr->first);
@@ -282,6 +308,9 @@ namespace Petter
 				}
 
 				cout << lpvars[u] << ' ';
+			}
+			if (i==20) {
+				cout << " ... ";
 			}
 			cout << endl;
 		}
