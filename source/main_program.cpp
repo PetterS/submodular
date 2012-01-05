@@ -674,12 +674,12 @@ int main_program(int num_args, char** args)
 				cout << " *** " << endl;
 				bool first_time = true;
         
-        packing_time = 0;
+				packing_time = 0;
 				do {
 					// Create posiform for -pb
 					Posiform<real,4> phi(f,true); 
 
-          start();
+					start();
 					// Maximize it	
 					real bound = -phi.maximize(x);
 					int new_labeled=0;
@@ -690,7 +690,7 @@ int main_program(int num_args, char** args)
 					}
 
 					f.reduce(x);
-          packing_time += stop();
+					packing_time += stop();
 
 					should_continue = new_labeled > labeled;
 					labeled = new_labeled;

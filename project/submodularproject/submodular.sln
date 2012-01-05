@@ -13,8 +13,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "image denoising", "..\textu
 		{BEC03BC9-532C-48A7-87A4-10B6C0F30E9F} = {BEC03BC9-532C-48A7-87A4-10B6C0F30E9F}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "texture", "..\texture\texture.vcxproj", "{83974036-3265-42EA-B18D-12DBD9B9DEEC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -47,13 +45,6 @@ Global
 		{FA3939A0-A497-433B-BD54-0B82F2E27776}.Release|Win32.Build.0 = Release|Win32
 		{FA3939A0-A497-433B-BD54-0B82F2E27776}.Release|x64.ActiveCfg = Release|x64
 		{FA3939A0-A497-433B-BD54-0B82F2E27776}.Release|x64.Build.0 = Release|x64
-		{83974036-3265-42EA-B18D-12DBD9B9DEEC}.Debug|Win32.ActiveCfg = Debug|Win32
-		{83974036-3265-42EA-B18D-12DBD9B9DEEC}.Debug|Win32.Build.0 = Debug|Win32
-		{83974036-3265-42EA-B18D-12DBD9B9DEEC}.Debug|x64.ActiveCfg = Debug|Win32
-		{83974036-3265-42EA-B18D-12DBD9B9DEEC}.Release|Win32.ActiveCfg = Release|Win32
-		{83974036-3265-42EA-B18D-12DBD9B9DEEC}.Release|Win32.Build.0 = Release|Win32
-		{83974036-3265-42EA-B18D-12DBD9B9DEEC}.Release|x64.ActiveCfg = Release|x64
-		{83974036-3265-42EA-B18D-12DBD9B9DEEC}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

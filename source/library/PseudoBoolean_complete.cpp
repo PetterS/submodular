@@ -22,29 +22,51 @@ namespace Petter
 
 		do {
 
-			// Create symmetric relaxation
-			SymmetricPseudoBoolean<real> spb;
+			
 			if (heuristic) {
+				// Create symmetric relaxation
+				SymmetricPseudoBoolean<real> spb;
+
 				spb.create_heuristic(*this);
+
+				// Minimize relaxation
+				int new_labeled = 0;
+				bound = spb.minimize(x, new_labeled);
+
+				// If we have more persistencies, continue
+				should_continue = new_labeled > labeled;
+				labeled = new_labeled;
+				if (labeled == n) {
+					//Nothing more to do
+					should_continue = false;
+				}
+
+				// Reduce this function
+				reduce(x);
 			}
 			else {
+				// Create symmetric relaxation, double needed
+				SymmetricPseudoBoolean<double> spb;
+
 				spb.create_lp(*this);
+
+				// Minimize relaxation
+				int new_labeled = 0;
+				bound = spb.minimize(x, new_labeled);
+
+				// If we have more persistencies, continue
+				should_continue = new_labeled > labeled;
+				labeled = new_labeled;
+				if (labeled == n) {
+					//Nothing more to do
+					should_continue = false;
+				}
+
+				// Reduce this function
+				reduce(x);
 			}
 
-			// Minimize relaxation
-			int new_labeled = 0;
-			bound = spb.minimize(x, new_labeled);
-
-			// If we have more persistencies, continue
-			should_continue = new_labeled > labeled;
-			labeled = new_labeled;
-			if (labeled == n) {
-				//Nothing more to do
-				should_continue = false;
-			}
-
-			// Reduce this function
-			reduce(x);
+			
 
 		} while (should_continue);
 
