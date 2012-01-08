@@ -44,7 +44,6 @@ namespace {
 // In: submodular_tests.cpp
 template<typename real> void test_pseudoboolean();
 void test_minimize();
-template<typename real> void test_posiform();
 
 //Simple routine for conversion of strings
 //used for the command line
@@ -106,16 +105,28 @@ int main_program(int num_args, char** args)
 
 	if (num_args == 1) {
 		// Run some tests
-		statusTry("Testing minimization...");
-		test_minimize();
-		statusTry("Testing pseudo-Boolean functions...");
-		test_pseudoboolean<double>();
+		//statusTry("Testing minimization...");
+		//test_minimize();
+		//statusTry("Testing pseudo-Boolean functions...");
+		//test_pseudoboolean<double>();
 		//test_pseudoboolean<int>(); // Does not have LP and therefore fails
-		statusTry("Testing posiform (double)...");
-		test_posiform<double>();
-		statusTry("Testing posiform (int)...");
-		test_posiform<int>();
+		//statusTry("Testing posiform (double)...");
+		//test_posiform<double>();
+		//statusTry("Testing posiform (int)...");
+		//test_posiform<int>();
+		//statusOK();
+
+
+		statusTry("Testing generators...");
+
+		Petter::GeneratorPseudoBoolean<real> genpb("generators/submodfull.txt");
 		statusOK();
+
+		statusTry("Testing create lp...");
+		PseudoBoolean<double> f("../tests/quartic_paper.txt");
+		genpb.create_lp(f);
+		statusOK();
+
 
 		cerr << "Possible choices : " << endl;
 		cerr << "  " << args[0] << " -m <int> -n <int> -nterms <int>  : runs random examples" << endl;

@@ -234,6 +234,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\source\library\GeneratorPseudoBoolean.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_complete.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_create_g.cpp" />
@@ -244,7 +245,6 @@
     <ClCompile Include="..\..\source\library\PseudoBoolean_reduce.cpp" />
     <ClCompile Include="..\..\source\library\VertexPacking.cpp" />
     <ClCompile Include="..\..\source\main_program.cpp" />
-    <ClCompile Include="..\..\source\posiform_tests.cpp" />
     <ClCompile Include="..\..\source\submodular_tests.cpp" />
   </ItemGroup>
   <ItemGroup>

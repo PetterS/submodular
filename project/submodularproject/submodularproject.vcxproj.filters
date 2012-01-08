@@ -11,8 +11,8 @@
     <ClCompile Include="..\..\source\library\PseudoBoolean_complete.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_minimize_reduction.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_minimize_lp.cpp" />
-    <ClCompile Include="..\..\source\posiform_tests.cpp" />
     <ClCompile Include="..\..\source\library\VertexPacking.cpp" />
+    <ClCompile Include="..\..\source\library\GeneratorPseudoBoolean.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\library\PseudoBoolean.h" />

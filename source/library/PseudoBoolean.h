@@ -66,10 +66,14 @@ namespace Petter
 	class SymmetricPseudoBoolean;
 
 	template<typename real>
+	class GeneratorPseudoBoolean;
+
+	template<typename real>
 	class PseudoBoolean
 	{
 	public:
 		template<typename real2> friend class SymmetricPseudoBoolean;
+		template<typename real2> friend class GeneratorPseudoBoolean;
 		template<typename real2,int degree> friend class Posiform;
 		void print_helper(std::ostream& out) const;
 
@@ -78,7 +82,7 @@ namespace Petter
 
 		void save_to_file(std::string filename); // Saves f to file
 
-		//Resests the function to the zero functions
+		//Reset the function to the zero functions
 		void clear();
 		// Returns the maximum index used + 1
 		int nvars() const;
@@ -228,6 +232,87 @@ namespace Petter
 		pbf.print_helper(out);
 		return out;
 	}
+
+	template<typename real>
+	class GeneratorPseudoBoolean
+	{
+	public:
+		template<typename real2> friend class PseudoBoolean;
+		GeneratorPseudoBoolean(std::string filename);
+		void clear();
+
+		// Create using LP
+		void create_lp(const PseudoBoolean<real>& pbf);
+
+		///////////
+		// Index //
+		///////////
+
+		template <typename Map>
+		int getindex(Map& m, const pair& key) 
+		{
+			auto itr = m.find( key );
+			if ( itr == m.end() ) {
+				m[key] = nlpvars;
+				int tmp = nlpvars;
+				nlpvars+=ngen2;
+				return tmp;
+			}
+			else {
+				return itr->second;
+			}
+		}
+		template <typename Map>
+		int getindex(Map& m, const triple& key) 
+		{
+			auto itr = m.find( key );
+			if ( itr == m.end() ) {
+				m[key] = nlpvars;
+				int tmp = nlpvars;
+				nlpvars+=ngen3;
+				return tmp;
+			}
+			else {
+				return itr->second;
+			}
+		}
+		template <typename Map>
+		int getindex(Map& m, const quad& key) 
+		{
+			auto itr = m.find( key );
+			if ( itr == m.end() ) {
+				m[key] = nlpvars;
+				int tmp = nlpvars;
+				nlpvars+=ngen4;
+				return tmp;
+			}
+			else {
+				return itr->second;
+			}
+		}
+
+		int iaa(int i, int j, int k, int l);
+		int ibb(int i, int j, int k);
+		int icc(int i, int j);
+
+	private:
+		int ngen2, ngen3, ngen4, ngen4pos, ngen4neg;
+		size_t nentries2, nentries3, nentries4;
+
+		std::vector<int> cc;
+		std::vector<int> bb12, bb13, bb23, bb123;
+		std::vector<int> aa12pos, aa13pos, aa14pos, aa23pos, aa24pos, aa34pos, aa123pos, aa124pos, aa134pos, aa234pos, aa1234pos;
+		std::vector<int> aa12neg, aa13neg, aa14neg, aa23neg, aa24neg, aa34neg, aa123neg, aa124neg, aa134neg, aa234neg, aa1234neg;
+
+		int nlpvars;
+		map<pair, int> indcc;
+		map<triple, int> indbb;
+		map<quad, int> indaa;
+
+		map<pair,   vector<real> > alphaij;
+		map<triple, vector<real> > alphaijk;
+		map<quad,   vector<real> > alphaijkl;
+	};
 
 }
 
