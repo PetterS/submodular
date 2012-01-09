@@ -123,7 +123,8 @@ int main_program(int num_args, char** args)
 		statusOK();
 
 		statusTry("Testing create lp...");
-		PseudoBoolean<double> f("../tests/quartic_paper.txt");
+//		PseudoBoolean<double> f("../tests/quartic_paper.txt");
+		PseudoBoolean<double> f("../../../tex/submodularstuff/maple/fq.txt");
 		genpb.create_lp(f);
 		statusOK();
 

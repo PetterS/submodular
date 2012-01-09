@@ -283,7 +283,7 @@ namespace Petter
 			if ( itr == m.end() ) {
 				m[key] = nlpvars;
 				int tmp = nlpvars;
-				nlpvars+=ngen4;
+				nlpvars+=ngen4pos;
 				return tmp;
 			}
 			else {
@@ -299,10 +299,10 @@ namespace Petter
 		int ngen2, ngen3, ngen4, ngen4pos, ngen4neg;
 		size_t nentries2, nentries3, nentries4;
 
-		std::vector<int> cc;
-		std::vector<int> bb12, bb13, bb23, bb123;
-		std::vector<int> aa12pos, aa13pos, aa14pos, aa23pos, aa24pos, aa34pos, aa123pos, aa124pos, aa134pos, aa234pos, aa1234pos;
-		std::vector<int> aa12neg, aa13neg, aa14neg, aa23neg, aa24neg, aa34neg, aa123neg, aa124neg, aa134neg, aa234neg, aa1234neg;
+		std::vector<int> cc, obj2;
+		std::vector<int> bb12, bb13, bb23, bb123, obj3;
+		std::vector<int> aa12pos, aa13pos, aa14pos, aa23pos, aa24pos, aa34pos, aa123pos, aa124pos, aa134pos, aa234pos, aa1234pos, obj4pos;
+		std::vector<int> aa12neg, aa13neg, aa14neg, aa23neg, aa24neg, aa34neg, aa123neg, aa124neg, aa134neg, aa234neg, aa1234neg, obj4neg;
 
 		int nlpvars;
 		map<pair, int> indcc;
