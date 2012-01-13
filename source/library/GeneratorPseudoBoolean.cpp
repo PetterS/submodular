@@ -82,10 +82,8 @@ namespace Petter
 
 		ASSERT_STR(fin, "Could not read aa");
 
-//		cout << "nentries234: " << nentries2 << " " << nentries3 << " " << nentries4 << endl;
 
 	}
-	//alpha[make_triple(i,j,k)].resize(ngen3);
 
 	template<typename real>
 	void GeneratorPseudoBoolean<real>::clear()
@@ -170,9 +168,6 @@ namespace Petter
 			rows.push_back(int(row));
 			cols.push_back(int(col));
 			values.push_back(value);
-
-//			cout << "row: " << row << " col: " << col << " value: " << value << endl;
-//			cout << rows.size() << endl;
 		};
 		//Changes the right-hand side of the constraints
 		auto change_rhs = [&rhs_eq](size_t row, double eq) 
@@ -202,7 +197,7 @@ namespace Petter
 				//Objective function
 				cost[colind] = -obj2[ii];
 			}
-			change_rhs(con, aij);
+			change_rhs(con, aij/2);
 			con++;
 
 		}
@@ -235,7 +230,7 @@ namespace Petter
 				//Objective function
 				cost[colind] = -obj3[ii];
 			}
-			change_rhs(con, aijk);
+			change_rhs(con, aijk/2);
 			con++;
 		}
 		for (auto itr = pbf.aijkl.begin(); itr != pbf.aijkl.end(); ++itr) {
@@ -336,14 +331,9 @@ namespace Petter
 					cost[colind] = -obj4neg[ii];
 				}
 			}
-			change_rhs(con, aijkl);
+			change_rhs(con, aijkl/2);
 			con++;
 		}
-
-		cout << endl;
-		cout << rows.size() << endl;
-		cout << nEntries << endl;
-
 
 		ASSERT(nLPVars == this->nlpvars);
 
@@ -369,20 +359,23 @@ namespace Petter
 
 		double obj = 0;
 		for (int ii=0;ii<nLPVars;++ii){
-			cout << "ii lpvars cost: " << ii << " " << lpvars[ii] << " " << cost[ii] << endl;
 			obj+= (lpvars[ii]*cost[ii]);
 		}
-		cout << "Objective: " << obj << endl;
+		cout << endl << "Objective: " << -obj << endl;
 
-/*
 		for (auto itr = pbf.aij.begin(); itr != pbf.aij.end(); ++itr) {
 			const pair& ind = itr->first;
 			int i=get_i(ind);
 			int j=get_j(ind);
 
-			bij[ind] = lpvars[ ib(i,j) ];
-			cij[ind] = lpvars[ ic(i,j) ];
+			alphaij[ind].resize(ngen2);
+			int icctmp = icc(i,j);
+			for (int ii=0;ii<ngen2;++ii){
+				alphaij[ind][ii] = lpvars[ icctmp+ii ];
+//			    cout << "alphaij (" << i << "," << j << "): " << alphaij[ind][ii] << endl;
+			}
 		}
+
 
 		for (auto itr = pbf.aijk.begin(); itr != pbf.aijk.end(); ++itr) {
 			const triple& ind = itr->first;
@@ -390,12 +383,14 @@ namespace Petter
 			int j=get_j(ind);
 			int k=get_k(ind);
 
-			bijk[ind] = lpvars[ ib(i,j,k) ];
-			cijk[ind] = lpvars[ ic(i,j,k) ];
-			dijk[ind] = lpvars[ id(i,j,k) ];
-			eijk[ind] = lpvars[ ie(i,j,k) ];
+			alphaijk[ind].resize(ngen3);
+			int ibbtmp = ibb(i,j,k);
+			for (int ii=0;ii<ngen3;++ii){
+				alphaijk[ind][ii] = lpvars[ ibbtmp+ii ];
+//			    cout << "alphaijk (" << i << "," << j << "," << k << "): " << alphaijk[ind][ii] << endl;
+			}
 		}
-	
+
 		for (auto itr = pbf.aijkl.begin(); itr != pbf.aijkl.end(); ++itr) {
 			const quad& ind = itr->first;
 			int i=get_i(ind);
@@ -403,18 +398,13 @@ namespace Petter
 			int k=get_k(ind);
 			int l=get_l(ind);
 
-			bijkl[ind] = lpvars[ ib(i,j,k,l) ];
-			cijkl[ind] = lpvars[ ic(i,j,k,l) ];
-			dijkl[ind] = lpvars[ id(i,j,k,l) ];
-			eijkl[ind] = lpvars[ ie(i,j,k,l) ];
-			pijkl[ind] = lpvars[ ip(i,j,k,l) ];
-			qijkl[ind] = lpvars[ iq(i,j,k,l) ];
-			rijkl[ind] = lpvars[ ir(i,j,k,l) ];
-			sijkl[ind] = lpvars[ is(i,j,k,l) ];
+			alphaijkl[ind].resize(ngen4pos);
+			int iaatmp = iaa(i,j,k,l);
+			for (int ii=0;ii<ngen4pos;++ii){
+				alphaijkl[ind][ii] = lpvars[ iaatmp+ii ];
+//			    cout << "alphaijkl (" << i << "," << j << "," << k << "," << l << "): " << alphaijkl[ind][ii] << endl;
+			}
 		}
-
-
-*/
 
 
 
