@@ -244,6 +244,9 @@ namespace Petter
 		// Create using LP
 		void create_lp(const PseudoBoolean<real>& pbf);
 
+		// Minimization
+		real minimize(vector<label>& x, int& nlabelled) const;
+
 		///////////
 		// Index //
 		///////////
@@ -295,6 +298,34 @@ namespace Petter
 		int ibb(int i, int j, int k);
 		int icc(int i, int j);
 
+		// This internal struct holds a monomial of degrees 0 (i,j<0), 1 (j<0) or 2.
+		struct Monomial
+		{
+			Monomial(real coef=0) 
+			{
+				i = j = -1;
+				coef = 0;
+			}
+			Monomial(int i_in, real coef) 
+			{
+				i = i_in;
+				j = -1;
+				c = coef;
+			}
+			Monomial(int i_in, int j_in, real coef) 
+			{
+				i = i_in;
+				j = j_in;
+				c = coef;
+			}
+			void check() 
+			{
+				ASSERT(i>=0 || j<0);
+			}
+			int i,j;
+			real c;
+		};
+
 	private:
 		int ngen2, ngen3, ngen4, ngen4pos, ngen4neg;
 		size_t nentries2, nentries3, nentries4;
@@ -303,6 +334,9 @@ namespace Petter
 		std::vector<int> bb12, bb13, bb23, bb123, obj3;
 		std::vector<int> aa12pos, aa13pos, aa14pos, aa23pos, aa24pos, aa34pos, aa123pos, aa124pos, aa134pos, aa234pos, aa1234pos, obj4pos;
 		std::vector<int> aa12neg, aa13neg, aa14neg, aa23neg, aa24neg, aa34neg, aa123neg, aa124neg, aa134neg, aa234neg, aa1234neg, obj4neg;
+
+		// These variables hold the reduced forms of the generators
+		std::vector< std::vector< Monomial > > gen2red, gen3red, gen4redpos, gen4redneg;
 
 		int nlpvars;
 		map<pair, int> indcc;

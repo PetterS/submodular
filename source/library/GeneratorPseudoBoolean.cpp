@@ -24,6 +24,40 @@ namespace Petter
 		return cnt;
 	}
 
+	template<typename real, typename vectype>
+	void read_reduced_polynomial(vector<vectype>& polynomial, ifstream& fin)
+	{
+		real c;
+		int n,i,j;
+		typedef GeneratorPseudoBoolean<real>::Monomial Monomial;
+
+		// Start with an empty polynomial
+		polynomial.clear();
+
+		// Read constant term
+		fin >> c;
+		polynomial.push_back( Monomial(c) );
+		ASSERT(fin);
+
+		// Read linear terms
+		fin >> n;
+		ASSERT(fin);
+		for (i=0; i<n; ++i) {
+			fin >> c;
+			ASSERT(fin);
+			polynomial.push_back( Monomial(i,c) );
+		}
+
+		// Read quadratic terms
+		fin >> n;
+		for (int ind=0;ind<n;++ind) {
+			fin >> i >> j >> c;
+			ASSERT(fin);
+			ASSERT(i>=0 && j>=0);
+			polynomial.push_back( Monomial(i,j,c) );
+		}
+	}
+
 	template<typename real> 
 	GeneratorPseudoBoolean<real>::GeneratorPseudoBoolean(string filename)
 	{
@@ -34,6 +68,37 @@ namespace Petter
 
 		ngen4=2*ngen4pos; //Half of generators required to be positive!
 		ngen4neg = ngen4pos;
+
+
+		//
+		// Read generated forms
+		// 
+
+		// Read quadratic generators
+		gen2red.resize(ngen2);
+		for (int i=0;i<ngen2;++i) {
+			read_reduced_polynomial<real>( gen2red.at(i), fin);
+		}
+
+		// Read cubic generators
+		gen3red.resize(ngen3);
+		for (int i=0;i<ngen3;++i) {
+			read_reduced_polynomial<real>( gen3red.at(i), fin);
+		}
+
+		// Read quadratic generators
+		gen4redpos.resize(ngen4pos);
+		for (int i=0;i<ngen4pos;++i) {
+			read_reduced_polynomial<real>( gen4redpos.at(i), fin);
+		}
+		gen4redneg.resize(ngen4neg);
+		for (int i=0;i<ngen4neg;++i) {
+			read_reduced_polynomial<real>( gen4redneg.at(i), fin);
+		}
+
+		//
+		// Read aa,bb and cc
+		// 
 
 		nentries2 = read_vec(cc,fin,ngen2);
 		read_vec(obj2,fin,ngen2);
@@ -81,8 +146,6 @@ namespace Petter
 		ASSERT_STR(ndummy==nentries4,"Not same number of entries in pos and neg");
 
 		ASSERT_STR(fin, "Could not read aa");
-
-
 	}
 
 	template<typename real>
@@ -410,6 +473,28 @@ namespace Petter
 
 
 	} //end of create_lp
+
+
+
+
+
+
+
+
+	template<typename real>
+	real GeneratorPseudoBoolean<real>::minimize(vector<label>& x, int& nlabelled) const
+	{
+		index nVars = index( x.size() ); // Number of variables
+		index var = 2*nVars; // Current variable
+
+		return 0;
+	}
+
+
+
+
+
+
 }
 
 #include "pb_instances.inc"
