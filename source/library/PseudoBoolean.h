@@ -330,6 +330,7 @@ namespace Petter
 		int ngen2, ngen3, ngen4, ngen4pos, ngen4neg;
 		size_t nentries2, nentries3, nentries4;
 
+		// These variables hold the information needed to build the constraint matrix
 		std::vector<int> cc, obj2;
 		std::vector<int> bb12, bb13, bb23, bb123, obj3;
 		std::vector<int> aa12pos, aa13pos, aa14pos, aa23pos, aa24pos, aa34pos, aa123pos, aa124pos, aa134pos, aa234pos, aa1234pos, obj4pos;
@@ -338,14 +339,18 @@ namespace Petter
 		// These variables hold the reduced forms of the generators
 		std::vector< std::vector< Monomial > > gen2red, gen3red, gen4redpos, gen4redneg;
 
+		// LP indices
 		int nlpvars;
 		map<pair, int> indcc;
 		map<triple, int> indbb;
 		map<quad, int> indaa;
 
+		// Coefficients in front of generators
 		map<pair,   vector<real> > alphaij;
 		map<triple, vector<real> > alphaijk;
 		map<quad,   vector<real> > alphaijkl;
+		// Positive or negative generator used
+		map<quad, bool> posgen4;
 	};
 
 }
