@@ -50,6 +50,92 @@ namespace Petter {
 		}
 	}
 
+
+
+	//
+	// Adds a linear monomial to a graph
+	//
+	template<typename real>
+	void add_monomial_1_to_graph( real& c, Graph<real,real,real>& graph, int i, real a) 
+	{
+		if (a<0) {
+			// a*xi = -a*(1-xi) + a
+			graph.add_tweights(i, 0,  -a);
+			c += a;
+		}
+		else {
+			graph.add_tweights(i, a,  0);
+		}
+	}
+
+	//
+	// Adds a quadratic monomial to a graph
+	//
+	template<typename real>
+	void add_monomial_2_to_graph( real& c,  Graph<real,real,real>& graph, int i, int j, real a) 
+	{
+		ASSERT(a <= 0); // Submodularity
+
+		// a*xi*xj = -a*(1-xi)*xj + a*xj
+		graph.add_edge(i,j, -a, 0);
+		add_monomial_1_to_graph(c, graph, j, a);
+	}
+
+	
+	template<typename real>
+	void test_graph_functions() 
+	{
+		{
+			//
+			// First test
+			//
+			real C = 0;
+			Graph<real,real,real> graph1(100,100);
+			graph1.add_node(2);
+		
+			// -10*x0*x1
+			add_monomial_2_to_graph(C, graph1, 0,1, -10);
+			// Force both variables to 1
+			graph1.add_tweights(0,0,1000000);
+			graph1.add_tweights(1,0,1000000);
+
+			ASSERT( C+graph1.maxflow() == -10 );
+			ASSERT( graph1.what_segment(0) == 1);
+			ASSERT( graph1.what_segment(1) == 1);
+		}
+
+		{
+			//
+			// Second test
+			//
+			real C = 0;
+			Graph<real,real,real> graph2(100,100);
+			graph2.add_node(2);
+		
+			// -2*x0*x1 - 5*x0 + 7*x1 + 1;
+			add_monomial_2_to_graph(C,graph2, 0,1, -2);
+			add_monomial_1_to_graph(C,graph2, 0, -5);
+			add_monomial_1_to_graph(C,graph2, 1,  7);
+			C += 1;
+
+			// Force both variables to 1
+			graph2.add_tweights(0,0,1000000);
+			graph2.add_tweights(1,0,1000000);
+		
+			ASSERT( C+graph2.maxflow() == -2 - 5 + 7 + 1);
+			ASSERT( graph2.what_segment(0) == 1);
+			ASSERT( graph2.what_segment(1) == 1);
+		}
+	}
+
+
+
+
+
+
+
+
+
 	template<typename real>
 	class Minimizer 
 	{

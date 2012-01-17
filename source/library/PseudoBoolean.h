@@ -318,7 +318,7 @@ namespace Petter
 				j = j_in;
 				c = coef;
 			}
-			void check() 
+			void check() const
 			{
 				ASSERT(i>=0 || j<0);
 			}

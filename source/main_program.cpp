@@ -26,6 +26,7 @@ using namespace std;
 #include "Petter-Color.h"
 #include "PseudoBoolean.h"
 #include "Posiform.h"
+#include "Minimizer.h" // For tests
 using namespace Petter;
 
 
@@ -115,6 +116,9 @@ int main_program(int num_args, char** args)
 		//statusTry("Testing posiform (int)...");
 		//test_posiform<int>();
 		//statusOK();
+		statusTry("Testing graph functions...");
+		test_graph_functions<int>();
+		statusOK();
 
 
 		statusTry("Testing generators...");

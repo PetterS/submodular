@@ -1,12 +1,15 @@
-#include <typeinfo>
-
-#include "PseudoBoolean.h"
-
-#include <coin/ClpSimplex.hpp>
 
 #include <fstream>
-
+#include <typeinfo>
 using namespace std;
+
+#include "PseudoBoolean.h"
+#include "Minimizer.h"
+
+// BK maxflow
+#include "graph.h"
+// LP solver
+#include <coin/ClpSimplex.hpp>
 
 namespace Petter
 {
@@ -477,7 +480,37 @@ namespace Petter
 
 
 
+	//
+	// Adds alpha times a quadratic generator to a graph
+	//
+	template<typename real, typename vectype>
+	void add_generator_to_graph( real& C, Graph<real,real,real>& graph, real alpha, const vector<vectype>& polynomial, int i, int j)
+	{
+		// Go though the number of indices used
+		// Not needed because there will be no extra variables
 
+		int idx[] = {i ,j}; // Translates from "local" indices to "global"
+
+		for (auto itr = polynomial.begin(); itr != polynomial.end(); ++itr) {
+			const GeneratorPseudoBoolean<real>::Monomial& monomial = *itr;
+			monomial.check(); //Debug
+
+			real beta = monomial.c; // Constant in front of monomial
+
+			if (monomial.j >= 0) {
+				// Quadraic term, add to graph
+				add_monomial_2_to_graph(C,graph, i,j, alpha*beta);
+			}
+			else if (monomial.i >= 0) {
+				// Linear term, add to graph
+				add_monomial_1_to_graph(C,graph, i, alpha*beta);
+			}
+			else {
+				// Constant
+				C += alpha*beta;
+			}
+		}
+	}
 
 
 
@@ -486,6 +519,38 @@ namespace Petter
 	{
 		index nVars = index( x.size() ); // Number of variables
 		index var = 2*nVars; // Current variable
+
+		real C = 0; // Constant in energy function
+		Graph<real,real,real> graph(var, 10*var); //TODO: calculate the number of nodes and edges
+		graph.add_node(var);
+		
+		//
+		// Go through all alphas which correspond to quadratic generators
+		// 
+		for (auto itr = alphaij.begin(); itr != alphaij.end(); ++itr) {
+			const pair& ind = itr->first;
+			int i=get_i(ind);
+			int j=get_j(ind);
+			const auto& vec = itr->second;
+			for (int ii=0;ii<ngen2;++ii) {
+				real alpha = vec.at(ii);
+				if (alpha > 0) {
+					// Add monomials for this generator to the graph
+					add_generator_to_graph(C, graph, alpha, gen2red.at(ii), i,j );
+				}
+			}
+		}
+
+		//
+		// Go through all alphas which correspond to cubic generators
+		// 
+
+		//
+		// Go through all alphas which correspond to quartic generators
+		// 
+
+		// Compute the maximum flow and labeling
+		graph.maxflow();
 
 		return 0;
 	}
