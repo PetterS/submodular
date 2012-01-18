@@ -152,6 +152,9 @@ int main_program(int num_args, char** args)
 		}
 		cout << "]" << endl;
 
+		if (nlabelled == f.nvars()) {
+			cout << "f(x*)     : " << f.eval(x) << endl;
+		}
 
 		//cerr << "Possible choices : " << endl;
 		//cerr << "  " << args[0] << " -m <int> -n <int> -nterms <int>  : runs random examples" << endl;

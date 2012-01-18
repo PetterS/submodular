@@ -126,6 +126,46 @@ namespace Petter {
 			ASSERT( graph2.what_segment(0) == 1);
 			ASSERT( graph2.what_segment(1) == 1);
 		}
+
+		{
+			real C = 0;
+			Graph<real,real,real> graph2(100,100);
+			graph2.add_node(1);
+			add_monomial_1_to_graph(C,graph2, 0, -5);
+			graph2.add_tweights(0,0,1000000);		
+			ASSERT( C+graph2.maxflow() == -5);
+			ASSERT( graph2.what_segment(0) == 1);
+		}
+
+		{
+			real C = 0;
+			Graph<real,real,real> graph2(100,100);
+			graph2.add_node(1);
+			add_monomial_1_to_graph(C,graph2, 0, -5);
+			graph2.add_tweights(0,1000000,0);		
+			ASSERT( C+graph2.maxflow() == 0);
+			ASSERT( graph2.what_segment(0) == 0);
+		}
+
+		{
+			real C = 0;
+			Graph<real,real,real> graph2(100,100);
+			graph2.add_node(1);
+			add_monomial_1_to_graph(C,graph2, 0, 5);
+			graph2.add_tweights(0,0,1000000);		
+			ASSERT( C+graph2.maxflow() == 5);
+			ASSERT( graph2.what_segment(0) == 1);
+		}
+
+		{
+			real C = 0;
+			Graph<real,real,real> graph2(100,100);
+			graph2.add_node(1);
+			add_monomial_1_to_graph(C,graph2, 0, 5);
+			graph2.add_tweights(0,1000000,0);		
+			ASSERT( C+graph2.maxflow() == 0);
+			ASSERT( graph2.what_segment(0) == 0);
+		}
 	}
 
 

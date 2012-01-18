@@ -208,6 +208,11 @@ namespace Petter
 		typedef double real;
 		clear();
 
+		// Save the linear coefficients
+		for (auto itr = pbf.ai.begin(); itr != pbf.ai.end(); ++itr) {
+			alphai[itr->first] = itr->second / 2;
+		}
+
 
 		int nLPVars = int( ngen2*pbf.aij.size() + ngen3*pbf.aijk.size() + ngen4pos*pbf.aijkl.size() );
 
@@ -454,7 +459,11 @@ namespace Petter
 			int icctmp = icc(i,j);
 			for (int ii=0;ii<ngen2;++ii){
 				alphaij[ind][ii] = lpvars[ icctmp+ii ];
-			    cout << "alphaij (" << i << "," << j << "; " << ii << "): " << alphaij[ind][ii] << endl;
+
+				if (alphaij[ind][ii] != 0) {
+					// +1 to reflect Maple indexing
+					cout << "alphaij (" << i+1 << "," << j+1 << "; " << ii+1 << "): " << alphaij[ind][ii] << endl;
+				}
 			}
 		}
 
@@ -469,7 +478,11 @@ namespace Petter
 			int ibbtmp = ibb(i,j,k);
 			for (int ii=0;ii<ngen3;++ii){
 				alphaijk[ind][ii] = lpvars[ ibbtmp+ii ];
-			    cout << "alphaijk (" << i << "," << j << "," << k << "; " << ii << "): " << alphaijk[ind][ii] << endl;
+
+				if (alphaijk[ind][ii] != 0) {
+					// +1 to reflect Maple indexing
+					cout << "alphaijk (" << i+1 << "," << j+1 << "," << k+1 << "; " << ii+1 << "): " << alphaijk[ind][ii] << endl;
+				}
 			}
 		}
 
@@ -484,7 +497,11 @@ namespace Petter
 			int iaatmp = iaa(i,j,k,l);
 			for (int ii=0;ii<ngen4pos;++ii){
 				alphaijkl[ind][ii] = lpvars[ iaatmp+ii ];
-			    cout << "alphaijkl (" << i << "," << j << "," << k << "," << l << "; " << ii << "): " << alphaijkl[ind][ii] << endl;
+
+				if (alphaijkl[ind][ii] != 0) {
+					// +1 to reflect Maple indexing
+					cout << "alphaijkl (" << i+1 << "," << j+1 << "," << k+1 << "," << l+1 << "; " << ii+1 << "): " << alphaijkl[ind][ii] << endl;
+				}
 			}
 		}
 
@@ -579,7 +596,7 @@ namespace Petter
 		idx.at(4) = j + nVars;
 		idx.at(5) = k + nVars;
 		
-		for (int n=3; n<=maxi; ++n) {
+		for (int n=6; n<=maxi; ++n) {
 			idx.at(n) = graph.add_node(); // Extra variable
 		}
 
@@ -634,6 +651,18 @@ namespace Petter
 		graph.add_node(var);
 		
 		//
+		// Linear generator
+		//
+		for (auto itr = alphai.begin(); itr != alphai.end(); ++itr) {
+			int i = itr->first;
+			real alpha = itr->second;
+
+			add_monomial_1_to_graph(C,graph,i,alpha);
+			add_monomial_1_to_graph(C,graph,i+nVars,-alpha);
+			C+=alpha;
+		}
+
+		//
 		// Go through all alphas which correspond to quadratic generators
 		// 
 		for (auto itr = alphaij.begin(); itr != alphaij.end(); ++itr) {
@@ -671,7 +700,7 @@ namespace Petter
 		//
 		// Go through all alphas which correspond to quartic generators
 		// 
-		for (auto itr = alphaijkl.begin(); false && itr != alphaijkl.end(); ++itr) {
+		for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
 			const quad& ind = itr->first;
 			int i=get_i(ind);
 			int j=get_j(ind);
