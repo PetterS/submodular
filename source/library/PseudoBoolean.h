@@ -304,7 +304,7 @@ namespace Petter
 			Monomial(real coef=0) 
 			{
 				i = j = -1;
-				coef = 0;
+				c = coef;
 			}
 			Monomial(int i_in, real coef) 
 			{
@@ -345,6 +345,8 @@ namespace Petter
 		map<triple, int> indbb;
 		map<quad, int> indaa;
 
+		// Linear terms
+		map<int, real> alphai;
 		// Coefficients in front of generators
 		map<pair,   vector<real> > alphaij;
 		map<triple, vector<real> > alphaijk;
