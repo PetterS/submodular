@@ -39,7 +39,9 @@ namespace Petter
 
 		// Read constant term
 		fin >> c;
-		polynomial.push_back( Monomial(c) );
+		if (c!=0) {
+			polynomial.push_back( Monomial(c) );
+		}
 		ASSERT(fin);
 
 		// Read linear terms
@@ -48,16 +50,22 @@ namespace Petter
 		for (i=0; i<n; ++i) {
 			fin >> c;
 			ASSERT(fin);
-			polynomial.push_back( Monomial(i,c) );
+			if (c!=0) {
+				polynomial.push_back( Monomial(i,c) );
+			}
 		}
 
 		// Read quadratic terms
 		fin >> n;
 		for (int ind=0;ind<n;++ind) {
 			fin >> i >> j >> c;
+			i--; // Convert between Maple indexing and C++ indexing
+			j--; // Convert between Maple indexing and C++ indexing 
 			ASSERT(fin);
 			ASSERT(i>=0 && j>=0);
-			polynomial.push_back( Monomial(i,j,c) );
+			if (c!=0) {
+				polynomial.push_back( Monomial(i,j,c) );
+			}
 		}
 	}
 
@@ -446,7 +454,7 @@ namespace Petter
 			int icctmp = icc(i,j);
 			for (int ii=0;ii<ngen2;++ii){
 				alphaij[ind][ii] = lpvars[ icctmp+ii ];
-//			    cout << "alphaij (" << i << "," << j << "): " << alphaij[ind][ii] << endl;
+			    cout << "alphaij (" << i << "," << j << "; " << ii << "): " << alphaij[ind][ii] << endl;
 			}
 		}
 
@@ -461,7 +469,7 @@ namespace Petter
 			int ibbtmp = ibb(i,j,k);
 			for (int ii=0;ii<ngen3;++ii){
 				alphaijk[ind][ii] = lpvars[ ibbtmp+ii ];
-//			    cout << "alphaijk (" << i << "," << j << "," << k << "): " << alphaijk[ind][ii] << endl;
+			    cout << "alphaijk (" << i << "," << j << "," << k << "; " << ii << "): " << alphaijk[ind][ii] << endl;
 			}
 		}
 
@@ -476,7 +484,7 @@ namespace Petter
 			int iaatmp = iaa(i,j,k,l);
 			for (int ii=0;ii<ngen4pos;++ii){
 				alphaijkl[ind][ii] = lpvars[ iaatmp+ii ];
-//			    cout << "alphaijkl (" << i << "," << j << "," << k << "," << l << "): " << alphaijkl[ind][ii] << endl;
+			    cout << "alphaijkl (" << i << "," << j << "," << k << "," << l << "; " << ii << "): " << alphaijkl[ind][ii] << endl;
 			}
 		}
 
@@ -487,6 +495,18 @@ namespace Petter
 
 
 
+	template<typename Monomial>
+	void print_monomial(std::ostream& out, const Monomial& monomial)
+	{
+		out << "Monomial ";
+		out << monomial.c;
+		if (monomial.i>=0) {
+			out << "*x" << monomial.i;
+		}
+		if (monomial.j>=0) {
+			out << "*x" << monomial.j;
+		}
+	}
 
 
 	//
@@ -496,6 +516,10 @@ namespace Petter
 	void add_monomial_to_graph( real& C, Graph<real,real,real>& graph, real alpha, const typename GeneratorPseudoBoolean<real>::Monomial& monomial, const vector<int>& idx)
 	{
 		monomial.check(); //Debug
+
+		//cout << "Adding ";
+		//print_monomial(cout,monomial);
+		//cout << " to the graph." << endl;
 
 		real beta = monomial.c; // Constant in front of monomial
 
@@ -517,14 +541,16 @@ namespace Petter
 	// Adds alpha times a quadratic generator to a graph
 	//
 	template<typename real, typename vectype>
-	void add_generator_to_graph( real& C, Graph<real,real,real>& graph, real alpha, const vector<vectype>& polynomial, int i, int j)
+	void add_generator_to_graph( int nVars, real& C, Graph<real,real,real>& graph, real alpha, const vector<vectype>& polynomial, int i, int j)
 	{
 		// Go though the number of indices used
 		// Not needed because there will be no extra variables
 
-		vector<int> idx(2); // Translates from "local" indices to "global"
-		idx[0] = i;
+		vector<int> idx(4); // Translates from "local" indices to "global"
+		idx[0] = i; // x variables
 		idx[1] = j;
+		idx[2] = i + nVars; // y variables
+		idx[3] = j + nVars;
 
 		for (auto itr = polynomial.begin(); itr != polynomial.end(); ++itr) {
 			add_monomial_to_graph(C,graph,alpha,*itr,idx);
@@ -536,7 +562,7 @@ namespace Petter
 	// Adds alpha times a cubic generator to a graph
 	//
 	template<typename real, typename vectype>
-	void add_generator_to_graph( real& C, Graph<real,real,real>& graph, real alpha, const vector<vectype>& polynomial, int i, int j, int k)
+	void add_generator_to_graph( int nVars, real& C, Graph<real,real,real>& graph, real alpha, const vector<vectype>& polynomial, int i, int j, int k)
 	{
 		// Go though the number of indices used
 		int maxi = -1;
@@ -544,10 +570,15 @@ namespace Petter
 			maxi = max( maxi, itr->i);
 			maxi = max( maxi, itr->j);
 		}
+
 		vector<int> idx(maxi+1); // Translates from "local" indices to "global"
-		idx.at(0) = i;
+		idx.at(0) = i; // x variables
 		idx.at(1) = j;
 		idx.at(2) = k;
+		idx.at(3) = i + nVars; // y variables
+		idx.at(4) = j + nVars;
+		idx.at(5) = k + nVars;
+		
 		for (int n=3; n<=maxi; ++n) {
 			idx.at(n) = graph.add_node(); // Extra variable
 		}
@@ -561,7 +592,7 @@ namespace Petter
 	// Adds alpha times a quartic generator to a graph
 	//
 	template<typename real, typename vectype>
-	void add_generator_to_graph( real& C, Graph<real,real,real>& graph, real alpha, const vector<vectype>& polynomial, int i, int j, int k, int l)
+	void add_generator_to_graph( int nVars, real& C, Graph<real,real,real>& graph, real alpha, const vector<vectype>& polynomial, int i, int j, int k, int l)
 	{
 		// Go though the number of indices used
 		int maxi = -1;
@@ -569,12 +600,18 @@ namespace Petter
 			maxi = max( maxi, itr->i);
 			maxi = max( maxi, itr->j);
 		}
+
 		vector<int> idx(maxi+1); // Translates from "local" indices to "global"
-		idx.at(0) = i;
+		idx.at(0) = i;  // x variables
 		idx.at(1) = j;
 		idx.at(2) = k;
 		idx.at(3) = l;
-		for (int n=4; n<=maxi; ++n) {
+		idx.at(4) = i + nVars; // y variables
+		idx.at(5) = j + nVars;
+		idx.at(6) = k + nVars;
+		idx.at(7) = l + nVars;
+
+		for (int n=8; n<=maxi; ++n) {
 			idx.at(n) = graph.add_node(); // Extra variable
 		}
 
@@ -593,7 +630,7 @@ namespace Petter
 		index var = 2*nVars; // Current variable
 
 		real C = 0; // Constant in energy function
-		Graph<real,real,real> graph(var, 10*var); //TODO: calculate the number of nodes and edges
+		Graph<real,real,real> graph(var, 50*var); //TODO: calculate the number of nodes and edges
 		graph.add_node(var);
 		
 		//
@@ -608,7 +645,7 @@ namespace Petter
 				real alpha = vec.at(ii);
 				if (alpha > 0) {
 					// Add monomials for this generator to the graph
-					add_generator_to_graph(C, graph, alpha, gen2red.at(ii), i,j );
+					add_generator_to_graph(nVars, C, graph, alpha, gen2red.at(ii), i,j );
 				}
 			}
 		}
@@ -626,7 +663,7 @@ namespace Petter
 				real alpha = vec.at(ii);
 				if (alpha > 0) {
 					// Add monomials for this generator to the graph
-					add_generator_to_graph(C, graph, alpha, gen3red.at(ii), i,j,k );
+					add_generator_to_graph(nVars, C, graph, alpha, gen3red.at(ii), i,j,k );
 				}
 			}
 		}
@@ -634,7 +671,7 @@ namespace Petter
 		//
 		// Go through all alphas which correspond to quartic generators
 		// 
-		for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
+		for (auto itr = alphaijkl.begin(); false && itr != alphaijkl.end(); ++itr) {
 			const quad& ind = itr->first;
 			int i=get_i(ind);
 			int j=get_j(ind);
@@ -650,17 +687,17 @@ namespace Petter
 			}
 
 
-			for (int ii=0;ii<ngen4;++ii) {
+			for (int ii=0;ii<ngen4pos;++ii) {
 				real alpha = vec.at(ii);
 				if (alpha > 0) {
 					// Add monomials for this generator to the graph
 					if (pos) {
 						// Positive generator was used
-						add_generator_to_graph(C, graph, alpha, gen4redpos.at(ii), i,j,k,l );
+						add_generator_to_graph(nVars, C, graph, alpha, gen4redpos.at(ii), i,j,k,l );
 					}
 					else {
 						// Negative generator was used
-						add_generator_to_graph(C, graph, alpha, gen4redneg.at(ii), i,j,k,l );
+						add_generator_to_graph(nVars, C, graph, alpha, gen4redneg.at(ii), i,j,k,l );
 					}
 				}
 			}
@@ -669,7 +706,28 @@ namespace Petter
 		// Compute the maximum flow and labeling
 		real ming = C + graph.maxflow();
 
-		// TODO: extract labeling
+		// Extract labeling
+		nlabelled = 0;
+		for (int i=0; i<nVars; ++i) {
+			//if (var_used[i]) {
+				x[i] = graph.what_segment(i);
+				label yi = graph.what_segment(i+nVars);;
+				if (x[i] == yi) {
+					x[i] = -1;
+				}
+				else {
+					nlabelled++;
+				}
+			//}
+			//else {
+			//	// This variable is not part of the polynomial,
+			//	// therefore labelled
+			//	if (x[i]<0) {
+			//		x[i]=0;
+			//	}
+			//	nlabelled++;
+			//}
+		}
 
 		return ming;
 	}

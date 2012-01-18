@@ -133,25 +133,44 @@ int main_program(int num_args, char** args)
 		genpb.create_lp(f);
 		statusOK();
 
+		statusTry("Minimizing g...");
+		vector<label> x(f.nvars(), -1);
+		int nlabelled=-1;
+		double gmin = genpb.minimize(x, nlabelled);
+		statusOK();
 
-		cerr << "Possible choices : " << endl;
-		cerr << "  " << args[0] << " -m <int> -n <int> -nterms <int>  : runs random examples" << endl;
-		cerr << "  " << args[0] << " -m <int> -example                : examples from paper" << endl;
-		cerr << "  " << args[0] << " -file <str>                      : read polynomial from file" << endl;
-		cerr << "  " << args[0] << " -sat <str>                       : read SAT problem from file" << endl;
-		cerr << endl;
-		cerr << "    -fixetal                         : use reductions from Fix et al." << endl;
-		cerr << "    -optimal                         : use linear programming" << endl;
-		cerr << "    -heuristic                       : use heuristics" << endl;
-		cerr << "    -exhaustive                      : use exhaustive search (n<=30)" << endl;
-		cerr << endl;
-		cerr << "    -iterate                         : also iterate reduction methods" << endl;
-		cerr << endl;
-		cerr << "    -packing                         : compute solution using vertex packing" << endl;
-		cerr << "    -lprelax                         : compute LP relaxation" << endl;
-		cerr << endl;
-		cerr << "    -verbose                         : print polynomials" << endl;
-		cerr << endl;
+		cout << "bound     : " << gmin << endl;
+		cout << "nlabelled : " << nlabelled << endl;
+		cout << "x = [";
+		for (int i=0;i<f.nvars();++i) {
+			if (x.at(i) < 0) {
+				cout << '?';
+			}
+			else {
+				cout << int(x.at(i));
+			}
+		}
+		cout << "]" << endl;
+
+
+		//cerr << "Possible choices : " << endl;
+		//cerr << "  " << args[0] << " -m <int> -n <int> -nterms <int>  : runs random examples" << endl;
+		//cerr << "  " << args[0] << " -m <int> -example                : examples from paper" << endl;
+		//cerr << "  " << args[0] << " -file <str>                      : read polynomial from file" << endl;
+		//cerr << "  " << args[0] << " -sat <str>                       : read SAT problem from file" << endl;
+		//cerr << endl;
+		//cerr << "    -fixetal                         : use reductions from Fix et al." << endl;
+		//cerr << "    -optimal                         : use linear programming" << endl;
+		//cerr << "    -heuristic                       : use heuristics" << endl;
+		//cerr << "    -exhaustive                      : use exhaustive search (n<=30)" << endl;
+		//cerr << endl;
+		//cerr << "    -iterate                         : also iterate reduction methods" << endl;
+		//cerr << endl;
+		//cerr << "    -packing                         : compute solution using vertex packing" << endl;
+		//cerr << "    -lprelax                         : compute LP relaxation" << endl;
+		//cerr << endl;
+		//cerr << "    -verbose                         : print polynomials" << endl;
+		//cerr << endl;
 
 		return 0;
 	}
