@@ -759,6 +759,22 @@ namespace Petter
 		// Compute the maximum flow and labeling
 		real ming = constant + C + graph.maxflow();
 
+		// Save solution from graph
+		//
+		int total_num_vars = graph.get_node_num();
+		vector<char> xfull(total_num_vars);
+		for (int i=0;i<total_num_vars; ++i) {
+			xfull[i] = graph.what_segment(i);
+		}
+
+		//TODO: try to obtain (0,1) and (1,0) solutions if possible
+		//      does not matter that much for random polynomials
+			//vector<std::pair<int,int> > pairs;
+			//for (int i=0;i<nVars;++i) {
+			//	pairs.push_back( std::make_pair(i, i+nVars) ); 
+			//}
+			//resolve_different(graph,xfull,pairs);
+
 		// Extract labeling
 		nlabelled = 0;
 		for (int i=0; i<nVars; ++i) {
@@ -769,8 +785,10 @@ namespace Petter
 			}
 
 			if (used) {
-				x[i] = graph.what_segment(i);
-				label yi = graph.what_segment(i+nVars);;
+				//x[i] = graph.what_segment(i);
+				//label yi = graph.what_segment(i+nVars);;
+			          x[i] = xfull[i];
+				label   yi = xfull[i+nVars];
 				if (x[i] == yi) {
 					x[i] = -1;
 				}

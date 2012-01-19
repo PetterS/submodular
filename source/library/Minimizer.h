@@ -81,6 +81,84 @@ namespace Petter {
 		add_monomial_1_to_graph(c, graph, j, a);
 	}
 
+
+
+	//
+	// Takes a list of pairs (i,j) and tries to find a solution where
+	// x[i] != x[j]. The function is assumed to be symmetric, i.e. 
+	// (1,1) is never a unique optimal solution.
+	//
+	template<typename real>
+	void resolve_different(Graph<real,real,real>& graph, std::vector<char> x, const std::vector<std::pair<int,int> >& pairs)
+	{
+		real infinity = 100; //Does not have to be big
+
+		// Fix the first element of the pair
+		for (auto itr=pairs.begin(); itr != pairs.end(); ++itr) {
+			int i = itr->first;
+			int j = itr->second;
+
+			// Extract solution
+			x.at(i) = graph.what_segment(i, Graph<real,real,real>::SOURCE);
+			x.at(j) = graph.what_segment(j, Graph<real,real,real>::SOURCE);
+
+			//std::cout << i << ',' << j << " : " << int(x[i]) << ',' << int(x[j]) << "  ";
+
+			//ASSERT(x[i]==0 || x[j]==0); // Should not happen, but might due to rounding errors
+
+			// If x[i]==0 and y[i]==0, we don't know whether there is another 
+			// solution where the two are different
+			if (x[i]==0 && x[j]==0) {
+
+				// Is there also an optimal solution for which x[i]==1?
+				if (graph.what_segment(i, Graph<real,real,real>::SINK) == 1) {
+					// Then fix x[i] to 1
+					graph.add_tweights(i, 0, infinity);
+					graph.mark_node(i);
+					// Resolve the graph
+					graph.maxflow(true);
+					// Extract solution; different if possible
+					x[i] = graph.what_segment(i, Graph<real,real,real>::SOURCE);
+					x[j] = graph.what_segment(j, Graph<real,real,real>::SOURCE);
+					ASSERT(x[i] == 1)
+
+					if (x[j] == 0) {
+						// We found a solution where x[i]==1 and x[j]==0
+						// std::cout << "A\n";
+						continue;
+					}
+				}
+
+				// Now fix x[i] to 0
+				graph.add_tweights(i, 2*infinity, 0);
+				graph.mark_node(i);
+				// Resolve the graph
+				graph.maxflow(true);
+				// Does there then exist a solution for which x[j]==1?
+				if (graph.what_segment(j, Graph<real,real,real>::SINK) == 1) {
+					// Then use that solution
+					graph.add_tweights(j, 0, infinity);
+					graph.mark_node(j);
+					// Resolve the graph
+					graph.maxflow(true);
+					x[i] = graph.what_segment(i, Graph<real,real,real>::SOURCE);
+					x[j] = graph.what_segment(j, Graph<real,real,real>::SOURCE);
+					ASSERT(x[i]==0 && x[j]==1);
+					// We found a solution where x[i]==0 and x[j]==1
+					// std::cout << "B\n";
+					continue;
+				}
+
+				// Otherwise, we only have the solution where x[i]==0 and x[j]==0
+				// std::cout << "C\n";
+				x[i] = 0;
+				x[j] = 0;
+			}
+		}
+
+	}
+
+
 	
 	template<typename real>
 	void test_graph_functions() 
@@ -379,72 +457,7 @@ namespace Petter {
 		void resolve_different(const std::vector<std::pair<int,int> >& pairs)
 		{
 			ASSERT(graph);
-
-			real infinity = 100; //Does not have to be big
-
-			// Fix the first element of the pair
-			for (auto itr=pairs.begin(); itr != pairs.end(); ++itr) {
-				int i = itr->first;
-				int j = itr->second;
-
-				// Extract solution
-				x.at(i) = graph->what_segment(i, Graph<real,real,real>::SOURCE);
-				x.at(j) = graph->what_segment(j, Graph<real,real,real>::SOURCE);
-
-				//std::cout << i << ',' << j << " : " << int(x[i]) << ',' << int(x[j]) << "  ";
-
-				//ASSERT(x[i]==0 || x[j]==0); // Should not happen, but might due to rounding errors
-
-				// If x[i]==0 and y[i]==0, we don't know whether there is another 
-				// solution where the two are different
-				if (x[i]==0 && x[j]==0) {
-
-					// Is there also an optimal solution for which x[i]==1?
-					if (graph->what_segment(i, Graph<real,real,real>::SINK) == 1) {
-						// Then fix x[i] to 1
-						graph->add_tweights(i, 0, infinity);
-						graph->mark_node(i);
-						// Resolve the graph
-						graph->maxflow(true);
-						// Extract solution; different if possible
-						x[i] = graph->what_segment(i, Graph<real,real,real>::SOURCE);
-						x[j] = graph->what_segment(j, Graph<real,real,real>::SOURCE);
-						ASSERT(x[i] == 1)
-
-						if (x[j] == 0) {
-							// We found a solution where x[i]==1 and x[j]==0
-							// std::cout << "A\n";
-							continue;
-						}
-					}
-
-					// Now fix x[i] to 0
-					graph->add_tweights(i, 2*infinity, 0);
-					graph->mark_node(i);
-					// Resolve the graph
-					graph->maxflow(true);
-					// Does there then exist a solution for which x[j]==1?
-					if (graph->what_segment(j, Graph<real,real,real>::SINK) == 1) {
-						// Then use that solution
-						graph->add_tweights(j, 0, infinity);
-						graph->mark_node(j);
-						// Resolve the graph
-						graph->maxflow(true);
-						x[i] = graph->what_segment(i, Graph<real,real,real>::SOURCE);
-						x[j] = graph->what_segment(j, Graph<real,real,real>::SOURCE);
-						ASSERT(x[i]==0 && x[j]==1);
-						// We found a solution where x[i]==0 and x[j]==1
-						// std::cout << "B\n";
-						continue;
-					}
-
-					// Otherwise, we only have the solution where x[i]==0 and x[j]==0
-					// std::cout << "C\n";
-					x[i] = 0;
-					x[j] = 0;
-				}
-			}
-
+			Petter::resolve_different(*graph, x, pairs);
 		}
 
 
