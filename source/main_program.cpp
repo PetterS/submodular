@@ -27,6 +27,7 @@ using namespace std;
 #include "PseudoBoolean.h"
 #include "Posiform.h"
 #include "Minimizer.h" // For tests
+#include "Timer.h"
 using namespace Petter;
 
 
@@ -87,7 +88,7 @@ template<typename real>
 void print_info(std::string name, const std::vector<label>& x, real bound, int labeled, Petter::Color color)
 {
 	using namespace std;
-	cout << left << setw(15) << name << "f(";
+	cout << left << setw(16) << name << "f(";
 	print_x(x);
 	cout << ") = " << color << right << setw(8) << bound << NORMAL;
 	cout << ",   labeled : " << color << labeled << NORMAL << endl;
@@ -647,11 +648,6 @@ int main_program(int num_args, char** args)
 	}
 	cout << endl;
 
-
-	// For timing
-	clock_t t_raw;
-	auto start = [&t_raw]() { t_raw = clock(); };
-	auto stop  = [&t_raw]() -> double { return double(clock()-t_raw) / double(CLOCKS_PER_SEC); };
 	
 	try {
 
