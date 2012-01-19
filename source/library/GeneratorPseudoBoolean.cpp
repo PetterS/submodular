@@ -72,6 +72,8 @@ namespace Petter
 	template<typename real> 
 	GeneratorPseudoBoolean<real>::GeneratorPseudoBoolean(string filename)
 	{
+		constant = 0;
+
 		ifstream fin(filename);
 
 		fin >> ngen2 >> ngen3 >> ngen4pos;
@@ -164,6 +166,8 @@ namespace Petter
 	{
 		nlpvars = 0;
 
+		constant = 0;
+		alphai.clear();
 		alphaij.clear();
 		alphaijk.clear();
 		alphaijkl.clear();
@@ -171,6 +175,8 @@ namespace Petter
 		indaa.clear();
 		indbb.clear();
 		indcc.clear();
+
+		var_used.clear();
 	}
 
 
@@ -208,9 +214,14 @@ namespace Petter
 		typedef double real;
 		clear();
 
+		// Save the constant 
+		constant = pbf.constant;
+
 		// Save the linear coefficients
+		real linear_coef_sum = 0;
 		for (auto itr = pbf.ai.begin(); itr != pbf.ai.end(); ++itr) {
-			alphai[itr->first] = itr->second / 2;
+			alphai[itr->first] =  itr->second / 2;
+			linear_coef_sum    += itr->second / 2;
 		}
 
 
@@ -279,6 +290,8 @@ namespace Petter
 			change_rhs(con, aij/2);
 			con++;
 
+			var_used[i] = true;
+			var_used[j] = true;
 		}
 		for (auto itr = pbf.aijk.begin(); itr != pbf.aijk.end(); ++itr) {
 			int i=get_i(itr->first);
@@ -311,6 +324,10 @@ namespace Petter
 			}
 			change_rhs(con, aijk/2);
 			con++;
+
+			var_used[i] = true;
+			var_used[j] = true;
+			var_used[k] = true;
 		}
 		for (auto itr = pbf.aijkl.begin(); itr != pbf.aijkl.end(); ++itr) {
 			int i=get_i(itr->first);
@@ -420,6 +437,11 @@ namespace Petter
 			}
 			change_rhs(con, aijkl/2);
 			con++;
+
+			var_used[i] = true;
+			var_used[j] = true;
+			var_used[k] = true;
+			var_used[l] = true;
 		}
 
 		ASSERT(nLPVars == this->nlpvars);
@@ -448,7 +470,9 @@ namespace Petter
 		for (int ii=0;ii<nLPVars;++ii){
 			obj+= (lpvars[ii]*cost[ii]);
 		}
-		cout << endl << "Objective: " << -obj << endl;
+
+		//cout << endl << "Objective                     : " << -obj << endl;
+		//cout <<         "Objective (with linear terms) : " << -obj+linear_coef_sum << endl;
 
 		for (auto itr = pbf.aij.begin(); itr != pbf.aij.end(); ++itr) {
 			const pair& ind = itr->first;
@@ -460,10 +484,10 @@ namespace Petter
 			for (int ii=0;ii<ngen2;++ii){
 				alphaij[ind][ii] = lpvars[ icctmp+ii ];
 
-				if (alphaij[ind][ii] != 0) {
-					// +1 to reflect Maple indexing
-					cout << "alphaij (" << i+1 << "," << j+1 << "; " << ii+1 << "): " << alphaij[ind][ii] << endl;
-				}
+				//if (alphaij[ind][ii] != 0) {
+				//	// +1 to reflect Maple indexing
+				//	cout << "alphaij (" << i+1 << "," << j+1 << "; " << ii+1 << "): " << alphaij[ind][ii] << endl;
+				//}
 			}
 		}
 
@@ -479,10 +503,10 @@ namespace Petter
 			for (int ii=0;ii<ngen3;++ii){
 				alphaijk[ind][ii] = lpvars[ ibbtmp+ii ];
 
-				if (alphaijk[ind][ii] != 0) {
-					// +1 to reflect Maple indexing
-					cout << "alphaijk (" << i+1 << "," << j+1 << "," << k+1 << "; " << ii+1 << "): " << alphaijk[ind][ii] << endl;
-				}
+				//if (alphaijk[ind][ii] != 0) {
+				//	// +1 to reflect Maple indexing
+				//	cout << "alphaijk (" << i+1 << "," << j+1 << "," << k+1 << "; " << ii+1 << "): " << alphaijk[ind][ii] << endl;
+				//}
 			}
 		}
 
@@ -498,10 +522,10 @@ namespace Petter
 			for (int ii=0;ii<ngen4pos;++ii){
 				alphaijkl[ind][ii] = lpvars[ iaatmp+ii ];
 
-				if (alphaijkl[ind][ii] != 0) {
-					// +1 to reflect Maple indexing
-					cout << "alphaijkl (" << i+1 << "," << j+1 << "," << k+1 << "," << l+1 << "; " << ii+1 << "): " << alphaijkl[ind][ii] << endl;
-				}
+				//if (alphaijkl[ind][ii] != 0) {
+				//	// +1 to reflect Maple indexing
+				//	cout << "alphaijkl (" << i+1 << "," << j+1 << "," << k+1 << "," << l+1 << "; " << ii+1 << "): " << alphaijkl[ind][ii] << endl;
+				//}
 			}
 		}
 
@@ -733,12 +757,18 @@ namespace Petter
 		}
 
 		// Compute the maximum flow and labeling
-		real ming = C + graph.maxflow();
+		real ming = constant + C + graph.maxflow();
 
 		// Extract labeling
 		nlabelled = 0;
 		for (int i=0; i<nVars; ++i) {
-			//if (var_used[i]) {
+			bool used = false;
+			auto itr = var_used.find(i);
+			if (itr != var_used.end()) {
+				used = itr->second;
+			}
+
+			if (used) {
 				x[i] = graph.what_segment(i);
 				label yi = graph.what_segment(i+nVars);;
 				if (x[i] == yi) {
@@ -747,15 +777,15 @@ namespace Petter
 				else {
 					nlabelled++;
 				}
-			//}
-			//else {
-			//	// This variable is not part of the polynomial,
-			//	// therefore labelled
-			//	if (x[i]<0) {
-			//		x[i]=0;
-			//	}
-			//	nlabelled++;
-			//}
+			}
+			else {
+				// This variable is not part of the polynomial,
+				// therefore labelled
+				if (x[i]<0) {
+					x[i]=0;
+				}
+				nlabelled++;
+			}
 		}
 
 		return ming;

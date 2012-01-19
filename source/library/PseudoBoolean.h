@@ -345,6 +345,8 @@ namespace Petter
 		map<triple, int> indbb;
 		map<quad, int> indaa;
 
+		// Constant
+		real constant;
 		// Linear terms
 		map<int, real> alphai;
 		// Coefficients in front of generators
@@ -353,6 +355,8 @@ namespace Petter
 		map<quad,   vector<real> > alphaijkl;
 		// Positive or negative generator used
 		map<quad, bool> posgen4;
+		// Keeps track of variables present
+		map<int,bool> var_used;
 	};
 
 }

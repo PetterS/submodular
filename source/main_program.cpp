@@ -45,6 +45,7 @@ namespace {
 // In: submodular_tests.cpp
 template<typename real> void test_pseudoboolean();
 void test_minimize();
+template<typename real> void test_posiform();
 
 //Simple routine for conversion of strings
 //used for the command line
@@ -106,28 +107,26 @@ int main_program(int num_args, char** args)
 
 	if (num_args == 1) {
 		// Run some tests
-		//statusTry("Testing minimization...");
-		//test_minimize();
-		//statusTry("Testing pseudo-Boolean functions...");
-		//test_pseudoboolean<double>();
+		statusTry("Testing minimization...");
+		test_minimize();
+		statusTry("Testing pseudo-Boolean functions...");
+		test_pseudoboolean<double>();
 		//test_pseudoboolean<int>(); // Does not have LP and therefore fails
-		//statusTry("Testing posiform (double)...");
+		statusTry("Testing posiform (double)...");
 		//test_posiform<double>();
-		//statusTry("Testing posiform (int)...");
+		statusTry("Testing posiform (int)...");
 		//test_posiform<int>();
-		//statusOK();
+		statusOK();
 		statusTry("Testing graph functions...");
 		test_graph_functions<int>();
 		statusOK();
 
 
 		statusTry("Testing generators...");
-
 		Petter::GeneratorPseudoBoolean<real> genpb("generators/generators.txt");
 		statusOK();
-
 		statusTry("Testing create lp...");
-//		PseudoBoolean<double> f("../tests/quartic_paper.txt");
+		//PseudoBoolean<double> f("../tests/quartic_paper.txt");
 		//PseudoBoolean<double> f("../../../tex/submodularstuff/maple/fq.txt");
 		PseudoBoolean<double> f("../../submodularstuff/maple/fq.txt");
 		genpb.create_lp(f);
@@ -139,41 +138,42 @@ int main_program(int num_args, char** args)
 		double gmin = genpb.minimize(x, nlabelled);
 		statusOK();
 
-		cout << "bound     : " << gmin << endl;
-		cout << "nlabelled : " << nlabelled << endl;
-		cout << "x = [";
-		for (int i=0;i<f.nvars();++i) {
-			if (x.at(i) < 0) {
-				cout << '?';
-			}
-			else {
-				cout << int(x.at(i));
-			}
-		}
-		cout << "]" << endl;
+		//cout << "bound     : " << gmin << endl;
+		//cout << "nlabelled : " << nlabelled << endl;
+		//cout << "x = [";
+		//for (int i=0;i<f.nvars();++i) {
+		//	if (x.at(i) < 0) {
+		//		cout << '?';
+		//	}
+		//	else {
+		//		cout << int(x.at(i));
+		//	}
+		//}
+		//cout << "]" << endl;
 
-		if (nlabelled == f.nvars()) {
-			cout << "f(x*)     : " << f.eval(x) << endl;
-		}
+		//if (nlabelled == f.nvars()) {
+		//	cout << "f(x*)     : " << f.eval(x) << endl;
+		//}
 
-		//cerr << "Possible choices : " << endl;
-		//cerr << "  " << args[0] << " -m <int> -n <int> -nterms <int>  : runs random examples" << endl;
-		//cerr << "  " << args[0] << " -m <int> -example                : examples from paper" << endl;
-		//cerr << "  " << args[0] << " -file <str>                      : read polynomial from file" << endl;
-		//cerr << "  " << args[0] << " -sat <str>                       : read SAT problem from file" << endl;
-		//cerr << endl;
-		//cerr << "    -fixetal                         : use reductions from Fix et al." << endl;
-		//cerr << "    -optimal                         : use linear programming" << endl;
-		//cerr << "    -heuristic                       : use heuristics" << endl;
-		//cerr << "    -exhaustive                      : use exhaustive search (n<=30)" << endl;
-		//cerr << endl;
-		//cerr << "    -iterate                         : also iterate reduction methods" << endl;
-		//cerr << endl;
-		//cerr << "    -packing                         : compute solution using vertex packing" << endl;
-		//cerr << "    -lprelax                         : compute LP relaxation" << endl;
-		//cerr << endl;
-		//cerr << "    -verbose                         : print polynomials" << endl;
-		//cerr << endl;
+		cerr << "Possible choices : " << endl;
+		cerr << "  " << args[0] << " -m <int> -n <int> -nterms <int>  : runs random examples" << endl;
+		cerr << "  " << args[0] << " -m <int> -example                : examples from paper" << endl;
+		cerr << "  " << args[0] << " -file <str>                      : read polynomial from file" << endl;
+		cerr << "  " << args[0] << " -sat <str>                       : read SAT problem from file" << endl;
+		cerr << endl;
+		cerr << "    -optimal                         : use linear programming" << endl;
+		cerr << "    -generators                      : use generators (with linear programming)" << endl;
+		cerr << "    -heuristic                       : use heuristics" << endl;
+		cerr << "    -fixetal                         : use reductions from Fix et al." << endl;
+		cerr << "    -exhaustive                      : use exhaustive search (n<=30)" << endl;
+		cerr << endl;
+		cerr << "    -iterate                         : also iterate reduction methods" << endl;
+		cerr << endl;
+		cerr << "    -packing                         : compute solution using vertex packing" << endl;
+		cerr << "    -lprelax                         : compute LP relaxation" << endl;
+		cerr << endl;
+		cerr << "    -verbose                         : print polynomials" << endl;
+		cerr << endl;
 
 		return 0;
 	}
@@ -207,6 +207,7 @@ int main_program(int num_args, char** args)
 
 	bool do_hocr = true;
 	bool do_optimal = false;
+	bool do_generators = false;
 	bool do_fixetal = false;
 	bool do_exhaustive = false;
 	bool do_heuristic = false;
@@ -215,6 +216,9 @@ int main_program(int num_args, char** args)
 	bool iterate_reduction_methods = false;
 	if (cmd_line.find("-optimal") != cmd_line.end()) {
 		do_optimal = true;
+	}
+	if (cmd_line.find("-generators") != cmd_line.end()) {
+		do_generators = true;
 	}
 	if (cmd_line.find("-fixetal") != cmd_line.end()) {
 		do_fixetal = true;
@@ -452,6 +456,15 @@ int main_program(int num_args, char** args)
 		}
 	}
 	////////////////////////////////
+	// Read previously generated  //
+	////////////////////////////////
+	else if (cmd_line.find("-prev") != cmd_line.end()) {
+		string tmp = std::getenv("TEMP");
+		pb = PseudoBoolean<real>(tmp + "/pb.txt");
+		n = pb.nvars();
+		m = 4; //TODO
+	}
+	////////////////////////////////
 	// Generate random polynomial //
 	////////////////////////////////
 	else {
@@ -580,6 +593,7 @@ int main_program(int num_args, char** args)
 	int fixetal_labeled = -1;
 	int fixetal_itr_labeled = -1;
 	int optimal_labeled = -1;
+	int generators_labeled = -1;
 	int heur_labeled = -1;
 	int packing_labeled = -1;
 
@@ -588,6 +602,7 @@ int main_program(int num_args, char** args)
 	real fixetal_bound = 100;
 	real fixetal_itr_bound = 100;
 	real optimal_bound = 100;
+	real generators_bound = 100;
 	real heur_bound = 100;
 	real lp_bound = 100;
 	real packing_bound = 100;
@@ -598,6 +613,7 @@ int main_program(int num_args, char** args)
 	double fixetal_time = -1;
 	double fixetal_itr_time = -1;
 	double optimal_time = -1;
+	double generators_time = -1;
 	double heur_time = -1;
 	double packing_time = -1;
 
@@ -621,7 +637,10 @@ int main_program(int num_args, char** args)
 		}
 	}
 	if (do_optimal) {
-		cout << GREEN << "GREEN" << NORMAL << " is optimal generalized roof duality (using LP)" << endl;
+		cout << GREEN << "GREEN" << NORMAL << " is generalized roof duality (using LP)" << endl;
+	}
+	if (do_generators) {
+		cout << DKGREEN << "DKGREEN" << NORMAL << " is generalized roof duality with generators (using LP)" << endl;
 	}
 	if (do_heuristic) {
 		cout << YELLOW << "YELLOW" << NORMAL << " is heuristic submodular relaxation" << endl;
@@ -990,6 +1009,73 @@ int main_program(int num_args, char** args)
 			optimal_labeled = labeled;
 		}
 
+
+		if (do_generators) {
+
+			int iters = 0;
+			double bound = 0;
+			int labeled = 0;
+			bool should_continue;
+			Petter::PseudoBoolean<real> f;
+
+			if (cmd_line.find("-usehocr") != cmd_line.end()) {
+				//Start at the HOCR solution (for speed)
+				f = f_hocrreduced;
+				cout << "USING HOCR REDUCED" << endl;
+			}
+			else {
+				//Default
+				f = pb;
+			}
+
+			generators_time = 0;
+			do {
+				iters++;
+
+				GeneratorPseudoBoolean<real> gpb("generators/generators.txt");
+				start();
+				gpb.create_lp(f);
+				double t_create = stop();
+
+				int new_labeled = 0;
+				start();
+				bound = gpb.minimize(x, new_labeled);
+				double t_minimize = stop();
+				should_continue = new_labeled > labeled;
+				labeled = new_labeled;
+				if (labeled == n) {
+					//Nothing more to do
+					should_continue = false;
+				}
+
+				start();
+				f.reduce(x);
+				double t_reduce = stop();
+
+				if (verbose) {
+					//cout << "Relaxation g : " << gpb << endl;
+				}
+	
+				print_info("Gener. solution",x,bound,labeled,DKGREEN);
+				if (verbose) {
+					cout << "time (create)   : " << DKGREEN << t_create <<  NORMAL << endl;
+					cout << "time (minimize) : " << DKGREEN << t_minimize <<  NORMAL << endl;
+					cout << "time (reduce)   : " << DKGREEN << t_reduce <<  NORMAL << endl;
+				}
+
+				generators_time += t_create + t_minimize + t_reduce;
+
+			} while (should_continue);
+
+			if (labeled == n) {
+				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
+			}
+			cout << endl;
+
+			generators_bound = bound;
+			generators_labeled = labeled;
+		}
+
 		
 		if (do_heuristic) {
 			//
@@ -1103,11 +1189,14 @@ int main_program(int num_args, char** args)
 			<< optimal_time     << '\t' // 13
 			<< heur_time        << '\t' // 14
 			<< fixetal_labeled  << '\t' // 15
-		 << fixetal_itr_labeled << '\t' // 16
+			<< fixetal_itr_labeled << '\t' // 16
 			<< fixetal_bound    << '\t' // 17
 			<< fixetal_itr_bound<< '\t' // 18
 			<< fixetal_time     << '\t' // 19
-			<< fixetal_itr_time << endl;// 20
+			<< fixetal_itr_time << '\t' // 20
+			<< generators_labeled<<'\t' // 21
+			<< generators_bound << '\t' // 22
+			<< generators_time  << endl;// 23
 	}
 	//cin.get();
 
