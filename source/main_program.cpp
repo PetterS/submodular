@@ -96,6 +96,51 @@ void print_info(std::string name, const std::vector<label>& x, real bound, int l
 
 
 //
+// Checks that the persistencies in x agrees with some optimal solution
+//
+void check_persistency( const vector< vector<label> >& optimal_solutions, const vector<label>& x)
+{
+	bool any_ok = false;
+	for (auto itr = optimal_solutions.begin(); itr != optimal_solutions.end(); ++itr) {
+		bool this_ok = true;
+		for (size_t i=0;i<x.size();++i) {
+			if (x.at(i) >= 0 && x.at(i) != itr->at(i)) {
+				this_ok = false;
+			}
+		}
+		if (this_ok) {
+			any_ok = true;
+			break;
+		}
+	}
+	if (!any_ok) {
+		// Persistency did not hold for this solution
+		throw runtime_error("Persistency error");
+	}
+}
+
+//
+// Checks that the lower bound agrees with the global optimum
+//
+template<typename real>
+void check_bound(real optimum, real lower_bound) 
+{
+	if (lower_bound > optimum) {
+		throw runtime_error("Lower bound error");
+	}
+}
+template<>
+void check_bound<double>(double optimum, double lower_bound) 
+{
+	// We have to have a loose check, because doubles have 
+	// rounding errors
+	if ( (optimum - lower_bound) / abs(optimum) < -1e-7 ) {
+		throw runtime_error("Lower bound error (double)");
+	}
+}
+
+
+//
 // Main program
 //
 int main_program(int num_args, char** args)
@@ -653,13 +698,14 @@ int main_program(int num_args, char** args)
 
 		//Holds optimal solutions
 		vector< vector<label> > optimal_solutions;
+		real optimum;
 
 		if (do_exhaustive) {
 			ASSERT(n<=30); // Otherwise too big
 			cout << "Exhaustive search: " << endl;
 
 			vector<label> x(n,0);
-			real best_energy = pb.eval(x);
+			optimum = pb.eval(x);
 			while (true) {
 				x[0]++;
 				int i=0;
@@ -676,8 +722,8 @@ int main_program(int num_args, char** args)
 				}
 			
 				real energy = pb.eval(x);
-				if (energy < best_energy) {
-					best_energy = energy;
+				if (energy < optimum) {
+					optimum = energy;
 				}
 			}
 
@@ -700,17 +746,11 @@ int main_program(int num_args, char** args)
 				}
 			
 				real energy = pb.eval(x);
-				if (energy == best_energy) {
-
+				if (energy == optimum) {
 					optimal_solutions.push_back(x);
-
 					print_info("Global minimum",x,energy,n,WHITE);
-
-
 				}
-
 			}
-
 			cout << endl;
 		}
 
@@ -775,25 +815,8 @@ int main_program(int num_args, char** args)
 				// If we know the optimal solution, we can verify 
 				// that the persistencies are correct
 				if (do_exhaustive) {
-					bool any_ok = false;
-					for (auto itr = optimal_solutions.begin(); itr != optimal_solutions.end(); ++itr) {
-						bool this_ok = true;
-						for (int i=0;i<n;++i) {
-							if (x.at(i) >= 0 && x.at(i) != itr->at(i)) {
-								this_ok = false;
-							}
-						}
-						if (this_ok) {
-							any_ok = true;
-							break;
-						}
-					}
-					if (!any_ok) {
-						// Persistency did not hold for this solution
-
-						pb.save_to_file("packing-error.txt");
-						throw runtime_error("Vertex packing solution without persistency");
-					}
+					check_persistency(optimal_solutions, x);
+					check_bound(optimum, packing_bound);
 				}
 
 			}
@@ -811,7 +834,7 @@ int main_program(int num_args, char** args)
 		}
 
 	
-		vector<label> x(n,0),x1(n,0),x2(n,0);
+		//vector<label> x(n,0),x1(n,0),x2(n,0);
 
 		
 
@@ -824,6 +847,7 @@ int main_program(int num_args, char** args)
 			int labeled = 0;
 			bool should_continue;
 			Petter::PseudoBoolean<real> f = pb;
+			vector<label> x(n,0);
 
 			const Petter::Color* COL = &RED;
 
@@ -874,6 +898,14 @@ int main_program(int num_args, char** args)
 			hocr_itr_bound = bound;
 			hocr_itr_labeled = labeled;
 
+			// If we know the optimal solution, we can verify 
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x);
+				check_bound(optimum, hocr_bound);
+				check_bound(optimum, hocr_itr_bound);
+			}
+
 			f_hocrreduced = f;
 		}
 
@@ -885,6 +917,7 @@ int main_program(int num_args, char** args)
 			int labeled = 0;
 			bool should_continue;
 			Petter::PseudoBoolean<real> f = pb;
+			vector<label> x(n,0);
 
 			const Petter::Color* COL = &BLUE;
 
@@ -935,7 +968,13 @@ int main_program(int num_args, char** args)
 			fixetal_itr_bound = bound;
 			fixetal_itr_labeled = labeled;
 
-			f_hocrreduced = f;
+			// If we know the optimal solution, we can verify 
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x);
+				check_bound(optimum, fixetal_bound);
+				check_bound(optimum, fixetal_itr_bound);
+			}
 		}
 
 		
@@ -946,6 +985,7 @@ int main_program(int num_args, char** args)
 			int labeled = 0;
 			bool should_continue;
 			Petter::PseudoBoolean<real> f;
+			vector<label> x(n,0);
 
 			if (cmd_line.find("-usehocr") != cmd_line.end()) {
 				//Start at the HOCR solution (for speed)
@@ -1003,6 +1043,13 @@ int main_program(int num_args, char** args)
 
 			optimal_bound = bound;
 			optimal_labeled = labeled;
+
+			// If we know the optimal solution, we can verify 
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x);
+				check_bound(optimum, optimal_bound);
+			}
 		}
 
 
@@ -1013,6 +1060,7 @@ int main_program(int num_args, char** args)
 			int labeled = 0;
 			bool should_continue;
 			Petter::PseudoBoolean<real> f;
+			vector<label> x(n,0);
 
 			if (cmd_line.find("-usehocr") != cmd_line.end()) {
 				//Start at the HOCR solution (for speed)
@@ -1070,6 +1118,13 @@ int main_program(int num_args, char** args)
 
 			generators_bound = bound;
 			generators_labeled = labeled;
+
+			// If we know the optimal solution, we can verify 
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x);
+				check_bound(optimum, generators_bound);
+			}
 		}
 
 		
@@ -1085,6 +1140,7 @@ int main_program(int num_args, char** args)
 			int labeled = 0;
 			bool should_continue;
 			Petter::PseudoBoolean<real> f = pb;
+			vector<label> x(n,0);
 
 			heur_time = 0;
 
@@ -1154,14 +1210,43 @@ int main_program(int num_args, char** args)
 			cout << endl;
 			heur_bound = bound;
 			heur_labeled = labeled;
+
+			// If we know the optimal solution, we can verify 
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x);
+				check_bound(optimum, heur_bound);
+			}
 		}
 	}
-	catch (...) {
+	catch (exception& e) {
+		statusFailed();
+
 		// Save erroneous polynomial to temporary file
+		stringstream filename;
 		if (std::getenv("TEMP")) {
-			string tmp = std::getenv("TEMP");
-			pb.save_to_file(tmp + "/pb-error.txt");
+			filename << std::getenv("TEMP") << "/";
 		}
+		int errorid = bind(uniform_int_distribution<int>(0,999), engine)();
+		filename << "pb-error-" << errorid << ".txt";
+		pb.save_to_file(filename.str());
+
+		// Output filename saved to
+		cerr << RED << "Solver error, polynomial saved to " << filename.str() << NORMAL << endl;
+
+		// Write to error log
+		stringstream errorlogfile;
+		errorlogfile << args[0] << ".errorlog";
+			// Get local time
+			struct tm *current;
+			time_t now;
+			time(&now);
+			current = localtime(&now);
+		ofstream errorfile(errorlogfile.str(), ios::app);
+		errorfile << 1900+current->tm_year << "-" << setw(2) << setfill('0') << current->tm_mon+1 << '-' << current->tm_mday << ' ' 
+		          << current->tm_hour << ':' << current->tm_min << ":" << current->tm_sec << "  ";
+		errorfile << "Solver error \"" << e.what() << ",\" polynomial saved to " << filename.str() << endl;
+
 		// Rethrow exception
 		throw;
 	}
