@@ -89,7 +89,7 @@ namespace Petter {
 	// (1,1) is never a unique optimal solution.
 	//
 	template<typename real>
-	void resolve_different(Graph<real,real,real>& graph, std::vector<char> x, const std::vector<std::pair<int,int> >& pairs)
+	void resolve_different(Graph<real,real,real>& graph, std::vector<char>& x, const std::vector<std::pair<int,int> >& pairs)
 	{
 		real infinity = 100; //Does not have to be big
 
@@ -120,7 +120,7 @@ namespace Petter {
 					// Extract solution; different if possible
 					x[i] = graph.what_segment(i, Graph<real,real,real>::SOURCE);
 					x[j] = graph.what_segment(j, Graph<real,real,real>::SOURCE);
-					ASSERT(x[i] == 1)
+					ASSERT(x[i] == 1);
 
 					if (x[j] == 0) {
 						// We found a solution where x[i]==1 and x[j]==0
@@ -153,6 +153,9 @@ namespace Petter {
 				// std::cout << "C\n";
 				x[i] = 0;
 				x[j] = 0;
+			}
+			else {
+				// std::cout << '\n';
 			}
 		}
 
