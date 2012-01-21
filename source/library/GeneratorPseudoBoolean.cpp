@@ -222,6 +222,7 @@ namespace Petter
 		for (auto itr = pbf.ai.begin(); itr != pbf.ai.end(); ++itr) {
 			alphai[itr->first] =  itr->second / 2;
 			linear_coef_sum    += itr->second / 2;
+			var_used[itr->first] = true;
 		}
 
 
