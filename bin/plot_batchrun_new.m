@@ -4,6 +4,10 @@ function plot_batchrun_new(filename,nedges)
     end
 
     data = load(filename);
+	if size(data,2) < 24
+		data(end,24)=0;
+	end
+		
     disp(filename)
     
 
@@ -22,15 +26,32 @@ function plot_batchrun_new(filename,nedges)
     heuristicbound = data(:,10+1);
     fixetalbound   = data(:,17+1);
 	generatorsbound= data(:,22+1);
+	
+	hocrtime        = data(:,11+1);
+	optimaltime     = data(:,13+1);
+	heuristictime   = data(:,14+1);
+	fixetaltime     = data(:,19+1);
+	generatorstime  = data(:,23+1);
+	
+	%Exclude experiments
+% 	heuristic(:) = -1;
     
 	disp('Generators');
     print_bound(optimalbound, generatorsbound);
+	print_time(generatorstime);
+	disp('Optimal');
+	print_time(optimaltime);
+	disp('Heuristic');
+    print_bound(optimalbound, heuristicbound);
+	print_time(heuristictime);
+	disp('Fix et al.');
+    print_bound(optimalbound, fixetalbound);
+	print_time(fixetaltime);
     disp('HOCR');
     print_bound(optimalbound, hocrbound);
-    disp('Fix et al.');
-    print_bound(optimalbound, fixetalbound);
-    disp('Heuristic');
-    print_bound(optimalbound, heuristicbound);
+	print_time(hocrtime);
+    
+    
     
     
     edges = linspace(0,data(1,1),nedges);
@@ -44,10 +65,12 @@ function plot_batchrun_new(filename,nedges)
     h3 = plot_hist(heuristic, edges,[ 0.6857    0.4521    0.0270],'-');
     h4 = plot_hist(optimal,   edges,[0 0 0],'-');
 	h5 = plot_hist(generators,   edges,[0 0 0],':');
+	
     
-%     xlim([0,data(1,1)]);
     maxxval = max([hocr(:);hocr_itr(:);optimal(:);heuristic(:);fixetal(:);fixetal_itr(:);generators(:)]);
-	xlim([0,1.1*maxxval]);
+	
+	xlim([0,data(1,1)]);
+% 	xlim([0,1.05*maxxval]);
 	
 	yl = ylim;
 	yl(2) = yl(2)+1;
@@ -56,7 +79,11 @@ function plot_batchrun_new(filename,nedges)
 	goodnumberofbins = 50 * 370 / maxxval 
 	
 %     leg = legend([h1 h2 h3 h4 h5], {'HOCR','Fix et al.','GRD-heuristic','GRD','GRD-Gen.'});
-	leg = legend([h5 h4 h3 h2 h1], {'GRD-gen','GRD','GRD-heuristic','Fix et al.','HOCR'});
+	h = [h5 h4 h3 h2 h1];
+	leg_str = {'GRD-gen','GRD','GRD-heur.','Fix et al.','HOCR'};
+	leg_str = leg_str(h>0);
+	h = h(h>0);
+	leg = legend(h, leg_str);
 	set(leg, 'box', 'off');
     xlabel('Number of persistencies');
     ylabel('Frequency');
@@ -64,6 +91,9 @@ function plot_batchrun_new(filename,nedges)
 end
 
 function print_bound(opt, bnd)
+	if all(opt>=0) 
+		return
+	end
     relbound = (opt - bnd)./abs(opt);
     minrelbound    = min(relbound);
     medianrelbound = median(relbound);
@@ -71,7 +101,16 @@ function print_bound(opt, bnd)
     fprintf('min/med/max : %f  %f  %f\n',minrelbound,medianrelbound,maxrelbound);
 end
 
+function print_time(time)
+    fprintf('min/med/max : %f  %f  %f  (time)\n',min(time),median(time),max(time));
+end
+
 function h = plot_hist(lab,edges,color,type)
+	if all(lab<=0) 
+		h = 0;
+		return
+	end
+	
     N1 = histc(lab,edges);
     h = bar(edges,N1,'histc');
     set(h,'FaceColor',color);
