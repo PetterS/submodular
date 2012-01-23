@@ -27,7 +27,7 @@ using namespace std;
 #include "PseudoBoolean.h"
 #include "Posiform.h"
 #include "Minimizer.h" // For tests
-#include "Timer.h"
+#include "Petter-Timer.h"
 using namespace Petter;
 
 
@@ -98,7 +98,7 @@ void print_info(std::string name, const std::vector<label>& x, real bound, int l
 //
 // Checks that the persistencies in x agrees with some optimal solution
 //
-void check_persistency( const vector< vector<label> >& optimal_solutions, const vector<label>& x)
+void check_persistency( const vector< vector<label> >& optimal_solutions, const vector<label>& x, int reported_labelled)
 {
 	bool any_ok = false;
 	for (auto itr = optimal_solutions.begin(); itr != optimal_solutions.end(); ++itr) {
@@ -116,6 +116,17 @@ void check_persistency( const vector< vector<label> >& optimal_solutions, const 
 	if (!any_ok) {
 		// Persistency did not hold for this solution
 		throw runtime_error("Persistency error");
+	}
+
+	int labelled = 0;
+	for (size_t i=0;i<x.size();++i) {
+		if (x.at(i) >= 0) {
+			labelled++;
+		}
+	}
+
+	if (labelled != reported_labelled) {
+		throw runtime_error("Incorrect number of labels reported");
 	}
 }
 
@@ -169,7 +180,8 @@ int main_program(int num_args, char** args)
 
 
 		statusTry("Testing generators...");
-		Petter::GeneratorPseudoBoolean<real> genpb("generators/generators.txt");
+		Generators<real> generators("generators/generators.txt");
+		Petter::GeneratorPseudoBoolean<real> genpb(generators);
 		statusOK();
 		statusTry("Testing create lp...");
 		//PseudoBoolean<double> f("../tests/quartic_paper.txt");
@@ -183,23 +195,6 @@ int main_program(int num_args, char** args)
 		int nlabelled=-1;
 		double gmin = genpb.minimize(x, nlabelled);
 		statusOK();
-
-		//cout << "bound     : " << gmin << endl;
-		//cout << "nlabelled : " << nlabelled << endl;
-		//cout << "x = [";
-		//for (int i=0;i<f.nvars();++i) {
-		//	if (x.at(i) < 0) {
-		//		cout << '?';
-		//	}
-		//	else {
-		//		cout << int(x.at(i));
-		//	}
-		//}
-		//cout << "]" << endl;
-
-		//if (nlabelled == f.nvars()) {
-		//	cout << "f(x*)     : " << f.eval(x) << endl;
-		//}
 
 		cerr << "Possible choices : " << endl;
 		cerr << "  " << args[0] << " -m <int> -n <int> -nterms <int>  : runs random examples" << endl;
@@ -815,7 +810,7 @@ int main_program(int num_args, char** args)
 				// If we know the optimal solution, we can verify 
 				// that the persistencies are correct
 				if (do_exhaustive) {
-					check_persistency(optimal_solutions, x);
+					check_persistency(optimal_solutions, x, packing_labeled);
 					check_bound(optimum, packing_bound);
 				}
 
@@ -901,7 +896,7 @@ int main_program(int num_args, char** args)
 			// If we know the optimal solution, we can verify 
 			// that the persistencies are correct
 			if (do_exhaustive) {
-				check_persistency(optimal_solutions, x);
+				check_persistency(optimal_solutions, x, hocr_itr_labeled);
 				check_bound(optimum, hocr_bound);
 				check_bound(optimum, hocr_itr_bound);
 			}
@@ -971,7 +966,7 @@ int main_program(int num_args, char** args)
 			// If we know the optimal solution, we can verify 
 			// that the persistencies are correct
 			if (do_exhaustive) {
-				check_persistency(optimal_solutions, x);
+				check_persistency(optimal_solutions, x, fixetal_itr_labeled);
 				check_bound(optimum, fixetal_bound);
 				check_bound(optimum, fixetal_itr_bound);
 			}
@@ -1047,7 +1042,7 @@ int main_program(int num_args, char** args)
 			// If we know the optimal solution, we can verify 
 			// that the persistencies are correct
 			if (do_exhaustive) {
-				check_persistency(optimal_solutions, x);
+				check_persistency(optimal_solutions, x, optimal_labeled);
 				check_bound(optimum, optimal_bound);
 			}
 		}
@@ -1072,11 +1067,14 @@ int main_program(int num_args, char** args)
 				f = pb;
 			}
 
+			Generators<real> generators("generators/generators.txt");
+
 			generators_time = 0;
 			do {
 				iters++;
 
-				GeneratorPseudoBoolean<real> gpb("generators/generators.txt");
+				//TODO: Reading the file every iteration is not optimal
+				GeneratorPseudoBoolean<real> gpb(generators); 
 				start();
 				gpb.create_lp(f);
 				double t_create = stop();
@@ -1122,7 +1120,7 @@ int main_program(int num_args, char** args)
 			// If we know the optimal solution, we can verify 
 			// that the persistencies are correct
 			if (do_exhaustive) {
-				check_persistency(optimal_solutions, x);
+				check_persistency(optimal_solutions, x, generators_labeled);
 				check_bound(optimum, generators_bound);
 			}
 		}
@@ -1214,7 +1212,7 @@ int main_program(int num_args, char** args)
 			// If we know the optimal solution, we can verify 
 			// that the persistencies are correct
 			if (do_exhaustive) {
-				check_persistency(optimal_solutions, x);
+				check_persistency(optimal_solutions, x, heur_labeled);
 				check_bound(optimum, heur_bound);
 			}
 		}

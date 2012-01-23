@@ -127,6 +127,10 @@ namespace Petter
 		// Minimizing using a symmetric, submodular function g(x,y)
 		// NOTE: will change (reduce) *this
 		real minimize(vector<label>& x, int& labeled, bool heuristic = false);
+		// Minimizing using a symmetric, submodular function g(x,y)
+		// represented with generators
+		// NOTE: will change (reduce) *this
+		real minimize_generators(vector<label>& x, int& labeled, bool heuristic = false);
 
 	protected:
 		/////////////////////////////
@@ -233,70 +237,17 @@ namespace Petter
 		return out;
 	}
 
+
+	//
+	// Helper class which holds informations about generators and
+	// how to reduce them
+	//
 	template<typename real>
-	class GeneratorPseudoBoolean
+	class Generators
 	{
 	public:
-		template<typename real2> friend class PseudoBoolean;
-		GeneratorPseudoBoolean(std::string filename);
-		void clear();
 
-		// Create using LP
-		void create_lp(const PseudoBoolean<real>& pbf);
-
-		// Minimization
-		real minimize(vector<label>& x, int& nlabelled) const;
-
-		///////////
-		// Index //
-		///////////
-
-		template <typename Map>
-		int getindex(Map& m, const pair& key) 
-		{
-			auto itr = m.find( key );
-			if ( itr == m.end() ) {
-				m[key] = nlpvars;
-				int tmp = nlpvars;
-				nlpvars+=ngen2;
-				return tmp;
-			}
-			else {
-				return itr->second;
-			}
-		}
-		template <typename Map>
-		int getindex(Map& m, const triple& key) 
-		{
-			auto itr = m.find( key );
-			if ( itr == m.end() ) {
-				m[key] = nlpvars;
-				int tmp = nlpvars;
-				nlpvars+=ngen3;
-				return tmp;
-			}
-			else {
-				return itr->second;
-			}
-		}
-		template <typename Map>
-		int getindex(Map& m, const quad& key) 
-		{
-			auto itr = m.find( key );
-			if ( itr == m.end() ) {
-				m[key] = nlpvars;
-				int tmp = nlpvars;
-				nlpvars+=ngen4pos;
-				return tmp;
-			}
-			else {
-				return itr->second;
-			}
-		}
-
-		int iaa(int i, int j, int k, int l);
-		int ibb(int i, int j, int k);
-		int icc(int i, int j);
+		Generators(const std::string& filename);
 
 		// This internal struct holds a monomial of degrees 0 (i,j<0), 1 (j<0) or 2.
 		struct Monomial
@@ -326,7 +277,6 @@ namespace Petter
 			real c;
 		};
 
-	private:
 		int ngen2, ngen3, ngen4, ngen4pos, ngen4neg;
 		size_t nentries2, nentries3, nentries4;
 
@@ -338,6 +288,77 @@ namespace Petter
 
 		// These variables hold the reduced forms of the generators
 		std::vector< std::vector< Monomial > > gen2red, gen3red, gen4redpos, gen4redneg;
+	};
+
+	template<typename real>
+	class GeneratorPseudoBoolean
+	{
+	public:
+		template<typename real2> friend class PseudoBoolean;
+		//GeneratorPseudoBoolean(std::string filename);
+		GeneratorPseudoBoolean(const Generators<real>& generators);
+		void clear();
+
+		// Create using LP
+		void create_lp(const PseudoBoolean<real>& pbf);
+
+		// Minimization
+		real minimize(vector<label>& x, int& nlabelled) const;
+
+		///////////
+		// Index //
+		///////////
+
+		template <typename Map>
+		int getindex(Map& m, const pair& key) 
+		{
+			auto itr = m.find( key );
+			if ( itr == m.end() ) {
+				m[key] = nlpvars;
+				int tmp = nlpvars;
+				nlpvars+=gen.ngen2;
+				return tmp;
+			}
+			else {
+				return itr->second;
+			}
+		}
+		template <typename Map>
+		int getindex(Map& m, const triple& key) 
+		{
+			auto itr = m.find( key );
+			if ( itr == m.end() ) {
+				m[key] = nlpvars;
+				int tmp = nlpvars;
+				nlpvars+=gen.ngen3;
+				return tmp;
+			}
+			else {
+				return itr->second;
+			}
+		}
+		template <typename Map>
+		int getindex(Map& m, const quad& key) 
+		{
+			auto itr = m.find( key );
+			if ( itr == m.end() ) {
+				m[key] = nlpvars;
+				int tmp = nlpvars;
+				nlpvars+=gen.ngen4pos;
+				return tmp;
+			}
+			else {
+				return itr->second;
+			}
+		}
+
+		int iaa(int i, int j, int k, int l);
+		int ibb(int i, int j, int k);
+		int icc(int i, int j);
+
+	private:
+
+		const Generators<real>& gen;
 
 		// LP indices
 		int nlpvars;

@@ -32,7 +32,7 @@ namespace Petter
 	{
 		real c;
 		int n,i,j;
-		typedef GeneratorPseudoBoolean<real>::Monomial Monomial;
+		typedef Generators<real>::Monomial Monomial;
 
 		// Start with an empty polynomial
 		polynomial.clear();
@@ -70,10 +70,8 @@ namespace Petter
 	}
 
 	template<typename real> 
-	GeneratorPseudoBoolean<real>::GeneratorPseudoBoolean(string filename)
+	Generators<real>::Generators(const string& filename)
 	{
-		constant = 0;
-
 		ifstream fin(filename);
 
 		fin >> ngen2 >> ngen3 >> ngen4pos;
@@ -161,6 +159,15 @@ namespace Petter
 		ASSERT_STR(fin, "Could not read aa");
 	}
 
+
+	template<typename real>
+	GeneratorPseudoBoolean<real>::GeneratorPseudoBoolean(const Generators<real>& generators) :
+		gen(generators)
+	{
+		constant = 0;
+		nlpvars = 0;
+	}
+
 	template<typename real>
 	void GeneratorPseudoBoolean<real>::clear()
 	{
@@ -226,14 +233,14 @@ namespace Petter
 		}
 
 
-		int nLPVars = int( ngen2*pbf.aij.size() + ngen3*pbf.aijk.size() + ngen4pos*pbf.aijkl.size() );
+		int nLPVars = int( gen.ngen2*pbf.aij.size() + gen.ngen3*pbf.aijk.size() + gen.ngen4pos*pbf.aijkl.size() );
 
 		int nConstraints = int( pbf.aij.size() + pbf.aijk.size() + pbf.aijkl.size() ); // equality constraints
 
 
 		// Compute the number of entries in the 
 		// constraint matrix
-		size_t nEntries = nentries2*pbf.aij.size() + nentries3*pbf.aijk.size() + nentries4*pbf.aijkl.size();
+		size_t nEntries = gen.nentries2*pbf.aij.size() + gen.nentries3*pbf.aijk.size() + gen.nentries4*pbf.aijkl.size();
 			
 		//Description of sparse matrix
 		vector<int> rows;
@@ -272,28 +279,25 @@ namespace Petter
 		map<pair,int> indpair_to_con;
 		map<triple,int> indtriple_to_con;
 
-
 		for (auto itr = pbf.aij.begin(); itr != pbf.aij.end(); ++itr) {
 			int i=get_i(itr->first);
 			int j=get_j(itr->first);
 			real aij = itr->second;
 
 			indpair_to_con[itr->first] = con;
-
 			int ind=icc(i,j); //column index of cc
-
-			for (int ii=0;ii<ngen2;++ii){
+			for (int ii=0;ii<gen.ngen2;++ii){
 				int colind=ind+ii;
-				add_element(con, colind, cc[ii]); // cc[ii] should always be non-zero, since degree 2 generator
+				add_element(con, colind, gen.cc.at(ii)); // cc[ii] should always be non-zero, since degree 2 generator
 				//Objective function
-				cost[colind] = -obj2[ii];
+				cost[colind] = -gen.obj2[ii];
 			}
 			change_rhs(con, aij/2);
 			con++;
-
 			var_used[i] = true;
 			var_used[j] = true;
 		}
+
 		for (auto itr = pbf.aijk.begin(); itr != pbf.aijk.end(); ++itr) {
 			int i=get_i(itr->first);
 			int j=get_j(itr->first);
@@ -308,20 +312,20 @@ namespace Petter
 			int con_13 = indpair_to_con[make_pair(i,k)];
 			int con_23 = indpair_to_con[make_pair(j,k)];
 
-			for (int ii=0;ii<ngen3;++ii){
+			for (int ii=0;ii<gen.ngen3;++ii){
 				int colind=ind+ii;
-				add_element(con, colind, bb123[ii]); // bb123[ii] should always be non-zero, since degree 3 generator
-				if (bb12[ii]!=0){
-					add_element(con_12, colind, bb12[ii]);
+				add_element(con, colind, gen.bb123[ii]); // bb123[ii] should always be non-zero, since degree 3 generator
+				if (gen.bb12[ii]!=0){
+					add_element(con_12, colind, gen.bb12[ii]);
 				}
-				if (bb13[ii]!=0){
-					add_element(con_13, colind, bb13[ii]);
+				if (gen.bb13[ii]!=0){
+					add_element(con_13, colind, gen.bb13[ii]);
 				}
-				if (bb23[ii]!=0){
-					add_element(con_23, colind, bb23[ii]);
+				if (gen.bb23[ii]!=0){
+					add_element(con_23, colind, gen.bb23[ii]);
 				}
 				//Objective function
-				cost[colind] = -obj3[ii];
+				cost[colind] = -gen.obj3[ii];
 			}
 			change_rhs(con, aijk/2);
 			con++;
@@ -330,6 +334,7 @@ namespace Petter
 			var_used[j] = true;
 			var_used[k] = true;
 		}
+
 		for (auto itr = pbf.aijkl.begin(); itr != pbf.aijkl.end(); ++itr) {
 			int i=get_i(itr->first);
 			int j=get_j(itr->first);
@@ -357,41 +362,41 @@ namespace Petter
 				// Save that we are using positive generators
 				posgen4[itr->first] = true;
 
-				for (int ii=0;ii<ngen4pos;++ii){
+				for (int ii=0;ii<gen.ngen4pos;++ii){
 					int colind=ind+ii;
-					add_element(con, colind, aa1234pos[ii]); // aa1234[ii] should always be non-zero, since degree 4 generator
-					if (aa12pos[ii]!=0){
-						add_element(con_12, colind, aa12pos[ii]);
+					add_element(con, colind, gen.aa1234pos[ii]); // aa1234[ii] should always be non-zero, since degree 4 generator
+					if (gen.aa12pos[ii]!=0){
+						add_element(con_12, colind, gen.aa12pos[ii]);
 					}
-					if (aa13pos[ii]!=0){
-						add_element(con_13, colind, aa13pos[ii]);
+					if (gen.aa13pos[ii]!=0){
+						add_element(con_13, colind, gen.aa13pos[ii]);
 					}
-					if (aa14pos[ii]!=0){
-						add_element(con_14, colind, aa14pos[ii]);
+					if (gen.aa14pos[ii]!=0){
+						add_element(con_14, colind, gen.aa14pos[ii]);
 					}
-					if (aa23pos[ii]!=0){
-						add_element(con_23, colind, aa23pos[ii]);
+					if (gen.aa23pos[ii]!=0){
+						add_element(con_23, colind, gen.aa23pos[ii]);
 					}
-					if (aa24pos[ii]!=0){
-						add_element(con_24, colind, aa24pos[ii]);
+					if (gen.aa24pos[ii]!=0){
+						add_element(con_24, colind, gen.aa24pos[ii]);
 					}
-					if (aa34pos[ii]!=0){
-						add_element(con_34, colind, aa34pos[ii]);
+					if (gen.aa34pos[ii]!=0){
+						add_element(con_34, colind, gen.aa34pos[ii]);
 					}
-					if (aa123pos[ii]!=0){
-						add_element(con_123, colind, aa123pos[ii]);
+					if (gen.aa123pos[ii]!=0){
+						add_element(con_123, colind, gen.aa123pos[ii]);
 					}
-					if (aa124pos[ii]!=0){
-						add_element(con_124, colind, aa124pos[ii]);
+					if (gen.aa124pos[ii]!=0){
+						add_element(con_124, colind, gen.aa124pos[ii]);
 					}
-					if (aa134pos[ii]!=0){
-						add_element(con_134, colind, aa134pos[ii]);
+					if (gen.aa134pos[ii]!=0){
+						add_element(con_134, colind, gen.aa134pos[ii]);
 					}
-					if (aa234pos[ii]!=0){
-						add_element(con_234, colind, aa234pos[ii]);
+					if (gen.aa234pos[ii]!=0){
+						add_element(con_234, colind, gen.aa234pos[ii]);
 					}
 					//Objective function
-					cost[colind] = -obj4pos[ii];
+					cost[colind] = -gen.obj4pos[ii];
 				}
 			}
 			else{
@@ -399,41 +404,41 @@ namespace Petter
 				// Save that we are using negative generators
 				posgen4[itr->first] = false;
 
-				for (int ii=0;ii<ngen4neg;++ii){
+				for (int ii=0;ii<gen.ngen4neg;++ii){
 					int colind=ind+ii;
-					add_element(con, colind, aa1234neg[ii]); // aa1234[ii] should always be non-zero, since degree 4 generator
-					if (aa12neg[ii]!=0){
-						add_element(con_12, colind, aa12neg[ii]);
+					add_element(con, colind, gen.aa1234neg[ii]); // aa1234[ii] should always be non-zero, since degree 4 generator
+					if (gen.aa12neg[ii]!=0){
+						add_element(con_12, colind, gen.aa12neg[ii]);
 					}
-					if (aa13neg[ii]!=0){
-						add_element(con_13, colind, aa13neg[ii]);
+					if (gen.aa13neg[ii]!=0){
+						add_element(con_13, colind, gen.aa13neg[ii]);
 					}
-					if (aa14neg[ii]!=0){
-						add_element(con_14, colind, aa14neg[ii]);
+					if (gen.aa14neg[ii]!=0){
+						add_element(con_14, colind, gen.aa14neg[ii]);
 					}
-					if (aa23neg[ii]!=0){
-						add_element(con_23, colind, aa23neg[ii]);
+					if (gen.aa23neg[ii]!=0){
+						add_element(con_23, colind, gen.aa23neg[ii]);
 					}
-					if (aa24neg[ii]!=0){
-						add_element(con_24, colind, aa24neg[ii]);
+					if (gen.aa24neg[ii]!=0){
+						add_element(con_24, colind, gen.aa24neg[ii]);
 					}
-					if (aa34neg[ii]!=0){
-						add_element(con_34, colind, aa34neg[ii]);
+					if (gen.aa34neg[ii]!=0){
+						add_element(con_34, colind, gen.aa34neg[ii]);
 					}
-					if (aa123neg[ii]!=0){
-						add_element(con_123, colind, aa123neg[ii]);
+					if (gen.aa123neg[ii]!=0){
+						add_element(con_123, colind, gen.aa123neg[ii]);
 					}
-					if (aa124neg[ii]!=0){
-						add_element(con_124, colind, aa124neg[ii]);
+					if (gen.aa124neg[ii]!=0){
+						add_element(con_124, colind, gen.aa124neg[ii]);
 					}
-					if (aa134neg[ii]!=0){
-						add_element(con_134, colind, aa134neg[ii]);
+					if (gen.aa134neg[ii]!=0){
+						add_element(con_134, colind, gen.aa134neg[ii]);
 					}
-					if (aa234neg[ii]!=0){
-						add_element(con_234, colind, aa234neg[ii]);
+					if (gen.aa234neg[ii]!=0){
+						add_element(con_234, colind, gen.aa234neg[ii]);
 					}
 					//Objective function
-					cost[colind] = -obj4neg[ii];
+					cost[colind] = -gen.obj4neg[ii];
 				}
 			}
 			change_rhs(con, aijkl/2);
@@ -480,9 +485,9 @@ namespace Petter
 			int i=get_i(ind);
 			int j=get_j(ind);
 
-			alphaij[ind].resize(ngen2);
+			alphaij[ind].resize(gen.ngen2);
 			int icctmp = icc(i,j);
-			for (int ii=0;ii<ngen2;++ii){
+			for (int ii=0;ii<gen.ngen2;++ii){
 				alphaij[ind][ii] = lpvars[ icctmp+ii ];
 
 				//if (alphaij[ind][ii] != 0) {
@@ -499,9 +504,9 @@ namespace Petter
 			int j=get_j(ind);
 			int k=get_k(ind);
 
-			alphaijk[ind].resize(ngen3);
+			alphaijk[ind].resize(gen.ngen3);
 			int ibbtmp = ibb(i,j,k);
-			for (int ii=0;ii<ngen3;++ii){
+			for (int ii=0;ii<gen.ngen3;++ii){
 				alphaijk[ind][ii] = lpvars[ ibbtmp+ii ];
 
 				//if (alphaijk[ind][ii] != 0) {
@@ -518,9 +523,9 @@ namespace Petter
 			int k=get_k(ind);
 			int l=get_l(ind);
 
-			alphaijkl[ind].resize(ngen4pos);
+			alphaijkl[ind].resize(gen.ngen4pos);
 			int iaatmp = iaa(i,j,k,l);
-			for (int ii=0;ii<ngen4pos;++ii){
+			for (int ii=0;ii<gen.ngen4pos;++ii){
 				alphaijkl[ind][ii] = lpvars[ iaatmp+ii ];
 
 				//if (alphaijkl[ind][ii] != 0) {
@@ -555,7 +560,7 @@ namespace Petter
 	// Adds alpha times a monomial to a graph
 	//
 	template<typename real> 
-	void add_monomial_to_graph( real& C, Graph<real,real,real>& graph, real alpha, const typename GeneratorPseudoBoolean<real>::Monomial& monomial, const vector<int>& idx)
+	void add_monomial_to_graph( real& C, Graph<real,real,real>& graph, real alpha, const typename Generators<real>::Monomial& monomial, const vector<int>& idx)
 	{
 		monomial.check(); //Debug
 
@@ -695,11 +700,11 @@ namespace Petter
 			int i=get_i(ind);
 			int j=get_j(ind);
 			const auto& vec = itr->second;
-			for (int ii=0;ii<ngen2;++ii) {
+			for (int ii=0;ii<gen.ngen2;++ii) {
 				real alpha = vec.at(ii);
 				if (alpha > 0) {
 					// Add monomials for this generator to the graph
-					add_generator_to_graph(nVars, C, graph, alpha, gen2red.at(ii), i,j );
+					add_generator_to_graph(nVars, C, graph, alpha, gen.gen2red.at(ii), i,j );
 				}
 			}
 		}
@@ -713,11 +718,11 @@ namespace Petter
 			int j=get_j(ind);
 			int k=get_k(ind);
 			const auto& vec = itr->second;
-			for (int ii=0;ii<ngen3;++ii) {
+			for (int ii=0;ii<gen.ngen3;++ii) {
 				real alpha = vec.at(ii);
 				if (alpha > 0) {
 					// Add monomials for this generator to the graph
-					add_generator_to_graph(nVars, C, graph, alpha, gen3red.at(ii), i,j,k );
+					add_generator_to_graph(nVars, C, graph, alpha, gen.gen3red.at(ii), i,j,k );
 				}
 			}
 		}
@@ -740,18 +745,19 @@ namespace Petter
 				pos = mitr->second;
 			}
 
+			ASSERT(gen.ngen4pos == gen.ngen4neg);
 
-			for (int ii=0;ii<ngen4pos;++ii) {
+			for (int ii=0;ii<gen.ngen4pos;++ii) {
 				real alpha = vec.at(ii);
 				if (alpha > 0) {
 					// Add monomials for this generator to the graph
 					if (pos) {
 						// Positive generator was used
-						add_generator_to_graph(nVars, C, graph, alpha, gen4redpos.at(ii), i,j,k,l );
+						add_generator_to_graph(nVars, C, graph, alpha, gen.gen4redpos.at(ii), i,j,k,l );
 					}
 					else {
 						// Negative generator was used
-						add_generator_to_graph(nVars, C, graph, alpha, gen4redneg.at(ii), i,j,k,l );
+						add_generator_to_graph(nVars, C, graph, alpha, gen.gen4redneg.at(ii), i,j,k,l );
 					}
 				}
 			}
@@ -768,13 +774,13 @@ namespace Petter
 			xfull[i] = graph.what_segment(i);
 		}
 
-		//TODO: try to obtain (0,1) and (1,0) solutions if possible
-		//      does not matter that much for random polynomials
-			//vector<std::pair<int,int> > pairs;
-			//for (int i=0;i<nVars;++i) {
-			//	pairs.push_back( std::make_pair(i, i+nVars) ); 
-			//}
-			//resolve_different(graph,xfull,pairs);
+		//  try to obtain (0,1) and (1,0) solutions if possible
+		//  does not matter that much for random polynomials
+			vector<std::pair<int,int> > pairs;
+			for (int i=0;i<nVars;++i) {
+				pairs.push_back( std::make_pair(i, i+nVars) ); 
+			}
+			resolve_different(graph,xfull,pairs);
 
 		// Extract labeling
 		nlabelled = 0;
