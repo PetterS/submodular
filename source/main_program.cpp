@@ -36,7 +36,7 @@ namespace {
 	#ifdef WIN32
 		// Time Stamp Counter gives better seeds than seconds
 		// when many small problems are generated consecutively
-		mt19937 engine(__rdtsc()); 
+		mt19937 engine((unsigned long)(__rdtsc()&0xffffffff)); 
 	#else
 		mt19937 engine(unsigned(time(0)));
 	#endif
@@ -70,8 +70,8 @@ T absolute(const T t)
 
 void print_x(const std::vector<label>& x)
 {
-	int n = x.size();
-	for (int i=0;i<n&&i<20;++i) {
+	size_t n = x.size();
+	for (size_t i=0;i<n&&i<20;++i) {
 		if (x[i]>=0) {
 			cout << x[i];
 		}
@@ -95,10 +95,28 @@ void print_info(std::string name, const std::vector<label>& x, real bound, int l
 }
 
 
+template<typename real>
+void test_branchandbound(const PseudoBoolean<real>& pb, int n, const string& method_str, BBInfo::Method method, ostream& fout)
+{
+	vector<label> x(n,0);
+	real val;
+	BBInfo bbinfo;
+
+	bbinfo.method = method;
+	val = branch_and_bound(pb,x,&bbinfo);
+	//if (do_exhaustive) {
+	//	check_persistency(optimal_solutions, x);
+	//	check_bound(optimum, val);
+	//}
+
+	cout << setw(10) << left << method_str <<  bbinfo.iterations << " iterations, total_time = " << bbinfo.total_time << " s, solver_time = " << bbinfo.solver_time << endl; 
+	fout << setw(10) << left << method_str <<  bbinfo.iterations << " iterations, total_time = " << bbinfo.total_time << " s, solver_time = " << bbinfo.solver_time << endl; 
+}
+
 //
 // Checks that the persistencies in x agrees with some optimal solution
 //
-void check_persistency( const vector< vector<label> >& optimal_solutions, const vector<label>& x, int reported_labelled)
+void check_persistency( const vector< vector<label> >& optimal_solutions, const vector<label>& x, int reported_labelled=-1)
 {
 	bool any_ok = false;
 	for (auto itr = optimal_solutions.begin(); itr != optimal_solutions.end(); ++itr) {
@@ -118,15 +136,17 @@ void check_persistency( const vector< vector<label> >& optimal_solutions, const 
 		throw runtime_error("Persistency error");
 	}
 
-	int labelled = 0;
-	for (size_t i=0;i<x.size();++i) {
-		if (x.at(i) >= 0) {
-			labelled++;
+	if (reported_labelled >= 0) {
+		int labelled = 0;
+		for (size_t i=0;i<x.size();++i) {
+			if (x.at(i) >= 0) {
+				labelled++;
+			}
 		}
-	}
 
-	if (labelled != reported_labelled) {
-		throw runtime_error("Incorrect number of labels reported");
+		if (labelled != reported_labelled) {
+			throw runtime_error("Incorrect number of labels reported");
+		}
 	}
 }
 
@@ -516,7 +536,7 @@ int main_program(int num_args, char** args)
 		statusTry("Generating random polynomial...");
 
 		auto random_coef  = bind(uniform_int_distribution<int>(-100,100), engine);
-		real upper = 100;
+		int upper = 100;
 		if (submodular) {
 			upper = 0;
 		}
@@ -657,6 +677,11 @@ int main_program(int num_args, char** args)
 	double generators_time = -1;
 	double heur_time = -1;
 	double packing_time = -1;
+
+	if (do_exhaustive && n>30) {
+		cout << "Not using exhaustive search for n=" << n << endl;
+		do_exhaustive = false;
+	}
 
 	if (do_exhaustive) {
 		cout << WHITE << "WHITE" << NORMAL << " is global optimum" << endl;
@@ -1171,7 +1196,7 @@ int main_program(int num_args, char** args)
 							u[i] = rand()%2;
 							v[i] = 1-u[i];
 						}
-						heurreal fval = f.eval(u);
+						real fval = f.eval(u);
 						heurreal gval = spb.eval(u,v);
 						if ( absolute(fval-gval) > 1e-6 ) {
 							cout << "f = " << fval << endl;
@@ -1216,6 +1241,36 @@ int main_program(int num_args, char** args)
 				check_bound(optimum, heur_bound);
 			}
 		}
+
+
+
+		//
+		// Branch and bound
+		//
+		if (cmd_line.find("-bb") != cmd_line.end() ) {
+
+			ofstream fout("bb.log");
+			fout << "m=" << m << ", n=" << n << ", nterms=" << nterms << endl;
+
+			if (do_generators) {
+				test_branchandbound(pb, n, "GRD-gen", BBInfo::GRD_gen, fout); 
+			}
+			if (do_optimal) {
+				test_branchandbound(pb, n, "GRD", BBInfo::GRD, fout); 
+			}
+			if (do_heuristic) {
+				test_branchandbound(pb, n, "GRD-heur", BBInfo::GRD_heur, fout); 
+			}
+			if (do_fixetal) {
+				test_branchandbound(pb, n, "Fix", BBInfo::Fix, fout); 
+			}
+			if (do_hocr) {
+				test_branchandbound(pb, n, "HOCR", BBInfo::HOCR, fout); 
+			}
+			
+		}
+
+
 	}
 	catch (exception& e) {
 		statusFailed();

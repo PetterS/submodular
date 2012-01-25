@@ -60,6 +60,8 @@ namespace Petter
 		labeled = 0;
 		int n = int( x.size() );
 
+		ASSERT(!heuristic);
+
 		// TODO: should be provided by user
 		Generators<real> generators("generators/generators.txt");
 

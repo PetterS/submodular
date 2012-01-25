@@ -123,7 +123,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>..\..\bin\</OutDir>
-    <TargetName>submodular</TargetName>
+    <TargetName>submodular2</TargetName>
     <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Without heuristics|x64'">
@@ -236,6 +236,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\source\library\GeneratorPseudoBoolean.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean.cpp" />
+    <ClCompile Include="..\..\source\library\PseudoBoolean_branchandbound.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_complete.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_create_g.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_heuristic.cpp" />

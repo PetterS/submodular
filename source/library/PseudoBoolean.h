@@ -150,6 +150,17 @@ namespace Petter
 		return out;
 	}
 
+
+	struct BBInfo
+	{
+		enum Method {HOCR,Fix,GRD,GRD_heur,GRD_gen};
+		Method method;
+		int iterations;
+		double total_time, solver_time;
+	};
+	template<typename real>
+	real branch_and_bound(const PseudoBoolean<real>& f, vector<label>& x, BBInfo* bbinfo=0);
+
 	template<typename real>
 	class SymmetricPseudoBoolean
 	{
