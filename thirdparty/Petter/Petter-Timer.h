@@ -54,7 +54,7 @@ namespace Petter
 			double time()
 			{ 
 				return double(stop_time - start_time) / double(CLOCKS_PER_SEC);
-			};
+			}
 			inline double stop()
 			{
 				stop_time = std::clock();
@@ -68,7 +68,7 @@ namespace Petter
 			double time2()
 			{ 
 				return double(stop_time2 - start_time2) / double(CLOCKS_PER_SEC);
-			};
+			}
 			inline double stop2()
 			{
 				stop_time2 = std::clock();

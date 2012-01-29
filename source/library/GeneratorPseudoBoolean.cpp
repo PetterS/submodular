@@ -32,7 +32,7 @@ namespace Petter
 	{
 		real c;
 		int n,i,j;
-		typedef Generators<real>::Monomial Monomial;
+		typedef typename Generators<real>::Monomial Monomial;
 
 		// Start with an empty polynomial
 		polynomial.clear();

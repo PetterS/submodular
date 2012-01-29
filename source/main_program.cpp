@@ -96,7 +96,7 @@ void print_info(std::string name, const std::vector<label>& x, real bound, int l
 
 
 template<typename real>
-void test_branchandbound(const PseudoBoolean<real>& pb, int n, const string& method_str, BBInfo::Method method, ostream& fout)
+void test_branchandbound(const PseudoBoolean<real>& pb, int n, Method method, ostream& fout, Petter::Color color)
 {
 	vector<label> x(n,0);
 	real val;
@@ -109,8 +109,8 @@ void test_branchandbound(const PseudoBoolean<real>& pb, int n, const string& met
 	//	check_bound(optimum, val);
 	//}
 
-	cout << setw(10) << left << method_str <<  bbinfo.iterations << " iterations, total_time = " << bbinfo.total_time << " s, solver_time = " << bbinfo.solver_time << endl; 
-	fout << setw(10) << left << method_str <<  bbinfo.iterations << " iterations, total_time = " << bbinfo.total_time << " s, solver_time = " << bbinfo.solver_time << endl; 
+	cout << setw(10) << left << str(method) << color << bbinfo.iterations << NORMAL << " iterations, total_time = " << color << bbinfo.total_time << NORMAL << " s, solver_time = " << color << bbinfo.solver_time << NORMAL << endl; 
+	fout << setw(10) << left << str(method) <<  bbinfo.iterations << " iterations, total_time = " << bbinfo.total_time << " s, solver_time = " << bbinfo.solver_time << endl; 
 }
 
 //
@@ -213,7 +213,7 @@ int main_program(int num_args, char** args)
 		statusTry("Minimizing g...");
 		vector<label> x(f.nvars(), -1);
 		int nlabelled=-1;
-		double gmin = genpb.minimize(x, nlabelled);
+		genpb.minimize(x, nlabelled);
 		statusOK();
 
 		cerr << "Possible choices : " << endl;
@@ -692,14 +692,14 @@ int main_program(int num_args, char** args)
 	if (do_lprelax) {
 		cout << NORMAL << "GRAY" << NORMAL << " is an LP relaxation (Rhys form)" << endl;
 	}
-	cout << DKRED << "DKRED" << NORMAL << " is HOCR" << endl;
+	cout << RED << "RED" << NORMAL << " is HOCR" << endl;
 	if (iterate_reduction_methods) {
-		cout << RED << "RED" << NORMAL << " is iterated HOCR" << endl;
+		cout << DKRED << "DKRED" << NORMAL << " is iterated HOCR" << endl;
 	}
 	if (do_fixetal) {
-		cout << DKBLUE << "DKBLUE" << NORMAL << " is Fix et al. from ICCV 2011" << endl;
+		cout << BLUE << "BLUE" << NORMAL << " is Fix et al. from ICCV 2011" << endl;
 		if (iterate_reduction_methods) {
-			cout << BLUE << "BLUE" << NORMAL << " is Fix et al. iterated" << endl;
+			cout << DKBLUE << "DKBLUE" << NORMAL << " is Fix et al. iterated" << endl;
 		}
 	}
 	if (do_optimal) {
@@ -939,7 +939,7 @@ int main_program(int num_args, char** args)
 			Petter::PseudoBoolean<real> f = pb;
 			vector<label> x(n,0);
 
-			const Petter::Color* COL = &BLUE;
+			const Petter::Color* COL = &DKBLUE;
 
 			do {
 				iters++;
@@ -965,10 +965,10 @@ int main_program(int num_args, char** args)
 					fixetal_labeled = new_labeled;
 					fixetal_time = t_minimize;
 					fixetal_itr_time = t_minimize + t_reduce;
-					COL = &DKBLUE;
+					COL = &BLUE;
 				}
 				else {
-					COL = &BLUE;
+					COL = &DKBLUE;
 					fixetal_itr_time += t_minimize + t_reduce;
 				}
 
@@ -1250,22 +1250,24 @@ int main_program(int num_args, char** args)
 		if (cmd_line.find("-bb") != cmd_line.end() ) {
 
 			ofstream fout("bb.log");
-			fout << "m=" << m << ", n=" << n << ", nterms=" << nterms << endl;
+			fout << "m=" << m << ", n=" << n << ", nterms=" << cmd_line["-nterms"] << endl;
+			cout << "Starting branch and bound." << endl;
+
 
 			if (do_generators) {
-				test_branchandbound(pb, n, "GRD-gen", BBInfo::GRD_gen, fout); 
+				test_branchandbound(pb, n,  GRD_gen, fout, DKGREEN); 
 			}
 			if (do_optimal) {
-				test_branchandbound(pb, n, "GRD", BBInfo::GRD, fout); 
+				test_branchandbound(pb, n,  GRD, fout, GREEN); 
 			}
 			if (do_heuristic) {
-				test_branchandbound(pb, n, "GRD-heur", BBInfo::GRD_heur, fout); 
+				test_branchandbound(pb, n, GRD_heur, fout, YELLOW); 
 			}
 			if (do_fixetal) {
-				test_branchandbound(pb, n, "Fix", BBInfo::Fix, fout); 
+				test_branchandbound(pb, n, Fix, fout, BLUE); 
 			}
-			if (do_hocr) {
-				test_branchandbound(pb, n, "HOCR", BBInfo::HOCR, fout); 
+			if (cmd_line.find("-hocr") != cmd_line.end()) {
+				test_branchandbound(pb, n,  HOCR, fout, RED); 
 			}
 			
 		}

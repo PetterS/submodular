@@ -12,6 +12,8 @@
 
 #include <iomanip>
 #include <queue>
+#include <cmath>
+#include <cstdio>
 using namespace std;
 
 // From main program
@@ -62,6 +64,13 @@ namespace Petter
 		}
 	};
 
+	template<typename real>
+	struct BB_Format_Strings
+	{
+		static const char* iteration_string;
+		static const char* completion_string;
+	};
+
 
 	template<typename real>
 	real branch_and_bound(const PseudoBoolean<real>& f, vector<label>& x, BBInfo* bbinfo)
@@ -75,7 +84,7 @@ namespace Petter
 		priority_queue<Subproblem<real> > problems;
 		
 		// Reset x
-		for (int i=0;i<x.size();++i) {
+		for (size_t i=0;i<x.size();++i) {
 			x[i] = -1;
 		}
 		Subproblem<real> start_problem(x,f);
@@ -149,12 +158,12 @@ namespace Petter
 					}
 				}
 
-				printf("  Iters=%-8d %2.0f%% of branches done. bounds=(%7.1f , %7.1f) queue size: %d\n",
+				printf(BB_Format_Strings<real>::iteration_string,
 				       total_iterations,
-					    100*(pow(2.0,prefix_length) - found_prefix)/pow(2.0,prefix_length),
-						lower_bound,
-						upper_bound,
-						problems.size());
+				       100*(pow(2.0,prefix_length) - found_prefix)/pow(2.0,prefix_length),
+				       lower_bound,
+				       upper_bound,
+				       problems.size());
 			}
 
 			start();
@@ -177,16 +186,16 @@ namespace Petter
 			int nlabeled;
 
 			start2();
-			if (!bbinfo || bbinfo->method == BBInfo::HOCR) {
+			if (!bbinfo || bbinfo->method == HOCR) {
 				problem.bound = problem.f.minimize_reduction( problem.fixed, nlabeled);
 			}
-			else if (bbinfo->method == BBInfo::Fix) {
+			else if (bbinfo->method == Fix) {
 				problem.bound = problem.f.minimize_reduction_fixetal( problem.fixed, nlabeled);
 			}
-			else if (bbinfo->method == BBInfo::GRD) {
+			else if (bbinfo->method == GRD) {
 				problem.bound = problem.f.minimize( problem.fixed, nlabeled);
 			}
-			else if (bbinfo->method == BBInfo::GRD_heur) {
+			else if (bbinfo->method == GRD_heur) {
 
 				//bound = problem.f.minimize( problem.fixed, nlabeled, true);
 
@@ -195,7 +204,7 @@ namespace Petter
 				g.create_heuristic(problem.f);
 				problem.bound = g.minimize(problem.fixed, nlabeled);
 			}
-			else if (bbinfo->method == BBInfo::GRD_gen) {
+			else if (bbinfo->method == GRD_gen) {
 				problem.bound = problem.f.minimize_generators( problem.fixed, nlabeled);
 			}
 			else {
@@ -214,7 +223,7 @@ namespace Petter
 
 			bool should_branch = false;
 
-			if (nlabeled == n && problem.bound < upper_bound) {
+			if (nlabeled == int(n) && problem.bound < upper_bound) {
 				// Found a new best solution
 				upper_bound = problem.bound;
 				x_best = problem.fixed;
@@ -224,7 +233,7 @@ namespace Petter
 					cout << WHITE;
 				}
 			}
-			else if (nlabeled < n && problem.bound <= upper_bound)  {
+			else if (nlabeled < int(n) && problem.bound <= upper_bound)  {
 				// Need to branch, because this subproblem
 				// is not completely solved
 				should_branch = true;
@@ -256,9 +265,12 @@ namespace Petter
 				
 				Subproblem<real> problem2 = problem;
 
-				for (int i=0;i<n;++i) {
+				// Go through all variables
+				for (size_t i=0;i<n;++i) {
+					// Look for a variable which isn't fixed for this problem
 					if (problem.fixed[i] < 0) {
 
+						// Branch into two problems for this variable
 						problem.fixed[i] = 0;
 						problem.f.reduce(problem.fixed);
 
@@ -270,6 +282,7 @@ namespace Petter
 							cout << "  New problem: "; print_x(problem2.fixed); cout << endl;
 						}
 
+						// Add the two new problems to the queue
 						problems.push(problem);
 						problems.push(problem2);
 
@@ -283,6 +296,12 @@ namespace Petter
 
 		total_time += stop();
 
+
+		printf(BB_Format_Strings<real>::completion_string,
+				       total_iterations,
+				       f_best,
+				       problems.size());
+
 		x = x_best;
 		if (bbinfo) {
 			bbinfo->total_time = total_time;
@@ -293,6 +312,27 @@ namespace Petter
 		return f_best;
 	}
 
+
+
+	template<typename real>
+	const char* BB_Format_Strings<real>::iteration_string = "  Iteration";
+	template<typename real>
+	const char* BB_Format_Strings<real>::completion_string = "  Completed";
+
+	template<>
+	const char* BB_Format_Strings<double>::iteration_string  = "  Iters=%-8d %2.0f%% of branches done. bounds=(%7.1f, %7.1f) queue size: %d\n";
+	template<>
+	const char* BB_Format_Strings<double>::completion_string = "  Iters=%-7d 100%% of branches done. optimum=%7.1f\n";
+
+	template<>
+	const char* BB_Format_Strings<int>::iteration_string = "  Iters=%-8d %2.0f%% of branches done. bounds=(%6d, %6d) queue size: %d\n";
+	template<>
+	const char* BB_Format_Strings<int>::completion_string = "  Iters=%-7d 100%% of branches done. optimum=%6d\n";
 }
 
-#include "pb_instances.inc"
+
+#define INSTANTIATE(c) \
+	template c     Petter::branch_and_bound<c>(const Petter::PseudoBoolean<c>& f, vector<label>& x, Petter::BBInfo* bbinfo);
+
+INSTANTIATE(double);
+INSTANTIATE(int);

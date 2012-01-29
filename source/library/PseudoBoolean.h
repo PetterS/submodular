@@ -37,6 +37,10 @@ namespace Petter
 	using std::map;
 	using std::vector;
 
+	// Used to specify optimization method
+	enum Method {HOCR,Fix,GRD,GRD_heur,GRD_gen,LP};
+	const char* str(Method m);
+
 	typedef signed short label;
 	typedef int index; 
 
@@ -124,6 +128,11 @@ namespace Petter
 		// mostly for testing purposes
 		real minimize_lp(vector<label>& x,bool verbose=false) const;
 
+		// Minimizing using any method
+		// NOTE: might change (reduce) *this
+		real minimize(vector<label>& x, Method method);
+		real minimize(vector<label>& x, int& labeled, Method method);
+
 		// Minimizing using a symmetric, submodular function g(x,y)
 		// NOTE: will change (reduce) *this
 		real minimize(vector<label>& x, int& labeled, bool heuristic = false);
@@ -153,7 +162,6 @@ namespace Petter
 
 	struct BBInfo
 	{
-		enum Method {HOCR,Fix,GRD,GRD_heur,GRD_gen};
 		Method method;
 		int iterations;
 		double total_time, solver_time;

@@ -13,12 +13,95 @@ namespace Petter
 {
 
 	template<typename real>
+	real PseudoBoolean<real>::minimize(vector<label>& x, Method method = GRD)
+	{
+		int tmp;
+		return minimize(x,tmp,method);
+	}
+
+	template<typename real>
+	real PseudoBoolean<real>::minimize(vector<label>& x, int& labeled, Method method = GRD)
+	{
+		if (method==HOCR) {
+			return minimize_reduction(x,labeled);
+		}
+		else if (method==Fix) {
+			return minimize_reduction_fixetal(x,labeled);
+		}
+		else if (method==LP) {
+			labeled=0;
+			return minimize_lp(x);
+		}
+
+
+		bool should_continue;
+		real bound;
+		labeled = 0;
+		int n = int( x.size() );
+
+		Generators<real>* generators = 0;
+		if (method == GRD_gen) {
+			// TODO: should be provided by user
+			generators = new Generators<real>("generators/generators.txt");
+		}
+
+		do {
+
+			int new_labeled = 0;
+
+			if (method==GRD || method==GRD_heur) {
+				// Create symmetric relaxation
+				SymmetricPseudoBoolean<real> spb;
+				if (method==GRD_heur) {
+					spb.create_heuristic(*this);
+				}
+				else {
+					spb.create_lp(*this);
+				}
+
+				// Minimize relaxation
+				bound = spb.minimize(x, new_labeled);
+			}
+			else if (method == GRD_gen) {
+				// Create symmetric relaxation
+				GeneratorPseudoBoolean<real> spb(*generators);
+				spb.create_lp(*this);
+				// Minimize relaxation
+				bound = spb.minimize(x, new_labeled);
+			}
+
+			// If we have more persistencies, continue
+			should_continue = new_labeled > labeled;
+			labeled = new_labeled;
+			if (labeled == n) {
+				//Nothing more to do
+				should_continue = false;
+			}
+
+			// Reduce this function
+			reduce(x);
+
+		} while (should_continue);
+
+
+		if (generators) {
+			delete generators;
+		}
+
+		return bound;
+
+	}
+
+
+
+	template<typename real>
 	real PseudoBoolean<real>::minimize(vector<label>& x, int& labeled, bool heuristic)
 	{
 		bool should_continue;
 		real bound;
 		labeled = 0;
 		int n = int( x.size() );
+
 
 		do {
 
@@ -67,7 +150,6 @@ namespace Petter
 
 		do {
 			// Create symmetric relaxation
-			//TODO: Reading the file every iteration is not optimal
 			GeneratorPseudoBoolean<real> spb(generators);
 			spb.create_lp(*this);
 
