@@ -108,7 +108,7 @@ void grd(int			nlhs, 		/* number of expected outputs */
 		unsigned int i   = QI(0,t)-1; 
 		unsigned int j   = QI(1,t)-1; 
 		unsigned int k   = QI(2,t)-1; 
-		unsigned int l   = QI(4,t)-1; 
+		unsigned int l   = QI(3,t)-1; 
 		unsigned int ind;
 		if (QI.M == 5) {
 			ind = QI(4,t)-1;
