@@ -85,32 +85,17 @@ void print_x(const std::vector<label>& x)
 }
 
 template<typename real>
-void print_info(std::string name, const std::vector<label>& x, real bound, int labeled, Petter::Color color)
+void print_info(std::string name, const std::vector<label>& x, real bound, int labeled, Petter::Color color, double time=-1)
 {
 	using namespace std;
 	cout << left << setw(16) << name << "f(";
 	print_x(x);
 	cout << ") = " << color << right << setw(8) << bound << NORMAL;
-	cout << ",   labeled : " << color << labeled << NORMAL << endl;
-}
-
-
-template<typename real>
-void test_branchandbound(const PseudoBoolean<real>& pb, int n, Method method, ostream& fout, Petter::Color color)
-{
-	vector<label> x(n,0);
-	real val;
-	BBInfo bbinfo;
-
-	bbinfo.method = method;
-	val = branch_and_bound(pb,x,&bbinfo);
-	//if (do_exhaustive) {
-	//	check_persistency(optimal_solutions, x);
-	//	check_bound(optimum, val);
-	//}
-
-	cout << setw(10) << left << str(method) << color << bbinfo.iterations << NORMAL << " iterations, total_time = " << color << bbinfo.total_time << NORMAL << " s, solver_time = " << color << bbinfo.solver_time << NORMAL << endl; 
-	fout << setw(10) << left << str(method) <<  bbinfo.iterations << " iterations, total_time = " << bbinfo.total_time << " s, solver_time = " << bbinfo.solver_time << endl; 
+	cout << ",   labeled : " << color << labeled << NORMAL;
+	if (time>=0) {
+		cout << ", time : " << color << time << NORMAL;
+	}
+	cout << endl;
 }
 
 //
@@ -168,6 +153,43 @@ void check_bound<double>(double optimum, double lower_bound)
 	if ( (optimum - lower_bound) / abs(optimum) < -1e-7 ) {
 		throw runtime_error("Lower bound error (double)");
 	}
+}
+
+//
+// Checks for equality
+//
+template<typename T>
+bool isequal(T t1, T t2) 
+{
+	return t1 == t2;
+}
+template<>
+bool isequal<double>(double t1, double t2) 
+{
+	if (t1==0 && t2==0) {
+		return true;
+	}
+	return abs(t1-t2)/(abs(t1)+abs(t2)) < 1e-8;
+}
+
+
+
+template<typename real>
+void test_branchandbound(const PseudoBoolean<real>& pb, int n, Method method, ostream& fout, Petter::Color color)
+{
+	vector<label> x(n,0);
+	real val;
+	BBInfo bbinfo;
+
+	bbinfo.method = method;
+	val = branch_and_bound(pb,x,&bbinfo);
+	
+	if (!isequal(val, pb.eval(x))) {
+		throw runtime_error("Branch and bound value inconsistent");
+	}
+
+	cout << setw(10) << left << str(method) << color << bbinfo.iterations << NORMAL << " iterations, total_time = " << color << bbinfo.total_time << NORMAL << " s, solver_time = " << color << bbinfo.solver_time << NORMAL << endl; 
+	fout << setw(10) << left << str(method) <<  bbinfo.iterations << " iterations, total_time = " << bbinfo.total_time << " s, solver_time = " << bbinfo.solver_time << endl; 
 }
 
 
@@ -818,7 +840,7 @@ int main_program(int num_args, char** args)
 					}
 
 					// Print solution
-					print_info("Vertex packing",x,bound,new_labeled,BROWN);
+					print_info("Vertex packing",x,bound,new_labeled,BROWN,packing_time);
 				} while (should_continue);
 
 
@@ -902,7 +924,7 @@ int main_program(int num_args, char** args)
 					hocr_itr_time += t_minimize + t_reduce;
 				}
 
-				print_info("HOCR",x,bound,labeled,*COL);
+				print_info("HOCR",x,bound,labeled,*COL,hocr_itr_time);
 				if (verbose) {
 					cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
 					cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;
@@ -972,7 +994,7 @@ int main_program(int num_args, char** args)
 					fixetal_itr_time += t_minimize + t_reduce;
 				}
 
-				print_info("Fix et al.",x,bound,labeled,*COL);
+				print_info("Fix et al.",x,bound,labeled,*COL,fixetal_itr_time);
 				if (verbose) {
 					cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
 					cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;

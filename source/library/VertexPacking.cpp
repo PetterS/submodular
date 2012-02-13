@@ -13,12 +13,18 @@
 #include "VertexPacking.h"
 #include "Petter-Color.h"
 
-#include "graph.h"
+//#define USE_IBFS
+#ifdef USE_IBFS
+	#include "ibfs.h"
+#else
+	#include "graph.h"
+#endif
 
 using namespace std;
 
 void err_function(char* err) 
 {
+	throw runtime_error(err);
 }
 
 namespace Petter 
@@ -374,7 +380,12 @@ namespace Petter
 		size_t m = wm.size();
 		size_t n = wn.size();
 
-		Graph<real,real,real> graph( int(m+n) , int(E.size()), err_function);
+		#ifdef USE_IBFS
+			IBFSGraph<real,real,real> graph( int(m+n) , int(E.size()), err_function);
+		#else
+			Graph<real,real,real> graph( int(m+n) , int(E.size()), err_function);
+		#endif
+
 		graph.add_node( int(m+n) );
 
 		real inf = 0;
@@ -552,3 +563,8 @@ namespace Petter
 }
 
 #include "vertex_instances.inc"
+
+#ifdef USE_IBFS
+#include "ibfs.cpp"
+#endif
+
