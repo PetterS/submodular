@@ -14,6 +14,20 @@ using std::size_t;
 namespace Petter
 {
 
+	const char* str(Method method)
+	{
+		#define switch_helper(m) case m: return #m;
+		switch (method) {
+			switch_helper(HOCR)
+			switch_helper(Fix)
+			switch_helper(GRD)
+			switch_helper(GRD_heur)
+			switch_helper(GRD_gen)
+			switch_helper(LP)
+		}
+		return "Unknown";
+	}
+
 	void check_Boolean(const vector<label>& x)
 	{
 		for (std::size_t i=0; i<x.size(); ++i) {

@@ -137,6 +137,7 @@ namespace Petter
 		QPBO<real> qpbo(nvars, nedges, err_function_qpbo);
 		qpbo.AddNode(n);
 
+		map<int,bool> var_used;
 
 		//
 		// Step 1: reduce all positive higher-degree terms
@@ -243,6 +244,11 @@ namespace Petter
 				qpbo.AddPairwiseTerm(z,k, 0,0,0, -a);
 				qpbo.AddPairwiseTerm(z,l, 0,0,0, -a);
 			}
+
+			var_used[i] = true;
+			var_used[j] = true;
+			var_used[k] = true;
+			var_used[l] = true;
 		}
 
 		for (auto itr=aijk.begin(); itr != aijk.end(); ++itr) {
@@ -268,6 +274,10 @@ namespace Petter
 				qpbo.AddPairwiseTerm(z,k, 0,0,0, -a);*/
 				aijk[ make_triple(y[i],j,k) ] += -a;
 			}
+
+			var_used[i] = true;
+			var_used[j] = true;
+			var_used[k] = true;
 		}
 
 		// No need to continue with the lower degree terms
@@ -367,6 +377,9 @@ namespace Petter
 			int i = get_i(itr->first);
 			int j = get_j(itr->first);
 			qpbo.AddPairwiseTerm(i,j, 0,0,0, a);
+
+			var_used[i] = true;
+			var_used[j] = true;
 		}
 
 		// Add all linear terms
@@ -374,6 +387,8 @@ namespace Petter
 			real a = itr->second;
 			int i = itr->first;
 			qpbo.AddUnaryTerm(i, 0, a);
+
+			var_used[i] = true;
 		}
 
 		qpbo.MergeParallelEdges();
@@ -382,7 +397,9 @@ namespace Petter
 
 		nlabelled = 0;
 		for (int i=0; i<n; ++i) {
-			x[i] = qpbo.GetLabel(i);
+			if (var_used[i] || x.at(i)<0) {
+				x[i] = qpbo.GetLabel(i);
+			}
 			if (x[i] >= 0) {
 				nlabelled++;
 			}

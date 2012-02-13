@@ -27,6 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\source\library\GeneratorPseudoBoolean.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_complete.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_create_g.cpp" />

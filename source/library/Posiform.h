@@ -461,10 +461,11 @@ namespace Petter
 		ASSERT(y == m);
 
 		vector<signed char> sol;
-		real energy = packing.solve_lp(sol);
+		//real energy = packing.solve_lp(sol);
+		real energy = packing.solve(sol);
 		energy += constant + packingconst;
 
-		for (size_t i=0;i<size_t(n);++i) {
+		for (int i=0;i<n;++i) {
 			if (var_used[i] || x.at(i)<0) {
 				x.at(i) = sol.at(i);
 			}

@@ -50,6 +50,213 @@ namespace Petter {
 		}
 	}
 
+
+
+	//
+	// Adds a linear monomial to a graph
+	//
+	template<typename real>
+	void add_monomial_1_to_graph( real& c, Graph<real,real,real>& graph, int i, real a) 
+	{
+		if (a<0) {
+			// a*xi = -a*(1-xi) + a
+			graph.add_tweights(i, 0,  -a);
+			c += a;
+		}
+		else {
+			graph.add_tweights(i, a,  0);
+		}
+	}
+
+	//
+	// Adds a quadratic monomial to a graph
+	//
+	template<typename real>
+	void add_monomial_2_to_graph( real& c,  Graph<real,real,real>& graph, int i, int j, real a) 
+	{
+		ASSERT(a <= 0); // Submodularity
+
+		// a*xi*xj = -a*(1-xi)*xj + a*xj
+		graph.add_edge(i,j, -a, 0);
+		add_monomial_1_to_graph(c, graph, j, a);
+	}
+
+
+
+	//
+	// Takes a list of pairs (i,j) and tries to find a solution where
+	// x[i] != x[j]. The function is assumed to be symmetric, i.e. 
+	// (1,1) is never a unique optimal solution.
+	//
+	template<typename real>
+	void resolve_different(Graph<real,real,real>& graph, std::vector<char>& x, const std::vector<std::pair<int,int> >& pairs)
+	{
+		real infinity = 100; //Does not have to be big
+
+		// Fix the first element of the pair
+		for (auto itr=pairs.begin(); itr != pairs.end(); ++itr) {
+			int i = itr->first;
+			int j = itr->second;
+
+			// Extract solution
+			x.at(i) = graph.what_segment(i, Graph<real,real,real>::SOURCE);
+			x.at(j) = graph.what_segment(j, Graph<real,real,real>::SOURCE);
+
+			//std::cout << i << ',' << j << " : " << int(x[i]) << ',' << int(x[j]) << "  ";
+
+			//ASSERT(x[i]==0 || x[j]==0); // Should not happen, but might due to rounding errors
+
+			// If x[i]==0 and y[i]==0, we don't know whether there is another 
+			// solution where the two are different
+			if (x[i]==0 && x[j]==0) {
+
+				// Is there also an optimal solution for which x[i]==1?
+				if (graph.what_segment(i, Graph<real,real,real>::SINK) == 1) {
+					// Then fix x[i] to 1
+					graph.add_tweights(i, 0, infinity);
+					graph.mark_node(i);
+					// Resolve the graph
+					graph.maxflow(true);
+					// Extract solution; different if possible
+					x[i] = graph.what_segment(i, Graph<real,real,real>::SOURCE);
+					x[j] = graph.what_segment(j, Graph<real,real,real>::SOURCE);
+					ASSERT(x[i] == 1);
+
+					if (x[j] == 0) {
+						// We found a solution where x[i]==1 and x[j]==0
+						// std::cout << "A\n";
+						continue;
+					}
+				}
+
+				// Now fix x[i] to 0
+				graph.add_tweights(i, 2*infinity, 0);
+				graph.mark_node(i);
+				// Resolve the graph
+				graph.maxflow(true);
+				// Does there then exist a solution for which x[j]==1?
+				if (graph.what_segment(j, Graph<real,real,real>::SINK) == 1) {
+					// Then use that solution
+					graph.add_tweights(j, 0, infinity);
+					graph.mark_node(j);
+					// Resolve the graph
+					graph.maxflow(true);
+					x[i] = graph.what_segment(i, Graph<real,real,real>::SOURCE);
+					x[j] = graph.what_segment(j, Graph<real,real,real>::SOURCE);
+					ASSERT(x[i]==0 && x[j]==1);
+					// We found a solution where x[i]==0 and x[j]==1
+					// std::cout << "B\n";
+					continue;
+				}
+
+				// Otherwise, we only have the solution where x[i]==0 and x[j]==0
+				// std::cout << "C\n";
+				x[i] = 0;
+				x[j] = 0;
+			}
+			else {
+				// std::cout << '\n';
+			}
+		}
+
+	}
+
+
+	
+	template<typename real>
+	void test_graph_functions() 
+	{
+		{
+			//
+			// First test
+			//
+			real C = 0;
+			Graph<real,real,real> graph1(100,100);
+			graph1.add_node(2);
+		
+			// -10*x0*x1
+			add_monomial_2_to_graph(C, graph1, 0,1, -10);
+			// Force both variables to 1
+			graph1.add_tweights(0,0,1000000);
+			graph1.add_tweights(1,0,1000000);
+
+			ASSERT( C+graph1.maxflow() == -10 );
+			ASSERT( graph1.what_segment(0) == 1);
+			ASSERT( graph1.what_segment(1) == 1);
+		}
+
+		{
+			//
+			// Second test
+			//
+			real C = 0;
+			Graph<real,real,real> graph2(100,100);
+			graph2.add_node(2);
+		
+			// -2*x0*x1 - 5*x0 + 7*x1 + 1;
+			add_monomial_2_to_graph(C,graph2, 0,1, -2);
+			add_monomial_1_to_graph(C,graph2, 0, -5);
+			add_monomial_1_to_graph(C,graph2, 1,  7);
+			C += 1;
+
+			// Force both variables to 1
+			graph2.add_tweights(0,0,1000000);
+			graph2.add_tweights(1,0,1000000);
+		
+			ASSERT( C+graph2.maxflow() == -2 - 5 + 7 + 1);
+			ASSERT( graph2.what_segment(0) == 1);
+			ASSERT( graph2.what_segment(1) == 1);
+		}
+
+		{
+			real C = 0;
+			Graph<real,real,real> graph2(100,100);
+			graph2.add_node(1);
+			add_monomial_1_to_graph(C,graph2, 0, -5);
+			graph2.add_tweights(0,0,1000000);		
+			ASSERT( C+graph2.maxflow() == -5);
+			ASSERT( graph2.what_segment(0) == 1);
+		}
+
+		{
+			real C = 0;
+			Graph<real,real,real> graph2(100,100);
+			graph2.add_node(1);
+			add_monomial_1_to_graph(C,graph2, 0, -5);
+			graph2.add_tweights(0,1000000,0);		
+			ASSERT( C+graph2.maxflow() == 0);
+			ASSERT( graph2.what_segment(0) == 0);
+		}
+
+		{
+			real C = 0;
+			Graph<real,real,real> graph2(100,100);
+			graph2.add_node(1);
+			add_monomial_1_to_graph(C,graph2, 0, 5);
+			graph2.add_tweights(0,0,1000000);		
+			ASSERT( C+graph2.maxflow() == 5);
+			ASSERT( graph2.what_segment(0) == 1);
+		}
+
+		{
+			real C = 0;
+			Graph<real,real,real> graph2(100,100);
+			graph2.add_node(1);
+			add_monomial_1_to_graph(C,graph2, 0, 5);
+			graph2.add_tweights(0,1000000,0);		
+			ASSERT( C+graph2.maxflow() == 0);
+			ASSERT( graph2.what_segment(0) == 0);
+		}
+	}
+
+
+
+
+
+
+
+
+
 	template<typename real>
 	class Minimizer 
 	{
@@ -253,72 +460,7 @@ namespace Petter {
 		void resolve_different(const std::vector<std::pair<int,int> >& pairs)
 		{
 			ASSERT(graph);
-
-			real infinity = 100; //Does not have to be big
-
-			// Fix the first element of the pair
-			for (auto itr=pairs.begin(); itr != pairs.end(); ++itr) {
-				int i = itr->first;
-				int j = itr->second;
-
-				// Extract solution
-				x.at(i) = graph->what_segment(i, Graph<real,real,real>::SOURCE);
-				x.at(j) = graph->what_segment(j, Graph<real,real,real>::SOURCE);
-
-				//std::cout << i << ',' << j << " : " << int(x[i]) << ',' << int(x[j]) << "  ";
-
-				//ASSERT(x[i]==0 || x[j]==0); // Should not happen, but might due to rounding errors
-
-				// If x[i]==0 and y[i]==0, we don't know whether there is another 
-				// solution where the two are different
-				if (x[i]==0 && x[j]==0) {
-
-					// Is there also an optimal solution for which x[i]==1?
-					if (graph->what_segment(i, Graph<real,real,real>::SINK) == 1) {
-						// Then fix x[i] to 1
-						graph->add_tweights(i, 0, infinity);
-						graph->mark_node(i);
-						// Resolve the graph
-						graph->maxflow(true);
-						// Extract solution; different if possible
-						x[i] = graph->what_segment(i, Graph<real,real,real>::SOURCE);
-						x[j] = graph->what_segment(j, Graph<real,real,real>::SOURCE);
-						ASSERT(x[i] == 1)
-
-						if (x[j] == 0) {
-							// We found a solution where x[i]==1 and x[j]==0
-							// std::cout << "A\n";
-							continue;
-						}
-					}
-
-					// Now fix x[i] to 0
-					graph->add_tweights(i, 2*infinity, 0);
-					graph->mark_node(i);
-					// Resolve the graph
-					graph->maxflow(true);
-					// Does there then exist a solution for which x[j]==1?
-					if (graph->what_segment(j, Graph<real,real,real>::SINK) == 1) {
-						// Then use that solution
-						graph->add_tweights(j, 0, infinity);
-						graph->mark_node(j);
-						// Resolve the graph
-						graph->maxflow(true);
-						x[i] = graph->what_segment(i, Graph<real,real,real>::SOURCE);
-						x[j] = graph->what_segment(j, Graph<real,real,real>::SOURCE);
-						ASSERT(x[i]==0 && x[j]==1);
-						// We found a solution where x[i]==0 and x[j]==1
-						// std::cout << "B\n";
-						continue;
-					}
-
-					// Otherwise, we only have the solution where x[i]==0 and x[j]==0
-					// std::cout << "C\n";
-					x[i] = 0;
-					x[j] = 0;
-				}
-			}
-
+			Petter::resolve_different(*graph, x, pairs);
 		}
 
 

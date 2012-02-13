@@ -93,42 +93,42 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <IncludePath>../../thirdparty/ibfs;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>..\..\bin\</OutDir>
     <TargetName>submodular_debug32</TargetName>
     <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <IncludePath>../../thirdparty/ibfs;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>..\..\bin\</OutDir>
     <TargetName>submodular_debug</TargetName>
     <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <IncludePath>../../thirdparty/ibfs;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>..\..\bin\</OutDir>
     <TargetName>submodular32</TargetName>
     <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Without heuristics|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <IncludePath>../../thirdparty/ibfs;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>..\..\</OutDir>
     <TargetName>submodular32</TargetName>
     <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <IncludePath>../../thirdparty/ibfs;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>..\..\bin\</OutDir>
     <TargetName>submodular</TargetName>
     <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Without heuristics|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <IncludePath>../../thirdparty/ibfs;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>..\..\</OutDir>
     <TargetName>submodular</TargetName>
     <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
@@ -234,7 +234,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\source\library\GeneratorPseudoBoolean.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean.cpp" />
+    <ClCompile Include="..\..\source\library\PseudoBoolean_branchandbound.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_complete.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_create_g.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_heuristic.cpp" />
@@ -244,7 +246,6 @@
     <ClCompile Include="..\..\source\library\PseudoBoolean_reduce.cpp" />
     <ClCompile Include="..\..\source\library\VertexPacking.cpp" />
     <ClCompile Include="..\..\source\main_program.cpp" />
-    <ClCompile Include="..\..\source\posiform_tests.cpp" />
     <ClCompile Include="..\..\source\submodular_tests.cpp" />
   </ItemGroup>
   <ItemGroup>

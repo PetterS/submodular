@@ -26,6 +26,8 @@ using namespace std;
 #include "Petter-Color.h"
 #include "PseudoBoolean.h"
 #include "Posiform.h"
+#include "Minimizer.h" // For tests
+#include "Petter-Timer.h"
 using namespace Petter;
 
 
@@ -34,7 +36,7 @@ namespace {
 	#ifdef WIN32
 		// Time Stamp Counter gives better seeds than seconds
 		// when many small problems are generated consecutively
-		mt19937 engine(__rdtsc()); 
+		mt19937 engine((unsigned long)(__rdtsc()&0xffffffff)); 
 	#else
 		mt19937 engine(unsigned(time(0)));
 	#endif
@@ -68,8 +70,8 @@ T absolute(const T t)
 
 void print_x(const std::vector<label>& x)
 {
-	int n = x.size();
-	for (int i=0;i<n&&i<20;++i) {
+	size_t n = x.size();
+	for (size_t i=0;i<n&&i<20;++i) {
 		if (x[i]>=0) {
 			cout << x[i];
 		}
@@ -83,13 +85,111 @@ void print_x(const std::vector<label>& x)
 }
 
 template<typename real>
-void print_info(std::string name, const std::vector<label>& x, real bound, int labeled, Petter::Color color)
+void print_info(std::string name, const std::vector<label>& x, real bound, int labeled, Petter::Color color, double time=-1)
 {
 	using namespace std;
-	cout << left << setw(15) << name << "f(";
+	cout << left << setw(16) << name << "f(";
 	print_x(x);
 	cout << ") = " << color << right << setw(8) << bound << NORMAL;
-	cout << ",   labeled : " << color << labeled << NORMAL << endl;
+	cout << ",   labeled : " << color << labeled << NORMAL;
+	if (time>=0) {
+		cout << ", time : " << color << time << NORMAL;
+	}
+	cout << endl;
+}
+
+//
+// Checks that the persistencies in x agrees with some optimal solution
+//
+void check_persistency( const vector< vector<label> >& optimal_solutions, const vector<label>& x, int reported_labelled=-1)
+{
+	bool any_ok = false;
+	for (auto itr = optimal_solutions.begin(); itr != optimal_solutions.end(); ++itr) {
+		bool this_ok = true;
+		for (size_t i=0;i<x.size();++i) {
+			if (x.at(i) >= 0 && x.at(i) != itr->at(i)) {
+				this_ok = false;
+			}
+		}
+		if (this_ok) {
+			any_ok = true;
+			break;
+		}
+	}
+	if (!any_ok) {
+		// Persistency did not hold for this solution
+		throw runtime_error("Persistency error");
+	}
+
+	if (reported_labelled >= 0) {
+		int labelled = 0;
+		for (size_t i=0;i<x.size();++i) {
+			if (x.at(i) >= 0) {
+				labelled++;
+			}
+		}
+
+		if (labelled != reported_labelled) {
+			throw runtime_error("Incorrect number of labels reported");
+		}
+	}
+}
+
+//
+// Checks that the lower bound agrees with the global optimum
+//
+template<typename real>
+void check_bound(real optimum, real lower_bound) 
+{
+	if (lower_bound > optimum) {
+		throw runtime_error("Lower bound error");
+	}
+}
+template<>
+void check_bound<double>(double optimum, double lower_bound) 
+{
+	// We have to have a loose check, because doubles have 
+	// rounding errors
+	if ( (optimum - lower_bound) / abs(optimum) < -1e-7 ) {
+		throw runtime_error("Lower bound error (double)");
+	}
+}
+
+//
+// Checks for equality
+//
+template<typename T>
+bool isequal(T t1, T t2) 
+{
+	return t1 == t2;
+}
+template<>
+bool isequal<double>(double t1, double t2) 
+{
+	if (t1==0 && t2==0) {
+		return true;
+	}
+	return abs(t1-t2)/(abs(t1)+abs(t2)) < 1e-8;
+}
+
+
+
+template<typename real>
+void test_branchandbound(const PseudoBoolean<real>& pb, int n, Method method, ostream& fout, Petter::Color color)
+{
+	vector<label> x(n,0);
+	real val;
+	BBInfo bbinfo;
+
+	bbinfo.method = method;
+	val = branch_and_bound(pb,x,&bbinfo);
+	
+	if (!isequal(val, pb.eval(x))) {
+		throw runtime_error("Branch and bound value inconsistent");
+	}
+
+	cout << setw(10) << left << str(method) << color << bbinfo.iterations << NORMAL << " iterations, total_time = " << color << bbinfo.total_time << NORMAL << " s, solver_time = " << color << bbinfo.solver_time << NORMAL << endl; 
+	fout << setw(10) << left << str(method) <<  bbinfo.iterations << " iterations, total_time = " << bbinfo.total_time << " s, solver_time = " << bbinfo.solver_time << endl; 
 }
 
 
@@ -112,9 +212,30 @@ int main_program(int num_args, char** args)
 		test_pseudoboolean<double>();
 		//test_pseudoboolean<int>(); // Does not have LP and therefore fails
 		statusTry("Testing posiform (double)...");
-		test_posiform<double>();
+		//test_posiform<double>();
 		statusTry("Testing posiform (int)...");
-		test_posiform<int>();
+		//test_posiform<int>();
+		statusOK();
+		statusTry("Testing graph functions...");
+		test_graph_functions<int>();
+		statusOK();
+
+
+		statusTry("Testing generators...");
+		Generators<real> generators("generators/generators.txt");
+		Petter::GeneratorPseudoBoolean<real> genpb(generators);
+		statusOK();
+		statusTry("Testing create lp...");
+		//PseudoBoolean<double> f("../tests/quartic_paper.txt");
+		//PseudoBoolean<double> f("../../../tex/submodularstuff/maple/fq.txt");
+		PseudoBoolean<double> f("../../submodularstuff/maple/fq.txt");
+		genpb.create_lp(f);
+		statusOK();
+
+		statusTry("Minimizing g...");
+		vector<label> x(f.nvars(), -1);
+		int nlabelled=-1;
+		genpb.minimize(x, nlabelled);
 		statusOK();
 
 		cerr << "Possible choices : " << endl;
@@ -123,9 +244,10 @@ int main_program(int num_args, char** args)
 		cerr << "  " << args[0] << " -file <str>                      : read polynomial from file" << endl;
 		cerr << "  " << args[0] << " -sat <str>                       : read SAT problem from file" << endl;
 		cerr << endl;
-		cerr << "    -fixetal                         : use reductions from Fix et al." << endl;
 		cerr << "    -optimal                         : use linear programming" << endl;
+		cerr << "    -generators                      : use generators (with linear programming)" << endl;
 		cerr << "    -heuristic                       : use heuristics" << endl;
+		cerr << "    -fixetal                         : use reductions from Fix et al." << endl;
 		cerr << "    -exhaustive                      : use exhaustive search (n<=30)" << endl;
 		cerr << endl;
 		cerr << "    -iterate                         : also iterate reduction methods" << endl;
@@ -168,6 +290,7 @@ int main_program(int num_args, char** args)
 
 	bool do_hocr = true;
 	bool do_optimal = false;
+	bool do_generators = false;
 	bool do_fixetal = false;
 	bool do_exhaustive = false;
 	bool do_heuristic = false;
@@ -176,6 +299,9 @@ int main_program(int num_args, char** args)
 	bool iterate_reduction_methods = false;
 	if (cmd_line.find("-optimal") != cmd_line.end()) {
 		do_optimal = true;
+	}
+	if (cmd_line.find("-generators") != cmd_line.end()) {
+		do_generators = true;
 	}
 	if (cmd_line.find("-fixetal") != cmd_line.end()) {
 		do_fixetal = true;
@@ -413,6 +539,15 @@ int main_program(int num_args, char** args)
 		}
 	}
 	////////////////////////////////
+	// Read previously generated  //
+	////////////////////////////////
+	else if (cmd_line.find("-prev") != cmd_line.end()) {
+		string tmp = std::getenv("TEMP");
+		pb = PseudoBoolean<real>(tmp + "/pb.txt");
+		n = pb.nvars();
+		m = 4; //TODO
+	}
+	////////////////////////////////
 	// Generate random polynomial //
 	////////////////////////////////
 	else {
@@ -423,7 +558,7 @@ int main_program(int num_args, char** args)
 		statusTry("Generating random polynomial...");
 
 		auto random_coef  = bind(uniform_int_distribution<int>(-100,100), engine);
-		real upper = 100;
+		int upper = 100;
 		if (submodular) {
 			upper = 0;
 		}
@@ -541,6 +676,7 @@ int main_program(int num_args, char** args)
 	int fixetal_labeled = -1;
 	int fixetal_itr_labeled = -1;
 	int optimal_labeled = -1;
+	int generators_labeled = -1;
 	int heur_labeled = -1;
 	int packing_labeled = -1;
 
@@ -549,6 +685,7 @@ int main_program(int num_args, char** args)
 	real fixetal_bound = 100;
 	real fixetal_itr_bound = 100;
 	real optimal_bound = 100;
+	real generators_bound = 100;
 	real heur_bound = 100;
 	real lp_bound = 100;
 	real packing_bound = 100;
@@ -559,8 +696,14 @@ int main_program(int num_args, char** args)
 	double fixetal_time = -1;
 	double fixetal_itr_time = -1;
 	double optimal_time = -1;
+	double generators_time = -1;
 	double heur_time = -1;
 	double packing_time = -1;
+
+	if (do_exhaustive && n>30) {
+		cout << "Not using exhaustive search for n=" << n << endl;
+		do_exhaustive = false;
+	}
 
 	if (do_exhaustive) {
 		cout << WHITE << "WHITE" << NORMAL << " is global optimum" << endl;
@@ -571,41 +714,40 @@ int main_program(int num_args, char** args)
 	if (do_lprelax) {
 		cout << NORMAL << "GRAY" << NORMAL << " is an LP relaxation (Rhys form)" << endl;
 	}
-	cout << DKRED << "DKRED" << NORMAL << " is HOCR" << endl;
+	cout << RED << "RED" << NORMAL << " is HOCR" << endl;
 	if (iterate_reduction_methods) {
-		cout << RED << "RED" << NORMAL << " is iterated HOCR" << endl;
+		cout << DKRED << "DKRED" << NORMAL << " is iterated HOCR" << endl;
 	}
 	if (do_fixetal) {
-		cout << DKBLUE << "DKBLUE" << NORMAL << " is Fix et al. from ICCV 2011" << endl;
+		cout << BLUE << "BLUE" << NORMAL << " is Fix et al. from ICCV 2011" << endl;
 		if (iterate_reduction_methods) {
-			cout << BLUE << "BLUE" << NORMAL << " is Fix et al. iterated" << endl;
+			cout << DKBLUE << "DKBLUE" << NORMAL << " is Fix et al. iterated" << endl;
 		}
 	}
 	if (do_optimal) {
-		cout << GREEN << "GREEN" << NORMAL << " is optimal generalized roof duality (using LP)" << endl;
+		cout << GREEN << "GREEN" << NORMAL << " is generalized roof duality (using LP)" << endl;
+	}
+	if (do_generators) {
+		cout << DKGREEN << "DKGREEN" << NORMAL << " is generalized roof duality with generators (using LP)" << endl;
 	}
 	if (do_heuristic) {
 		cout << YELLOW << "YELLOW" << NORMAL << " is heuristic submodular relaxation" << endl;
 	}
 	cout << endl;
 
-
-	// For timing
-	clock_t t_raw;
-	auto start = [&t_raw]() { t_raw = clock(); };
-	auto stop  = [&t_raw]() -> double { return double(clock()-t_raw) / double(CLOCKS_PER_SEC); };
 	
 	try {
 
 		//Holds optimal solutions
 		vector< vector<label> > optimal_solutions;
+		real optimum;
 
 		if (do_exhaustive) {
 			ASSERT(n<=30); // Otherwise too big
 			cout << "Exhaustive search: " << endl;
 
 			vector<label> x(n,0);
-			real best_energy = pb.eval(x);
+			optimum = pb.eval(x);
 			while (true) {
 				x[0]++;
 				int i=0;
@@ -622,8 +764,8 @@ int main_program(int num_args, char** args)
 				}
 			
 				real energy = pb.eval(x);
-				if (energy < best_energy) {
-					best_energy = energy;
+				if (energy < optimum) {
+					optimum = energy;
 				}
 			}
 
@@ -646,17 +788,11 @@ int main_program(int num_args, char** args)
 				}
 			
 				real energy = pb.eval(x);
-				if (energy == best_energy) {
-
+				if (energy == optimum) {
 					optimal_solutions.push_back(x);
-
 					print_info("Global minimum",x,energy,n,WHITE);
-
-
 				}
-
 			}
-
 			cout << endl;
 		}
 
@@ -704,7 +840,7 @@ int main_program(int num_args, char** args)
 					}
 
 					// Print solution
-					print_info("Vertex packing",x,bound,new_labeled,BROWN);
+					print_info("Vertex packing",x,bound,new_labeled,BROWN,packing_time);
 				} while (should_continue);
 
 
@@ -721,31 +857,14 @@ int main_program(int num_args, char** args)
 				// If we know the optimal solution, we can verify 
 				// that the persistencies are correct
 				if (do_exhaustive) {
-					bool any_ok = false;
-					for (auto itr = optimal_solutions.begin(); itr != optimal_solutions.end(); ++itr) {
-						bool this_ok = true;
-						for (int i=0;i<n;++i) {
-							if (x.at(i) >= 0 && x.at(i) != itr->at(i)) {
-								this_ok = false;
-							}
-						}
-						if (this_ok) {
-							any_ok = true;
-							break;
-						}
-					}
-					if (!any_ok) {
-						// Persistency did not hold for this solution
-
-						pb.save_to_file("packing-error.txt");
-						throw runtime_error("Vertex packing solution without persistency");
-					}
+					check_persistency(optimal_solutions, x, packing_labeled);
+					check_bound(optimum, packing_bound);
 				}
 
 			}
-      if (verbose) {
-        cout << "Vertex packing time : " << BROWN << packing_time << NORMAL << endl;
-      }
+			if (verbose) {
+				cout << "Vertex packing time : " << BROWN << packing_time << NORMAL << endl;
+			}
 			cout << endl;
 		}
 
@@ -757,7 +876,7 @@ int main_program(int num_args, char** args)
 		}
 
 	
-		vector<label> x(n,0),x1(n,0),x2(n,0);
+		//vector<label> x(n,0),x1(n,0),x2(n,0);
 
 		
 
@@ -770,6 +889,7 @@ int main_program(int num_args, char** args)
 			int labeled = 0;
 			bool should_continue;
 			Petter::PseudoBoolean<real> f = pb;
+			vector<label> x(n,0);
 
 			const Petter::Color* COL = &RED;
 
@@ -804,7 +924,7 @@ int main_program(int num_args, char** args)
 					hocr_itr_time += t_minimize + t_reduce;
 				}
 
-				print_info("HOCR",x,bound,labeled,*COL);
+				print_info("HOCR",x,bound,labeled,*COL,hocr_itr_time);
 				if (verbose) {
 					cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
 					cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;
@@ -820,6 +940,14 @@ int main_program(int num_args, char** args)
 			hocr_itr_bound = bound;
 			hocr_itr_labeled = labeled;
 
+			// If we know the optimal solution, we can verify 
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x, hocr_itr_labeled);
+				check_bound(optimum, hocr_bound);
+				check_bound(optimum, hocr_itr_bound);
+			}
+
 			f_hocrreduced = f;
 		}
 
@@ -831,8 +959,9 @@ int main_program(int num_args, char** args)
 			int labeled = 0;
 			bool should_continue;
 			Petter::PseudoBoolean<real> f = pb;
+			vector<label> x(n,0);
 
-			const Petter::Color* COL = &BLUE;
+			const Petter::Color* COL = &DKBLUE;
 
 			do {
 				iters++;
@@ -858,14 +987,14 @@ int main_program(int num_args, char** args)
 					fixetal_labeled = new_labeled;
 					fixetal_time = t_minimize;
 					fixetal_itr_time = t_minimize + t_reduce;
-					COL = &DKBLUE;
+					COL = &BLUE;
 				}
 				else {
-					COL = &BLUE;
+					COL = &DKBLUE;
 					fixetal_itr_time += t_minimize + t_reduce;
 				}
 
-				print_info("Fix et al.",x,bound,labeled,*COL);
+				print_info("Fix et al.",x,bound,labeled,*COL,fixetal_itr_time);
 				if (verbose) {
 					cout << "time (minimize) : " << *COL << t_minimize <<  NORMAL << endl;
 					cout << "time (reduce)   : " << *COL << t_reduce <<  NORMAL << endl;
@@ -881,7 +1010,13 @@ int main_program(int num_args, char** args)
 			fixetal_itr_bound = bound;
 			fixetal_itr_labeled = labeled;
 
-			f_hocrreduced = f;
+			// If we know the optimal solution, we can verify 
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x, fixetal_itr_labeled);
+				check_bound(optimum, fixetal_bound);
+				check_bound(optimum, fixetal_itr_bound);
+			}
 		}
 
 		
@@ -892,6 +1027,7 @@ int main_program(int num_args, char** args)
 			int labeled = 0;
 			bool should_continue;
 			Petter::PseudoBoolean<real> f;
+			vector<label> x(n,0);
 
 			if (cmd_line.find("-usehocr") != cmd_line.end()) {
 				//Start at the HOCR solution (for speed)
@@ -949,6 +1085,91 @@ int main_program(int num_args, char** args)
 
 			optimal_bound = bound;
 			optimal_labeled = labeled;
+
+			// If we know the optimal solution, we can verify 
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x, optimal_labeled);
+				check_bound(optimum, optimal_bound);
+			}
+		}
+
+
+		if (do_generators) {
+
+			int iters = 0;
+			double bound = 0;
+			int labeled = 0;
+			bool should_continue;
+			Petter::PseudoBoolean<real> f;
+			vector<label> x(n,0);
+
+			if (cmd_line.find("-usehocr") != cmd_line.end()) {
+				//Start at the HOCR solution (for speed)
+				f = f_hocrreduced;
+				cout << "USING HOCR REDUCED" << endl;
+			}
+			else {
+				//Default
+				f = pb;
+			}
+
+			Generators<real> generators("generators/generators.txt");
+
+			generators_time = 0;
+			do {
+				iters++;
+
+				//TODO: Reading the file every iteration is not optimal
+				GeneratorPseudoBoolean<real> gpb(generators); 
+				start();
+				gpb.create_lp(f);
+				double t_create = stop();
+
+				int new_labeled = 0;
+				start();
+				bound = gpb.minimize(x, new_labeled);
+				double t_minimize = stop();
+				should_continue = new_labeled > labeled;
+				labeled = new_labeled;
+				if (labeled == n) {
+					//Nothing more to do
+					should_continue = false;
+				}
+
+				start();
+				f.reduce(x);
+				double t_reduce = stop();
+
+				if (verbose) {
+					//cout << "Relaxation g : " << gpb << endl;
+				}
+	
+				print_info("Gener. solution",x,bound,labeled,DKGREEN);
+				if (verbose) {
+					cout << "time (create)   : " << DKGREEN << t_create <<  NORMAL << endl;
+					cout << "time (minimize) : " << DKGREEN << t_minimize <<  NORMAL << endl;
+					cout << "time (reduce)   : " << DKGREEN << t_reduce <<  NORMAL << endl;
+				}
+
+				generators_time += t_create + t_minimize + t_reduce;
+
+			} while (should_continue);
+
+			if (labeled == n) {
+				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
+			}
+			cout << endl;
+
+			generators_bound = bound;
+			generators_labeled = labeled;
+
+			// If we know the optimal solution, we can verify 
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x, generators_labeled);
+				check_bound(optimum, generators_bound);
+			}
 		}
 
 		
@@ -964,6 +1185,7 @@ int main_program(int num_args, char** args)
 			int labeled = 0;
 			bool should_continue;
 			Petter::PseudoBoolean<real> f = pb;
+			vector<label> x(n,0);
 
 			heur_time = 0;
 
@@ -996,7 +1218,7 @@ int main_program(int num_args, char** args)
 							u[i] = rand()%2;
 							v[i] = 1-u[i];
 						}
-						heurreal fval = f.eval(u);
+						real fval = f.eval(u);
 						heurreal gval = spb.eval(u,v);
 						if ( absolute(fval-gval) > 1e-6 ) {
 							cout << "f = " << fval << endl;
@@ -1033,14 +1255,75 @@ int main_program(int num_args, char** args)
 			cout << endl;
 			heur_bound = bound;
 			heur_labeled = labeled;
+
+			// If we know the optimal solution, we can verify 
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x, heur_labeled);
+				check_bound(optimum, heur_bound);
+			}
 		}
+
+
+
+		//
+		// Branch and bound
+		//
+		if (cmd_line.find("-bb") != cmd_line.end() ) {
+
+			ofstream fout("bb.log");
+			fout << "m=" << m << ", n=" << n << ", nterms=" << cmd_line["-nterms"] << endl;
+			cout << "Starting branch and bound." << endl;
+
+
+			if (do_generators) {
+				test_branchandbound(pb, n,  GRD_gen, fout, DKGREEN); 
+			}
+			if (do_optimal) {
+				test_branchandbound(pb, n,  GRD, fout, GREEN); 
+			}
+			if (do_heuristic) {
+				test_branchandbound(pb, n, GRD_heur, fout, YELLOW); 
+			}
+			if (do_fixetal) {
+				test_branchandbound(pb, n, Fix, fout, BLUE); 
+			}
+			if (cmd_line.find("-hocr") != cmd_line.end()) {
+				test_branchandbound(pb, n,  HOCR, fout, RED); 
+			}
+			
+		}
+
+
 	}
-	catch (...) {
+	catch (exception& e) {
+		statusFailed();
+
 		// Save erroneous polynomial to temporary file
+		stringstream filename;
 		if (std::getenv("TEMP")) {
-			string tmp = std::getenv("TEMP");
-			pb.save_to_file(tmp + "/pb-error.txt");
+			filename << std::getenv("TEMP") << "/";
 		}
+		int errorid = bind(uniform_int_distribution<int>(0,999), engine)();
+		filename << "pb-error-" << errorid << ".txt";
+		pb.save_to_file(filename.str());
+
+		// Output filename saved to
+		cerr << RED << "Solver error, polynomial saved to " << filename.str() << NORMAL << endl;
+
+		// Write to error log
+		stringstream errorlogfile;
+		errorlogfile << args[0] << ".errorlog";
+			// Get local time
+			struct tm *current;
+			time_t now;
+			time(&now);
+			current = localtime(&now);
+		ofstream errorfile(errorlogfile.str(), ios::app);
+		errorfile << 1900+current->tm_year << "-" << setw(2) << setfill('0') << current->tm_mon+1 << '-' << current->tm_mday << ' ' 
+		          << current->tm_hour << ':' << current->tm_min << ":" << current->tm_sec << "  ";
+		errorfile << "Solver error \"" << e.what() << ",\" polynomial saved to " << filename.str() << endl;
+
 		// Rethrow exception
 		throw;
 	}
@@ -1064,11 +1347,14 @@ int main_program(int num_args, char** args)
 			<< optimal_time     << '\t' // 13
 			<< heur_time        << '\t' // 14
 			<< fixetal_labeled  << '\t' // 15
-		 << fixetal_itr_labeled << '\t' // 16
+			<< fixetal_itr_labeled << '\t' // 16
 			<< fixetal_bound    << '\t' // 17
 			<< fixetal_itr_bound<< '\t' // 18
 			<< fixetal_time     << '\t' // 19
-			<< fixetal_itr_time << endl;// 20
+			<< fixetal_itr_time << '\t' // 20
+			<< generators_labeled<<'\t' // 21
+			<< generators_bound << '\t' // 22
+			<< generators_time  << endl;// 23
 	}
 	//cin.get();
 

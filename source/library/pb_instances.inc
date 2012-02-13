@@ -4,7 +4,9 @@
 
 #define INSTANTIATE(c) \
 	template class Petter::PseudoBoolean<c>; \
-	template class Petter::SymmetricPseudoBoolean<c>; 
+	template class Petter::SymmetricPseudoBoolean<c>; \
+	template class Petter::GeneratorPseudoBoolean<c>; \
+	template class Petter::Generators<c>; 
 
 INSTANTIATE(double);
 INSTANTIATE(int);

@@ -37,6 +37,10 @@ namespace Petter
 	using std::map;
 	using std::vector;
 
+	// Used to specify optimization method
+	enum Method {HOCR,Fix,GRD,GRD_heur,GRD_gen,LP};
+	const char* str(Method m);
+
 	typedef signed short label;
 	typedef int index; 
 
@@ -66,10 +70,14 @@ namespace Petter
 	class SymmetricPseudoBoolean;
 
 	template<typename real>
+	class GeneratorPseudoBoolean;
+
+	template<typename real>
 	class PseudoBoolean
 	{
 	public:
 		template<typename real2> friend class SymmetricPseudoBoolean;
+		template<typename real2> friend class GeneratorPseudoBoolean;
 		template<typename real2,int degree> friend class Posiform;
 		void print_helper(std::ostream& out) const;
 
@@ -78,7 +86,7 @@ namespace Petter
 
 		void save_to_file(std::string filename); // Saves f to file
 
-		//Resests the function to the zero functions
+		//Reset the function to the zero functions
 		void clear();
 		// Returns the maximum index used + 1
 		int nvars() const;
@@ -120,9 +128,18 @@ namespace Petter
 		// mostly for testing purposes
 		real minimize_lp(vector<label>& x,bool verbose=false) const;
 
+		// Minimizing using any method
+		// NOTE: might change (reduce) *this
+		real minimize(vector<label>& x, Method method);
+		real minimize(vector<label>& x, int& labeled, Method method);
+
 		// Minimizing using a symmetric, submodular function g(x,y)
 		// NOTE: will change (reduce) *this
 		real minimize(vector<label>& x, int& labeled, bool heuristic = false);
+		// Minimizing using a symmetric, submodular function g(x,y)
+		// represented with generators
+		// NOTE: will change (reduce) *this
+		real minimize_generators(vector<label>& x, int& labeled, bool heuristic = false);
 
 	protected:
 		/////////////////////////////
@@ -141,6 +158,16 @@ namespace Petter
 		pbf.print_helper(out);
 		return out;
 	}
+
+
+	struct BBInfo
+	{
+		Method method;
+		int iterations;
+		double total_time, solver_time;
+	};
+	template<typename real>
+	real branch_and_bound(const PseudoBoolean<real>& f, vector<label>& x, BBInfo* bbinfo=0);
 
 	template<typename real>
 	class SymmetricPseudoBoolean
@@ -228,6 +255,149 @@ namespace Petter
 		pbf.print_helper(out);
 		return out;
 	}
+
+
+	//
+	// Helper class which holds informations about generators and
+	// how to reduce them
+	//
+	template<typename real>
+	class Generators
+	{
+	public:
+
+		Generators(const std::string& filename);
+
+		// This internal struct holds a monomial of degrees 0 (i,j<0), 1 (j<0) or 2.
+		struct Monomial
+		{
+			Monomial(real coef=0) 
+			{
+				i = j = -1;
+				c = coef;
+			}
+			Monomial(int i_in, real coef) 
+			{
+				i = i_in;
+				j = -1;
+				c = coef;
+			}
+			Monomial(int i_in, int j_in, real coef) 
+			{
+				i = i_in;
+				j = j_in;
+				c = coef;
+			}
+			void check() const
+			{
+				ASSERT(i>=0 || j<0);
+			}
+			int i,j;
+			real c;
+		};
+
+		int ngen2, ngen3, ngen4, ngen4pos, ngen4neg;
+		size_t nentries2, nentries3, nentries4;
+
+		// These variables hold the information needed to build the constraint matrix
+		std::vector<int> cc, obj2;
+		std::vector<int> bb12, bb13, bb23, bb123, obj3;
+		std::vector<int> aa12pos, aa13pos, aa14pos, aa23pos, aa24pos, aa34pos, aa123pos, aa124pos, aa134pos, aa234pos, aa1234pos, obj4pos;
+		std::vector<int> aa12neg, aa13neg, aa14neg, aa23neg, aa24neg, aa34neg, aa123neg, aa124neg, aa134neg, aa234neg, aa1234neg, obj4neg;
+
+		// These variables hold the reduced forms of the generators
+		std::vector< std::vector< Monomial > > gen2red, gen3red, gen4redpos, gen4redneg;
+	};
+
+	template<typename real>
+	class GeneratorPseudoBoolean
+	{
+	public:
+		template<typename real2> friend class PseudoBoolean;
+		//GeneratorPseudoBoolean(std::string filename);
+		GeneratorPseudoBoolean(const Generators<real>& generators);
+		void clear();
+
+		// Create using LP
+		void create_lp(const PseudoBoolean<real>& pbf);
+
+		// Minimization
+		real minimize(vector<label>& x, int& nlabelled) const;
+
+		///////////
+		// Index //
+		///////////
+
+		template <typename Map>
+		int getindex(Map& m, const pair& key) 
+		{
+			auto itr = m.find( key );
+			if ( itr == m.end() ) {
+				m[key] = nlpvars;
+				int tmp = nlpvars;
+				nlpvars+=gen.ngen2;
+				return tmp;
+			}
+			else {
+				return itr->second;
+			}
+		}
+		template <typename Map>
+		int getindex(Map& m, const triple& key) 
+		{
+			auto itr = m.find( key );
+			if ( itr == m.end() ) {
+				m[key] = nlpvars;
+				int tmp = nlpvars;
+				nlpvars+=gen.ngen3;
+				return tmp;
+			}
+			else {
+				return itr->second;
+			}
+		}
+		template <typename Map>
+		int getindex(Map& m, const quad& key) 
+		{
+			auto itr = m.find( key );
+			if ( itr == m.end() ) {
+				m[key] = nlpvars;
+				int tmp = nlpvars;
+				nlpvars+=gen.ngen4pos;
+				return tmp;
+			}
+			else {
+				return itr->second;
+			}
+		}
+
+		int iaa(int i, int j, int k, int l);
+		int ibb(int i, int j, int k);
+		int icc(int i, int j);
+
+	private:
+
+		const Generators<real>& gen;
+
+		// LP indices
+		int nlpvars;
+		map<pair, int> indcc;
+		map<triple, int> indbb;
+		map<quad, int> indaa;
+
+		// Constant
+		real constant;
+		// Linear terms
+		map<int, real> alphai;
+		// Coefficients in front of generators
+		map<pair,   vector<real> > alphaij;
+		map<triple, vector<real> > alphaijk;
+		map<quad,   vector<real> > alphaijkl;
+		// Positive or negative generator used
+		map<quad, bool> posgen4;
+		// Keeps track of variables present
+		map<int,bool> var_used;
+	};
 
 }
 
