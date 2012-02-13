@@ -186,14 +186,8 @@ namespace Petter
 			int nlabeled;
 
 			start2();
-			if (!bbinfo || bbinfo->method == HOCR) {
-				problem.bound = problem.f.minimize_reduction( problem.fixed, nlabeled);
-			}
-			else if (bbinfo->method == Fix) {
-				problem.bound = problem.f.minimize_reduction_fixetal( problem.fixed, nlabeled);
-			}
-			else if (bbinfo->method == GRD) {
-				problem.bound = problem.f.minimize( problem.fixed, nlabeled);
+			if (!bbinfo) {
+				problem.bound = problem.f.minimize( problem.fixed, nlabeled, HOCR);
 			}
 			else if (bbinfo->method == GRD_heur) {
 
@@ -204,11 +198,8 @@ namespace Petter
 				g.create_heuristic(problem.f);
 				problem.bound = g.minimize(problem.fixed, nlabeled);
 			}
-			else if (bbinfo->method == GRD_gen) {
-				problem.bound = problem.f.minimize_generators( problem.fixed, nlabeled);
-			}
 			else {
-				throw runtime_error("B&B: Unknown optimization method");
+				problem.bound = problem.f.minimize( problem.fixed, nlabeled, bbinfo->method);
 			}
 			solver_time += stop2();
 

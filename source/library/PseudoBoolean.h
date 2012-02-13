@@ -130,8 +130,8 @@ namespace Petter
 
 		// Minimizing using any method
 		// NOTE: might change (reduce) *this
-		real minimize(vector<label>& x, Method method);
-		real minimize(vector<label>& x, int& labeled, Method method);
+		real minimize(vector<label>& x, Method method, const char* generators_file=0);
+		real minimize(vector<label>& x, int& labeled, Method method = GRD, const char* generators_file=0);
 
 		// Minimizing using a symmetric, submodular function g(x,y)
 		// NOTE: will change (reduce) *this

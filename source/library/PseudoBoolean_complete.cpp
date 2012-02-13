@@ -13,14 +13,14 @@ namespace Petter
 {
 
 	template<typename real>
-	real PseudoBoolean<real>::minimize(vector<label>& x, Method method = GRD)
+	real PseudoBoolean<real>::minimize(vector<label>& x, Method method, const char* generators_file)
 	{
 		int tmp;
-		return minimize(x,tmp,method);
+		return minimize(x,tmp,method,generators_file);
 	}
 
 	template<typename real>
-	real PseudoBoolean<real>::minimize(vector<label>& x, int& labeled, Method method = GRD)
+	real PseudoBoolean<real>::minimize(vector<label>& x, int& labeled, Method method, const char* generators_file)
 	{
 		if (method==HOCR) {
 			return minimize_reduction(x,labeled);
@@ -41,8 +41,15 @@ namespace Petter
 
 		Generators<real>* generators = 0;
 		if (method == GRD_gen) {
-			// TODO: should be provided by user
-			generators = new Generators<real>("generators/generators.txt");
+			if (generators_file) {
+				generators = new Generators<real>(generators_file);
+			}
+			else if (getenv("GENERATORS")) {
+				generators = new Generators<real>(getenv("GENERATORS"));
+			}
+			else {
+				generators = new Generators<real>("generators/generators.txt");
+			}
 		}
 
 		do {
