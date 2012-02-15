@@ -39,7 +39,8 @@ void grd(int			nlhs, 		/* number of expected outputs */
 	MexParams params(nrhs-curarg, prhs+curarg);
 
 	//Get some params
-	string method_str = params.get<string>("method","GRD"); //With default value
+	string method_str = params.get<string>("method","GRD"); 
+	string generators = params.get<string>("generators","../bin/generators/generators.txt");
 	//double d = params.get<double>("d",42); 
 	//vector<double> vec = params.get< vector<double> >("vec");
 
@@ -146,7 +147,7 @@ void grd(int			nlhs, 		/* number of expected outputs */
 
 	vector<label> x(n,-1);
 	matrix<real> energy(1);
-	energy(0) = f.minimize(x, method);
+	energy(0) = f.minimize(x, method, generators.c_str() );
 
 	matrix<int> lab(n);
 	for (size_t i=0; i<n; ++i) {

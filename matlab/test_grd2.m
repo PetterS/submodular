@@ -8,7 +8,7 @@ QI = [1;2;3;4];
 QE = zeros(16,1);
 QE(16,1) = 1;
 
-Methods = {'GRD','GRD-heur','Fix','HOCR'};
+Methods = {'GRD-gen','GRD','GRD-heur','Fix','HOCR'};
 for method = Methods
 	method=method{1};
 	
@@ -18,5 +18,3 @@ for method = Methods
 	disp(bound);
 end
 
-
-% 
