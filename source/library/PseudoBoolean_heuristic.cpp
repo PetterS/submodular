@@ -272,7 +272,7 @@ namespace Petter
 			cRHS[make_pair(j,k)] += min(dijkl[ijkl], real(0));
 			cRHS[make_pair(k,l)] += min(dijkl[ijkl], real(0));
 
-			cRHS[make_pair(i,k)] += min(eijkl[ijkl], real(0));
+			cRHS[make_pair(i,j)] += min(eijkl[ijkl], real(0));
 			cRHS[make_pair(j,k)] += min(eijkl[ijkl], real(0));
 			cRHS[make_pair(j,l)] += min(eijkl[ijkl], real(0));
 
@@ -305,6 +305,123 @@ namespace Petter
 		}
 
 	} 
+
+
+	template<typename real>
+	void SymmetricPseudoBoolean<real>::make_submodular(const PseudoBoolean<real>& pbf)
+	{
+		using namespace std;
+
+		map<pair,real> bRHS;
+		map<pair,real> cRHS;
+
+		for (auto itr=pbf.aij.begin(); itr != pbf.aij.end(); ++itr) {
+			bRHS[itr->first]  = 0;
+			cRHS[itr->first] = real(itr->second);
+		}
+
+		for (auto itr = pbf.aijk.begin(); itr != pbf.aijk.end(); ++itr) {
+			triple ind = itr->first;
+			int i = get_i(ind);
+			int j = get_j(ind);
+			int k = get_k(ind);
+
+			bRHS[make_pair(i,j)] -= max(bijk[ind],real(0));
+			bRHS[make_pair(i,k)] -= max(bijk[ind],real(0));
+			bRHS[make_pair(j,k)] -= max(bijk[ind],real(0));
+			bRHS[make_pair(i,j)] -= max(cijk[ind],real(0));
+			bRHS[make_pair(i,k)] -= max(dijk[ind],real(0));
+			bRHS[make_pair(j,k)] -= max(eijk[ind],real(0));
+
+			cRHS[make_pair(i,j)] += min(dijk[ind],real(0));
+			cRHS[make_pair(i,j)] += min(eijk[ind],real(0));
+			cRHS[make_pair(i,k)] += min(cijk[ind],real(0));
+			cRHS[make_pair(i,k)] += min(eijk[ind],real(0));
+			cRHS[make_pair(j,k)] += min(cijk[ind],real(0));
+			cRHS[make_pair(j,k)] += min(dijk[ind],real(0));
+		}
+
+		for (auto itr = pbf.aijkl.begin(); itr != pbf.aijkl.end(); ++itr) {
+			quad ijkl = itr->first;
+			int i = get_i(ijkl);
+			int j = get_j(ijkl);
+			int k = get_k(ijkl);
+			int l = get_l(ijkl);
+
+			bRHS[make_pair(i,j)] -= max(bijkl[ijkl],real(0));
+			bRHS[make_pair(i,k)] -= max(bijkl[ijkl],real(0));
+			bRHS[make_pair(i,l)] -= max(bijkl[ijkl],real(0));
+			bRHS[make_pair(j,k)] -= max(bijkl[ijkl],real(0));
+			bRHS[make_pair(j,l)] -= max(bijkl[ijkl],real(0));
+			bRHS[make_pair(k,l)] -= max(bijkl[ijkl],real(0));
+
+			bRHS[make_pair(i,j)] -= abs(cijkl[ijkl]);
+			bRHS[make_pair(i,k)] -= abs(cijkl[ijkl]);
+			bRHS[make_pair(j,k)] -= abs(cijkl[ijkl]);
+
+			bRHS[make_pair(i,j)] -= abs(dijkl[ijkl]);
+			bRHS[make_pair(i,l)] -= abs(dijkl[ijkl]);
+			bRHS[make_pair(j,l)] -= abs(dijkl[ijkl]);
+
+			bRHS[make_pair(i,k)] -= abs(eijkl[ijkl]);
+			bRHS[make_pair(i,l)] -= abs(eijkl[ijkl]);
+			bRHS[make_pair(k,l)] -= abs(eijkl[ijkl]);
+
+			bRHS[make_pair(j,k)] -= abs(pijkl[ijkl]);
+			bRHS[make_pair(j,l)] -= abs(pijkl[ijkl]);
+			bRHS[make_pair(k,l)] -= abs(pijkl[ijkl]);
+		
+			bRHS[make_pair(i,j)] -= abs(qijkl[ijkl]) + max(qijkl[ijkl], real(0));
+			bRHS[make_pair(k,l)] -= max(qijkl[ijkl], real(0));
+
+			bRHS[make_pair(i,k)] -= abs(rijkl[ijkl]) + max(rijkl[ijkl], real(0));
+			bRHS[make_pair(j,l)] -= max(rijkl[ijkl], real(0));
+
+			bRHS[make_pair(i,l)] -= abs(sijkl[ijkl]) + max(sijkl[ijkl], real(0));
+			bRHS[make_pair(j,k)] -= max(sijkl[ijkl], real(0));
+
+
+
+			cRHS[make_pair(i,l)] += min(cijkl[ijkl], real(0));
+			cRHS[make_pair(j,l)] += min(cijkl[ijkl], real(0));
+			cRHS[make_pair(k,l)] += min(cijkl[ijkl], real(0));
+
+			cRHS[make_pair(i,k)] += min(dijkl[ijkl], real(0));
+			cRHS[make_pair(j,k)] += min(dijkl[ijkl], real(0));
+			cRHS[make_pair(k,l)] += min(dijkl[ijkl], real(0));
+
+			cRHS[make_pair(i,j)] += min(eijkl[ijkl], real(0));
+			cRHS[make_pair(j,k)] += min(eijkl[ijkl], real(0));
+			cRHS[make_pair(j,l)] += min(eijkl[ijkl], real(0));
+
+			cRHS[make_pair(i,j)] += min(pijkl[ijkl], real(0));
+			cRHS[make_pair(i,k)] += min(pijkl[ijkl], real(0));
+			cRHS[make_pair(i,l)] += min(pijkl[ijkl], real(0));
+
+			cRHS[make_pair(i,k)] -= abs(qijkl[ijkl]);
+			cRHS[make_pair(i,l)] -= abs(qijkl[ijkl]);
+			cRHS[make_pair(j,k)] -= abs(qijkl[ijkl]);
+			cRHS[make_pair(j,l)] -= abs(qijkl[ijkl]);
+
+			cRHS[make_pair(i,j)] -= abs(rijkl[ijkl]);
+			cRHS[make_pair(i,l)] -= abs(rijkl[ijkl]);
+			cRHS[make_pair(j,k)] -= abs(rijkl[ijkl]);
+			cRHS[make_pair(k,l)] -= abs(rijkl[ijkl]);
+
+			cRHS[make_pair(i,j)] -= abs(sijkl[ijkl]);
+			cRHS[make_pair(i,k)] -= abs(sijkl[ijkl]);
+			cRHS[make_pair(j,l)] -= abs(sijkl[ijkl]);
+			cRHS[make_pair(k,l)] -= abs(sijkl[ijkl]);
+		}
+
+		for (auto itr = pbf.aij.begin(); itr != pbf.aij.end(); ++itr) {
+			pair ind = itr->first;
+			real aij = real(itr->second);
+
+			bij[ind] = min( bRHS[ind], cRHS[ind] );
+			cij[ind] = aij - bij[ind];
+		}
+	}
 
 
 	// TODO: better solution to this?

@@ -246,6 +246,7 @@ int main_program(int num_args, char** args)
 		cerr << endl;
 		cerr << "    -optimal                         : use linear programming" << endl;
 		cerr << "    -generators                      : use generators (with linear programming)" << endl;
+		cerr << "        -generators-file             : file with generators to use (optional)" << endl; 
 		cerr << "    -heuristic                       : use heuristics" << endl;
 		cerr << "    -fixetal                         : use reductions from Fix et al." << endl;
 		cerr << "    -exhaustive                      : use exhaustive search (n<=30)" << endl;
@@ -267,6 +268,7 @@ int main_program(int num_args, char** args)
 	cmd_line["-m"] = "3";
 	cmd_line["-n"] = "0";
 	cmd_line["-nterms"] = "0";
+	cmd_line["-generators-file"] = "generators/generators.txt";
 
 	//Read command line into map
 	for (int i=1;i<num_args;++i) {
@@ -1114,7 +1116,7 @@ int main_program(int num_args, char** args)
 				f = pb;
 			}
 
-			Generators<real> generators("generators/generators.txt");
+			Generators<real> generators(cmd_line["-generators-file"]);
 
 			generators_time = 0;
 			do {

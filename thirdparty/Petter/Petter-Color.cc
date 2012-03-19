@@ -34,6 +34,7 @@
 #include <ctime>
 
 #include "Petter-Color.h"
+#include "Petter-Timer.h"
 
 
 namespace Petter
@@ -85,12 +86,13 @@ namespace Petter
 		}
 		std::cerr << std::left << std::setw(40) << str << " [ " << YELLOW << "WAIT" << NORMAL << " ] ";
 		inside_try_block = true;
-		start_time = clock();
+		start2();
 	}
 	double statusOK()
 	{
+		stop2();
 		if (inside_try_block) {
-			double seconds = double(clock() - start_time) / double(CLOCKS_PER_SEC);
+			double seconds = time2();
 			std::cerr << "\b\b\b\b\b\b\b\b" << GREEN << "  OK  " << NORMAL << "]   ";
 			std::cerr << /*std::fixed << std::setprecision(1) <<*/ seconds << " s." << std::endl;
 			inside_try_block = false;
@@ -102,8 +104,9 @@ namespace Petter
 	}
 	void statusFailed()
 	{
+		stop2();
 		if (inside_try_block) {
-			double seconds = double(clock() - start_time) / double(CLOCKS_PER_SEC);
+			double seconds = time2();
 			std::cerr << "\b\b\b\b\b\b\b\b" << RED << "FAILED" << NORMAL << "]   ";
 			std::cerr << /*std::fixed << std::setprecision(1) <<*/ seconds << " s." << std::endl;
 			inside_try_block = false;

@@ -196,7 +196,9 @@ namespace Petter
 		void test();
 		void test_clear();
 
-	protected:
+		void make_submodular(const PseudoBoolean<real>& pbf);
+
+	//protected:
 
 		/////////////////////////////
 		// Polynomial coefficients //
