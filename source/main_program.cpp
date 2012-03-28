@@ -674,12 +674,6 @@ int main_program(int num_args, char** args)
 	// Solve using different methods //
 	///////////////////////////////////
 
-    vector<label> x(n);
-    int labeled;
-    Petter::re
-    pb.minimize(x, labeled, GRD);
-    pb.minimize(x, labeled, GRD_heur);
-
 	int hocr_labeled = -1;
 	int hocr_itr_labeled = -1;
 	int fixetal_labeled = -1;
