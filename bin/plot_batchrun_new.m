@@ -1,7 +1,10 @@
-function plot_batchrun_new(filename,nedges)
+function plot_batchrun_new(filename,nedges,use_packing)
     if nargin<2
         nedges=20;
-    end
+	end
+	if nargin<3
+		use_packing = false;
+	end
 
     data = load(filename);
 	if size(data,2) < 24
@@ -20,18 +23,27 @@ function plot_batchrun_new(filename,nedges)
     fixetal    = data(:,15+1);
     fixetal_itr= data(:,16+1);
 	generators = data(:,21+1);
+	if use_packing
+		packing    = data(:,24+1);
+	end
 
     hocrbound      = data(:,7+1);
     optimalbound   = data(:,9+1);
     heuristicbound = data(:,10+1);
     fixetalbound   = data(:,17+1);
 	generatorsbound= data(:,22+1);
+	if use_packing
+		packingbound = data(:,25+1);
+	end
 	
 	hocrtime        = data(:,11+1);
 	optimaltime     = data(:,13+1);
 	heuristictime   = data(:,14+1);
 	fixetaltime     = data(:,19+1);
 	generatorstime  = data(:,23+1);
+	if use_packing
+		packingtime = data(:,26+1);
+	end
 	
 	%Exclude experiments
 % 	heuristic(:) = -1;
@@ -50,7 +62,11 @@ function plot_batchrun_new(filename,nedges)
     disp('HOCR');
     print_bound(optimalbound, hocrbound);
 	print_time(hocrtime);
-    
+	if use_packing
+		disp('Packing');
+		print_bound(optimalbound, packingbound);
+		print_time(packingtime);
+	end
     
     
     
@@ -60,11 +76,21 @@ function plot_batchrun_new(filename,nedges)
     hold on
     
 %     c = colorspiral;
-    h1 = plot_hist(hocr,      edges,[ 0.9526    0.5773    0.8113],'-');
-    h2 = plot_hist(fixetal,   edges,[ 0.1722    0.7860    0.7948],'-');
-    h3 = plot_hist(heuristic, edges,[ 0.6857    0.4521    0.0270],'-');
-    h4 = plot_hist(optimal,   edges,[0 0 0],'-');
-	h5 = plot_hist(generators,   edges,[0 0 0],':');
+	if ~use_packing
+		h1 = plot_hist(hocr,      edges,[ 0.9526    0.5773    0.8113],'-');
+		h2 = plot_hist(fixetal,   edges,[ 0.1722    0.7860    0.7948],'-');
+		h3 = plot_hist(heuristic, edges,[ 0.6857    0.4521    0.0270],'-');
+		h4 = plot_hist(optimal,   edges,[0 0 0],'-');
+		h5 = plot_hist(generators,   edges,[0 0 0],':');
+		h = [h5 h4 h3 h2 h1];
+		leg_str = {'GRD-gen','GRD','GRD-heur.','Fix et al.','HOCR'};
+	else
+		h1 = plot_hist(hocr,      edges,[ 0.9526    0.5773    0.8113],'-');
+		h5 = plot_hist(generators,   edges,[0 0 0],':');
+		h6 = plot_hist(packing, edges, [ 0.3126    0.6160    0.9537], '-');
+		h = [h5 h6 h1];
+		leg_str = {'GRD-gen','Vertex packing','HOCR'};
+	end
 	
     
     maxxval = max([hocr(:);hocr_itr(:);optimal(:);heuristic(:);fixetal(:);fixetal_itr(:);generators(:)]);
@@ -78,9 +104,6 @@ function plot_batchrun_new(filename,nedges)
 	
 	goodnumberofbins = 50 * 370 / maxxval 
 	
-%     leg = legend([h1 h2 h3 h4 h5], {'HOCR','Fix et al.','GRD-heuristic','GRD','GRD-Gen.'});
-	h = [h5 h4 h3 h2 h1];
-	leg_str = {'GRD-gen','GRD','GRD-heur.','Fix et al.','HOCR'};
 	leg_str = leg_str(h>0);
 	h = h(h>0);
 	leg = legend(h, leg_str);

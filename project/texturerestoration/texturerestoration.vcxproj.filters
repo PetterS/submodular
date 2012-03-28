@@ -38,6 +38,9 @@
     <ClCompile Include="..\..\source\library\GeneratorPseudoBoolean.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\library\PseudoBoolean_minimize_lp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\library\PseudoBoolean.h">

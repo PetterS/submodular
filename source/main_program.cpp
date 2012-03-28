@@ -859,7 +859,7 @@ int main_program(int num_args, char** args)
 				// If we know the optimal solution, we can verify 
 				// that the persistencies are correct
 				if (do_exhaustive) {
-					check_persistency(optimal_solutions, x, packing_labeled);
+					check_persistency(optimal_solutions, x, labeled);
 					check_bound(optimum, packing_bound);
 				}
 
@@ -1356,7 +1356,11 @@ int main_program(int num_args, char** args)
 			<< fixetal_itr_time << '\t' // 20
 			<< generators_labeled<<'\t' // 21
 			<< generators_bound << '\t' // 22
-			<< generators_time  << endl;// 23
+			<< generators_time  << '\t' // 23
+			<< packing_labeled<<'\t' // 24
+			<< packing_bound << '\t' // 25
+			<< packing_time  << '\t' // 26
+            << endl;
 	}
 	//cin.get();
 
