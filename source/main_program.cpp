@@ -299,16 +299,19 @@ int main_program(int num_args, char** args)
 	bool do_lprelax = false;
 	bool do_packing = false;
 	bool iterate_reduction_methods = false;
-	if (cmd_line.find("-optimal") != cmd_line.end()) {
+	if (cmd_line.find("-optimal") != cmd_line.end() || cmd_line.find("-grd") != cmd_line.end()) {
 		do_optimal = true;
 	}
-	if (cmd_line.find("-generators") != cmd_line.end()) {
+	if (cmd_line.find("-generators") != cmd_line.end() || cmd_line.find("-grd-gen") != cmd_line.end()) {
 		do_generators = true;
 	}
 	if (cmd_line.find("-fixetal") != cmd_line.end()) {
 		do_fixetal = true;
 	}
-	if (cmd_line.find("-heuristic") != cmd_line.end()) {
+    if (cmd_line.find("-hocr") != cmd_line.end()) {
+		do_hocr = true;
+	}
+	if (cmd_line.find("-heuristic") != cmd_line.end() || cmd_line.find("-grd-heuristic") != cmd_line.end()) {
 		do_heuristic = true;
 	}
 	if (cmd_line.find("-lprelax") != cmd_line.end()) {
@@ -671,7 +674,11 @@ int main_program(int num_args, char** args)
 	// Solve using different methods //
 	///////////////////////////////////
 
-	
+    vector<label> x(n);
+    int labeled;
+    Petter::re
+    pb.minimize(x, labeled, GRD);
+    pb.minimize(x, labeled, GRD_heur);
 
 	int hocr_labeled = -1;
 	int hocr_itr_labeled = -1;
