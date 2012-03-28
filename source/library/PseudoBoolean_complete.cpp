@@ -8,6 +8,7 @@
 
 #include "PseudoBoolean.h"
 
+#include <cstdlib>
 
 namespace Petter
 {
@@ -45,7 +46,7 @@ namespace Petter
 				generators = new Generators<real>(generators_file);
 			}
 			else if (getenv("GENERATORS")) {
-				generators = new Generators<real>(getenv("GENERATORS"));
+				generators = new Generators<real>(std::getenv("GENERATORS"));
 			}
 			else {
 				generators = new Generators<real>("generators/generators.txt");

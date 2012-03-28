@@ -13,7 +13,11 @@
 #include "VertexPacking.h"
 #include "Petter-Color.h"
 
-#define USE_IBFS
+#ifdef WIN32
+    //Choose whether to use IBFS
+    #define USE_IBFS
+#endif 
+
 #ifdef USE_IBFS
 	#include "ibfs.h"
 #else
