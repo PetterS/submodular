@@ -37,15 +37,33 @@ namespace Petter
 	using std::map;
 	using std::vector;
 
-	// Used to specify optimization method
-	enum Method {HOCR,Fix,GRD,GRD_heur,GRD_gen,LP};
+	/// Used to specify optimization method
+	enum Method {
+		/// HOCR (Ishikawa, 2011)
+		HOCR, 
+		/// Fix et al. (2001)
+		Fix,  
+		/// Generalized roof duality
+		GRD, 
+		/// Heuristic GRD
+		GRD_heur, 
+		/// GRD with generators
+		GRD_gen,  
+		/// Linear program relaxation
+		LP 
+	};
 	const char* str(Method m);
 
+	/// Represents a boolean label (0 or 1).  Negative values mean undetermined.
 	typedef signed short label;
+	/// Represents an index 
 	typedef int index; 
 
+	/// A pair of indices
 	typedef std::pair<int,int> pair;
+	/// A 3-tuple of indices
 	typedef std::pair<int, std::pair<int,int> > triple;
+	/// A 4-tuple of indices
 	typedef std::pair<std::pair<int,int>, std::pair<int,int> > quad;
 
 	// Indexing maps with tuples doesn't work very well in VC++ (known bug)
@@ -72,6 +90,9 @@ namespace Petter
 	template<typename real>
 	class GeneratorPseudoBoolean;
 
+    ///
+    /// The main polynomial class
+    ///
 	template<typename real>
 	class PseudoBoolean
 	{
@@ -81,75 +102,85 @@ namespace Petter
 		template<typename real2,int degree> friend class Posiform;
 		void print_helper(std::ostream& out) const;
 
-		PseudoBoolean(); //Creates the zero polynomial
-		PseudoBoolean(std::string filename); //Reads f from a file
+		/// Creates the zero function
+		PseudoBoolean(); 
+		/// Reads a polynomial from file
+		PseudoBoolean(std::string filename); 
 
-		void save_to_file(std::string filename); // Saves f to file
+		/// Saves the function to file
+		void save_to_file(std::string filename); 
 
-		//Reset the function to the zero functions
+		/// Resets the function to the zero functions
 		void clear();
-		// Returns the maximum index used + 1
+		/// Returns the maximum index used + 1
 		int nvars() const;
 
-		// Add monomials
+		/// Adds a monomial of degree 1 to the function
 		void add_monomial(int i, real a);
+        /// Adds a monomial of degree 2 to the function
 		void add_monomial(int i, int j, real a);
+        /// Adds a monomial of degree 3 to the function
 		void add_monomial(int i, int j, int k, real a);
+        /// Adds a monomial of degree 4 to the function
 		void add_monomial(int i, int j, int k, int l, real a);
 
-		// Add entire cliques
+		/// Adds a clique of a single variable to the function
 		void add_clique(int i, real E0, real E1);
+        /// Adds a clique of two variables to the function
 		void add_clique(int i, int j, real E00, real E01, real E10, real E11);
+        /// Adds a clique of three variables to the function
 		void add_clique(int i, int j, int k, const vector<real>& E);
+        /// Adds a clique of three variables to the function
 		void add_clique(int i, int j, int k, real E000, real E001, real E010, real E011,
 											 real E100, real E101, real E110, real E111);
+        /// Adds a clique of four variables to the function
 		void add_clique(int i, int j, int k, int l, const vector<real>& E);
+        /// Adds a clique of four variables to the function
 		void add_clique(int i, int j, int k, int l, real E0000, real E0001, real E0010, real E0011,
 		                                            real E0100, real E0101, real E0110, real E0111,
 		                                            real E1000, real E1001, real E1010, real E1011,
 		                                            real E1100, real E1101, real E1110, real E1111);
 
-		// Evaluate the function
+		/// Evaluates the function
 		real eval(const vector<label>& x) const;
 
-		// Reduce the function given a partial labeling
+		/// Reduce the function given a partial labeling
 		void reduce(const vector<label>& x);
 
-		// Minimize using higher-order clique reduction (HOCR, Ishikawa 2011)
+		/// \private
 		real minimize_reduction(vector<label>& x) const;
 		real minimize_reduction(vector<label>& x, int& nlabelled) const;
 
-		// Minimize using Fix et al., ICCV 2011
+		/// \private
 		real minimize_reduction_fixetal(vector<label>& x) const;
 		real minimize_reduction_fixetal(vector<label>& x, int& nlabelled) const;
 		
-		// Minimize using LP relaxation
-		// (persistency does not hold in general)
-		// mostly for testing purposes
+		/// Minimize using LP relaxation
+
+		/// Persistency does not hold in general. This function is
+		/// mostly for testing purposes
 		real minimize_lp(vector<label>& x,bool verbose=false) const;
 
-		// Minimizing using any method
-		// NOTE: might change (reduce) *this
+		/// Minimizing using any method
+
+		/// NOTE: might change (reduce) *this
 		real minimize(vector<label>& x, Method method, const char* generators_file=0);
 		real minimize(vector<label>& x, int& labeled, Method method = GRD, const char* generators_file=0);
 
-		// Minimizing using a symmetric, submodular function g(x,y)
-		// NOTE: will change (reduce) *this
+		/// \private
 		real minimize(vector<label>& x, int& labeled, bool heuristic = false);
-		// Minimizing using a symmetric, submodular function g(x,y)
-		// represented with generators
-		// NOTE: will change (reduce) *this
+        /// \private
 		real minimize_generators(vector<label>& x, int& labeled, bool heuristic = false);
 
 	protected:
-		/////////////////////////////
+		// //////////////////////////
 		// Polynomial coefficients //
-		/////////////////////////////
-		real constant;
-		map<int, real>    ai;
-		map<pair  , real> aij;
-		map<triple, real> aijk;
-		map<quad  , real> aijkl;
+		// //////////////////////////
+		real constant; /// constant term in function
+		map<int, real>    ai; /// Degree-1 terms
+		map<pair  , real> aij; /// Degree-2 terms
+		map<triple, real> aijk; /// Degree-3 terms
+		map<quad  , real> aijkl; /// Degree-4 terms
 	};
 
 	template<typename real>
