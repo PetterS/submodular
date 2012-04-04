@@ -34,6 +34,7 @@
                                             sout << "Error (line " << __LINE__ << " in " << __FILE__ << "): " << (msg); \
                                             throw std::runtime_error(sout.str()); }
 
+/// The namespace everything resides in
 namespace Petter
 {
 	using std::map;
@@ -206,11 +207,16 @@ namespace Petter
 		// //////////////////////////
 		// Polynomial coefficients //
 		// //////////////////////////
-		real constant; /// constant term in function
-		map<int, real>    ai; /// Degree-1 terms
-		map<pair  , real> aij; /// Degree-2 terms
-		map<triple, real> aijk; /// Degree-3 terms
-		map<quad  , real> aijkl; /// Degree-4 terms
+		/// constant term in function
+		real constant; 
+		/// Degree-1 terms
+		map<int, real>    ai; 
+		/// Degree-2 terms
+		map<pair  , real> aij; 
+		/// Degree-3 terms
+		map<triple, real> aijk; 
+		/// Degree-4 terms
+		map<quad  , real> aijkl; 
 	};
 
 	template<typename real>
@@ -223,10 +229,14 @@ namespace Petter
     /// Holds info about a branch-and-bound run.
 	struct BBInfo
 	{
-		Method method; /// (input) What minimization method should be used
-		int iterations; /// (output) How mant iterations were used
-		double total_time; /// (output) Total solver time
-        double solver_time; /// (output) Time spent in pseudo-boolean solver
+		/// (input) What minimization method should be used
+		Method method; 
+		 /// (output) How many iterations were used
+		int iterations;
+		/// (output) Total solver time
+		double total_time; 
+		/// (output) Time spent in pseudo-boolean solver
+        double solver_time; 
 	};
 
 	/// Minimizes a pseudo-boolean function exactly using branch and bound
