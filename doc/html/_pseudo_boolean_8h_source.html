@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>submodular: source/library/PseudoBoolean.h Source File</title>
+<title>Generalized Roof Duality: source/library/PseudoBoolean.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -22,7 +22,7 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">submodular
+   <div id="projectname">Generalized Roof Duality
    
    </div>
    
@@ -200,263 +200,263 @@
 <a name="l00207"></a>00207                 <span class="comment">// //////////////////////////</span>
 <a name="l00208"></a>00208                 <span class="comment">// Polynomial coefficients //</span>
 <a name="l00209"></a>00209                 <span class="comment">// //////////////////////////</span>
-<a name="l00210"></a><a class="code" href="class_petter_1_1_pseudo_boolean.html#a8ee351caa1f7e524584c6b9d1e5764b7">00210</a>                 real <a class="code" href="class_petter_1_1_pseudo_boolean.html#a8ee351caa1f7e524584c6b9d1e5764b7">constant</a>; 
-<a name="l00211"></a><a class="code" href="class_petter_1_1_pseudo_boolean.html#a3899f8b507fcc52141b6ef7ef7e618b3">00211</a>                 map&lt;int, real&gt;    <a class="code" href="class_petter_1_1_pseudo_boolean.html#a3899f8b507fcc52141b6ef7ef7e618b3" title="constant term in function">ai</a>; 
-<a name="l00212"></a><a class="code" href="class_petter_1_1_pseudo_boolean.html#aa143734a2d687dbabb81548f211787b2">00212</a>                 map&lt;pair  , real&gt; <a class="code" href="class_petter_1_1_pseudo_boolean.html#aa143734a2d687dbabb81548f211787b2" title="Degree-1 terms.">aij</a>; 
-<a name="l00213"></a><a class="code" href="class_petter_1_1_pseudo_boolean.html#a90473af16397a383bcde57eb21809a6f">00213</a>                 map&lt;triple, real&gt; <a class="code" href="class_petter_1_1_pseudo_boolean.html#a90473af16397a383bcde57eb21809a6f" title="Degree-2 terms.">aijk</a>; 
-<a name="l00214"></a><a class="code" href="class_petter_1_1_pseudo_boolean.html#ad935a19f75d890743a00cb9551d309c8">00214</a>                 map&lt;quad  , real&gt; <a class="code" href="class_petter_1_1_pseudo_boolean.html#ad935a19f75d890743a00cb9551d309c8" title="Degree-3 terms.">aijkl</a>; 
-<a name="l00215"></a>00215         };
-<a name="l00216"></a>00216 
-<a name="l00217"></a>00217         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real&gt;
-<a name="l00218"></a><a class="code" href="namespace_petter.html#a87f4f82d56dd93e81f14e96526aa11b0">00218</a>         std::ostream&amp; operator&lt;&lt;(std::ostream&amp; out, const PseudoBoolean&lt;real&gt;&amp; pbf)
-<a name="l00219"></a>00219         {
-<a name="l00220"></a>00220                 pbf.print_helper(out);
-<a name="l00221"></a>00221                 <span class="keywordflow">return</span> out;
-<a name="l00222"></a>00222         }
-<a name="l00223"></a>00223 
-<a name="l00225"></a><a class="code" href="struct_petter_1_1_b_b_info.html">00225</a>         <span class="keyword">struct </span><a class="code" href="struct_petter_1_1_b_b_info.html" title="Holds info about a branch-and-bound run.">BBInfo</a>
-<a name="l00226"></a>00226         {
-<a name="l00227"></a><a class="code" href="struct_petter_1_1_b_b_info.html#a941f6ec750b99ea6bc77d2fc3c2834a5">00227</a>                 <a class="code" href="namespace_petter.html#a93fa000da5845fb68d971298016b1e1a" title="Used to specify optimization method.">Method</a> <a class="code" href="struct_petter_1_1_b_b_info.html#a941f6ec750b99ea6bc77d2fc3c2834a5">method</a>; 
-<a name="l00228"></a><a class="code" href="struct_petter_1_1_b_b_info.html#a5789fe7b15678543bc3247997172060a">00228</a>                 <span class="keywordtype">int</span> <a class="code" href="struct_petter_1_1_b_b_info.html#a5789fe7b15678543bc3247997172060a" title="(input) What minimization method should be used">iterations</a>; 
-<a name="l00229"></a><a class="code" href="struct_petter_1_1_b_b_info.html#a8c3b61ec91a5f6cbf6a4b64c5b81362c">00229</a>                 <span class="keywordtype">double</span> <a class="code" href="struct_petter_1_1_b_b_info.html#a8c3b61ec91a5f6cbf6a4b64c5b81362c" title="(output) How mant iterations were used">total_time</a>; 
-<a name="l00230"></a><a class="code" href="struct_petter_1_1_b_b_info.html#aeba37187fb67e19343085679dd446242">00230</a>         <span class="keywordtype">double</span> <a class="code" href="struct_petter_1_1_b_b_info.html#aeba37187fb67e19343085679dd446242" title="(output) Total solver time">solver_time</a>; 
-<a name="l00231"></a>00231         };
-<a name="l00232"></a>00232 
-<a name="l00238"></a>00238         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real&gt;
-<a name="l00239"></a>00239         real <a class="code" href="namespace_petter.html#a36161d3af6c100075ab941a4c1da9412">branch_and_bound</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean&lt;real&gt;</a>&amp; f, vector&lt;label&gt;&amp; x, <a class="code" href="struct_petter_1_1_b_b_info.html" title="Holds info about a branch-and-bound run.">BBInfo</a>* bbinfo=0);
-<a name="l00240"></a>00240     
-<a name="l00241"></a>00241         <span class="comment">//</span>
-<a name="l00243"></a>00243 <span class="comment"></span>        <span class="comment">//</span>
-<a name="l00247"></a>00247 <span class="comment"></span>        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real&gt;
-<a name="l00248"></a><a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html">00248</a>         <span class="keyword">class </span><a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html" title="Represents a symmetric pseudo-boolean function of degree &lt;= 4.">SymmetricPseudoBoolean</a>
-<a name="l00249"></a>00249         {
-<a name="l00250"></a>00250         <span class="keyword">public</span>:
-<a name="l00251"></a><a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#a8c08f5f471ddf6750fe5670476469ff1">00251</a>                 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real2&gt; <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean</a>;
-<a name="l00252"></a>00252                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#ac638e701f1d7e0438a56f536403de22b">print_helper</a>(std::ostream&amp; out);
-<a name="l00253"></a>00253 
-<a name="l00254"></a>00254                 <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#a5af66a84c84041e24e876c763fce2f04">SymmetricPseudoBoolean</a>();
-<a name="l00255"></a>00255                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#ab7f7bfd51e0a1c084a6611c0669e9357">clear</a>();
-<a name="l00256"></a>00256 
-<a name="l00257"></a>00257                 real <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#ad37f4423af883aea7632381c63e5c4e2">eval</a>(<span class="keyword">const</span> vector&lt;label&gt;&amp; x, <span class="keyword">const</span> vector&lt;label&gt;&amp; y) <span class="keyword">const</span>;
-<a name="l00258"></a>00258 
-<a name="l00259"></a>00259                 <span class="comment">// Create using LP</span>
-<a name="l00260"></a>00260                 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> orgreal&gt;
-<a name="l00261"></a>00261                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#af22bba6da296224f53f94a2846bb2f2f">create_lp</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean&lt;orgreal&gt;</a>&amp; pbf);
+<a name="l00211"></a><a class="code" href="class_petter_1_1_pseudo_boolean.html#a8ee351caa1f7e524584c6b9d1e5764b7">00211</a> <span class="comment"></span>                real <a class="code" href="class_petter_1_1_pseudo_boolean.html#a8ee351caa1f7e524584c6b9d1e5764b7" title="constant term in function">constant</a>; 
+<a name="l00213"></a><a class="code" href="class_petter_1_1_pseudo_boolean.html#a3899f8b507fcc52141b6ef7ef7e618b3">00213</a>                 map&lt;int, real&gt;    <a class="code" href="class_petter_1_1_pseudo_boolean.html#a3899f8b507fcc52141b6ef7ef7e618b3" title="Degree-1 terms.">ai</a>; 
+<a name="l00215"></a><a class="code" href="class_petter_1_1_pseudo_boolean.html#aa143734a2d687dbabb81548f211787b2">00215</a>                 map&lt;pair  , real&gt; <a class="code" href="class_petter_1_1_pseudo_boolean.html#aa143734a2d687dbabb81548f211787b2" title="Degree-2 terms.">aij</a>; 
+<a name="l00217"></a><a class="code" href="class_petter_1_1_pseudo_boolean.html#a90473af16397a383bcde57eb21809a6f">00217</a>                 map&lt;triple, real&gt; <a class="code" href="class_petter_1_1_pseudo_boolean.html#a90473af16397a383bcde57eb21809a6f" title="Degree-3 terms.">aijk</a>; 
+<a name="l00219"></a><a class="code" href="class_petter_1_1_pseudo_boolean.html#ad935a19f75d890743a00cb9551d309c8">00219</a>                 map&lt;quad  , real&gt; <a class="code" href="class_petter_1_1_pseudo_boolean.html#ad935a19f75d890743a00cb9551d309c8" title="Degree-4 terms.">aijkl</a>; 
+<a name="l00220"></a>00220         };
+<a name="l00221"></a>00221 
+<a name="l00222"></a>00222         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real&gt;
+<a name="l00223"></a><a class="code" href="namespace_petter.html#a87f4f82d56dd93e81f14e96526aa11b0">00223</a>         std::ostream&amp; operator&lt;&lt;(std::ostream&amp; out, const PseudoBoolean&lt;real&gt;&amp; pbf)
+<a name="l00224"></a>00224         {
+<a name="l00225"></a>00225                 pbf.print_helper(out);
+<a name="l00226"></a>00226                 <span class="keywordflow">return</span> out;
+<a name="l00227"></a>00227         }
+<a name="l00228"></a>00228 
+<a name="l00230"></a><a class="code" href="struct_petter_1_1_b_b_info.html">00230</a>         <span class="keyword">struct </span><a class="code" href="struct_petter_1_1_b_b_info.html" title="Holds info about a branch-and-bound run. See branch_and_bound().">BBInfo</a>
+<a name="l00231"></a>00231         {
+<a name="l00233"></a><a class="code" href="struct_petter_1_1_b_b_info.html#a941f6ec750b99ea6bc77d2fc3c2834a5">00233</a>                 <a class="code" href="namespace_petter.html#a93fa000da5845fb68d971298016b1e1a" title="Used to specify optimization method.">Method</a> <a class="code" href="struct_petter_1_1_b_b_info.html#a941f6ec750b99ea6bc77d2fc3c2834a5" title="(input) What minimization method should be used">method</a>; 
+<a name="l00235"></a><a class="code" href="struct_petter_1_1_b_b_info.html#a5789fe7b15678543bc3247997172060a">00235</a>                 <span class="keywordtype">int</span> <a class="code" href="struct_petter_1_1_b_b_info.html#a5789fe7b15678543bc3247997172060a" title="(output) How many iterations were used">iterations</a>;
+<a name="l00237"></a><a class="code" href="struct_petter_1_1_b_b_info.html#a8c3b61ec91a5f6cbf6a4b64c5b81362c">00237</a>                 <span class="keywordtype">double</span> <a class="code" href="struct_petter_1_1_b_b_info.html#a8c3b61ec91a5f6cbf6a4b64c5b81362c" title="(output) Total solver time">total_time</a>; 
+<a name="l00239"></a><a class="code" href="struct_petter_1_1_b_b_info.html#aeba37187fb67e19343085679dd446242">00239</a>         <span class="keywordtype">double</span> <a class="code" href="struct_petter_1_1_b_b_info.html#aeba37187fb67e19343085679dd446242" title="(output) Time spent in pseudo-boolean solver">solver_time</a>; 
+<a name="l00240"></a>00240         };
+<a name="l00241"></a>00241 
+<a name="l00247"></a>00247         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real&gt;
+<a name="l00248"></a>00248         real <a class="code" href="namespace_petter.html#a36161d3af6c100075ab941a4c1da9412">branch_and_bound</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean&lt;real&gt;</a>&amp; f, vector&lt;label&gt;&amp; x, <a class="code" href="struct_petter_1_1_b_b_info.html" title="Holds info about a branch-and-bound run. See branch_and_bound().">BBInfo</a>* bbinfo=0);
+<a name="l00249"></a>00249     
+<a name="l00250"></a>00250         <span class="comment">//</span>
+<a name="l00252"></a>00252 <span class="comment"></span>        <span class="comment">//</span>
+<a name="l00256"></a>00256 <span class="comment"></span>        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real&gt;
+<a name="l00257"></a><a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html">00257</a>         <span class="keyword">class </span><a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html" title="Represents a symmetric pseudo-boolean function of degree &lt;= 4.">SymmetricPseudoBoolean</a>
+<a name="l00258"></a>00258         {
+<a name="l00259"></a>00259         <span class="keyword">public</span>:
+<a name="l00260"></a><a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#a8c08f5f471ddf6750fe5670476469ff1">00260</a>                 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real2&gt; <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean</a>;
+<a name="l00261"></a>00261                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#ac638e701f1d7e0438a56f536403de22b">print_helper</a>(std::ostream&amp; out);
 <a name="l00262"></a>00262 
-<a name="l00263"></a>00263                 <span class="comment">// Create using heuristics</span>
-<a name="l00264"></a>00264                 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> orgreal&gt;
-<a name="l00265"></a>00265                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#abdc7d54982ef11b5e764992815107923">create_heuristic</a>(<a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean&lt;orgreal&gt;</a>&amp; pbf);
-<a name="l00266"></a>00266 
-<a name="l00267"></a>00267                 <span class="comment">// Minimize; requires submodularity</span>
-<a name="l00268"></a>00268                 real <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#a8c0413796965e3570c0c916cd8036cf9">minimize</a>(vector&lt;label&gt;&amp; x) <span class="keyword">const</span>;
-<a name="l00269"></a>00269                 real <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#a8c0413796965e3570c0c916cd8036cf9">minimize</a>(vector&lt;label&gt;&amp; x, <span class="keywordtype">int</span>&amp; nlabelled) <span class="keyword">const</span>;
-<a name="l00270"></a>00270 
-<a name="l00271"></a>00271                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#a7c1bf5c3b84ebd674d0ac87256f1077e">test</a>();
-<a name="l00272"></a>00272                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#ad39c6efef8cb7d3aa6eccc27eee7aa50">test_clear</a>();
-<a name="l00273"></a>00273 
-<a name="l00274"></a>00274                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#afe925cacd433316fee8e517b1957823e">make_submodular</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean&lt;real&gt;</a>&amp; pbf);
+<a name="l00263"></a>00263                 <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#a5af66a84c84041e24e876c763fce2f04">SymmetricPseudoBoolean</a>();
+<a name="l00264"></a>00264                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#ab7f7bfd51e0a1c084a6611c0669e9357">clear</a>();
+<a name="l00265"></a>00265 
+<a name="l00266"></a>00266                 real <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#ad37f4423af883aea7632381c63e5c4e2">eval</a>(<span class="keyword">const</span> vector&lt;label&gt;&amp; x, <span class="keyword">const</span> vector&lt;label&gt;&amp; y) <span class="keyword">const</span>;
+<a name="l00267"></a>00267 
+<a name="l00268"></a>00268                 <span class="comment">// Create using LP</span>
+<a name="l00269"></a>00269                 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> orgreal&gt;
+<a name="l00270"></a>00270                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#af22bba6da296224f53f94a2846bb2f2f">create_lp</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean&lt;orgreal&gt;</a>&amp; pbf);
+<a name="l00271"></a>00271 
+<a name="l00272"></a>00272                 <span class="comment">// Create using heuristics</span>
+<a name="l00273"></a>00273                 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> orgreal&gt;
+<a name="l00274"></a>00274                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#abdc7d54982ef11b5e764992815107923">create_heuristic</a>(<a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean&lt;orgreal&gt;</a>&amp; pbf);
 <a name="l00275"></a>00275 
-<a name="l00276"></a>00276         <span class="keyword">private</span>:
-<a name="l00277"></a>00277 
-<a name="l00279"></a>00279                 <span class="comment">// Polynomial coefficients //</span>
-<a name="l00281"></a>00281 <span class="comment"></span>                real constant;
-<a name="l00282"></a>00282                 map&lt;int, real&gt; bi;
-<a name="l00283"></a>00283                 map&lt;pair, real&gt; bij,cij;
-<a name="l00284"></a>00284                 map&lt;triple, real&gt; bijk,cijk,dijk,eijk;
-<a name="l00285"></a>00285                 map&lt;quad  , real&gt; bijkl,cijkl,dijkl,eijkl,pijkl,qijkl,rijkl,sijkl;
+<a name="l00276"></a>00276                 <span class="comment">// Minimize; requires submodularity</span>
+<a name="l00277"></a>00277                 real <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#a8c0413796965e3570c0c916cd8036cf9">minimize</a>(vector&lt;label&gt;&amp; x) <span class="keyword">const</span>;
+<a name="l00278"></a>00278                 real <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#a8c0413796965e3570c0c916cd8036cf9">minimize</a>(vector&lt;label&gt;&amp; x, <span class="keywordtype">int</span>&amp; nlabelled) <span class="keyword">const</span>;
+<a name="l00279"></a>00279 
+<a name="l00280"></a>00280                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#a7c1bf5c3b84ebd674d0ac87256f1077e">test</a>();
+<a name="l00281"></a>00281                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#ad39c6efef8cb7d3aa6eccc27eee7aa50">test_clear</a>();
+<a name="l00282"></a>00282 
+<a name="l00283"></a>00283                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_symmetric_pseudo_boolean.html#afe925cacd433316fee8e517b1957823e">make_submodular</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean&lt;real&gt;</a>&amp; pbf);
+<a name="l00284"></a>00284 
+<a name="l00285"></a>00285         <span class="keyword">private</span>:
 <a name="l00286"></a>00286 
-<a name="l00288"></a>00288                 <span class="comment">// Index //</span>
-<a name="l00290"></a>00290 <span class="comment"></span>
-<a name="l00291"></a>00291                 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Map, <span class="keyword">typename</span> K&gt;
-<a name="l00292"></a>00292                 <span class="keywordtype">int</span> getindex(Map&amp; m, <span class="keyword">const</span> K&amp; key) 
-<a name="l00293"></a>00293                 {
-<a name="l00294"></a>00294                         <span class="keyword">auto</span> itr = m.find( key );
-<a name="l00295"></a>00295                         <span class="keywordflow">if</span> ( itr == m.end() ) {
-<a name="l00296"></a>00296                                 m[key] = nlpvars;
-<a name="l00297"></a>00297                                 <span class="keywordflow">return</span> nlpvars++;
-<a name="l00298"></a>00298                         }
-<a name="l00299"></a>00299                         <span class="keywordflow">else</span> {
-<a name="l00300"></a>00300                                 <span class="keywordflow">return</span> itr-&gt;second;
-<a name="l00301"></a>00301                         }
-<a name="l00302"></a>00302                 }
-<a name="l00303"></a>00303 
-<a name="l00304"></a>00304                 <span class="comment">//int ib(int i);</span>
-<a name="l00305"></a>00305                 <span class="keywordtype">int</span> ib(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j);
-<a name="l00306"></a>00306                 <span class="keywordtype">int</span> ic(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j);
-<a name="l00307"></a>00307                 <span class="keywordtype">int</span> ib(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k);
-<a name="l00308"></a>00308                 <span class="keywordtype">int</span> ic(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k);
-<a name="l00309"></a>00309                 <span class="keywordtype">int</span> id(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k);
-<a name="l00310"></a>00310                 <span class="keywordtype">int</span> ie(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k);
-<a name="l00311"></a>00311                 <span class="keywordtype">int</span> ib(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
-<a name="l00312"></a>00312                 <span class="keywordtype">int</span> ic(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
-<a name="l00313"></a>00313                 <span class="keywordtype">int</span> id(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
-<a name="l00314"></a>00314                 <span class="keywordtype">int</span> ie(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
-<a name="l00315"></a>00315                 <span class="keywordtype">int</span> ip(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
-<a name="l00316"></a>00316                 <span class="keywordtype">int</span> iq(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
-<a name="l00317"></a>00317                 <span class="keywordtype">int</span> ir(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
-<a name="l00318"></a>00318                 <span class="keywordtype">int</span> is(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
-<a name="l00319"></a>00319 
-<a name="l00320"></a>00320                 <span class="comment">//These are not to be modified directly</span>
-<a name="l00321"></a>00321                 <span class="keywordtype">int</span> nlpvars;
-<a name="l00322"></a>00322                 map&lt;int, int&gt; indbi;
-<a name="l00323"></a>00323                 map&lt;pair, int&gt; indbij,indcij;
-<a name="l00324"></a>00324                 map&lt;triple, int&gt; indbijk,indcijk,inddijk,indeijk;
-<a name="l00325"></a>00325                 map&lt;quad  , int&gt; indbijkl,indcijkl,inddijkl,indeijkl,indpijkl,indqijkl,indrijkl,indsijkl;
-<a name="l00326"></a>00326         };
-<a name="l00327"></a>00327 
-<a name="l00328"></a>00328         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real&gt;
-<a name="l00329"></a><a class="code" href="namespace_petter.html#afe735bcbb54e75d07e5cbd436b2208d4">00329</a>         std::ostream&amp; operator&lt;&lt;(std::ostream&amp; out, SymmetricPseudoBoolean&lt;real&gt;&amp; pbf)
-<a name="l00330"></a>00330         {
-<a name="l00331"></a>00331                 pbf.print_helper(out);
-<a name="l00332"></a>00332                 <span class="keywordflow">return</span> out;
-<a name="l00333"></a>00333         }
-<a name="l00334"></a>00334 
-<a name="l00335"></a>00335 
-<a name="l00336"></a>00336         <span class="comment">//</span>
-<a name="l00338"></a>00338 <span class="comment"></span>        <span class="comment">//</span>
-<a name="l00339"></a>00339         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real&gt;
-<a name="l00340"></a><a class="code" href="class_petter_1_1_generators.html">00340</a>         <span class="keyword">class </span><a class="code" href="class_petter_1_1_generators.html" title="Helper class that holds informations about generators and how to reduce them.">Generators</a>
-<a name="l00341"></a>00341         {
-<a name="l00342"></a>00342         <span class="keyword">public</span>:
+<a name="l00288"></a>00288                 <span class="comment">// Polynomial coefficients //</span>
+<a name="l00290"></a>00290 <span class="comment"></span>                real constant;
+<a name="l00291"></a>00291                 map&lt;int, real&gt; bi;
+<a name="l00292"></a>00292                 map&lt;pair, real&gt; bij,cij;
+<a name="l00293"></a>00293                 map&lt;triple, real&gt; bijk,cijk,dijk,eijk;
+<a name="l00294"></a>00294                 map&lt;quad  , real&gt; bijkl,cijkl,dijkl,eijkl,pijkl,qijkl,rijkl,sijkl;
+<a name="l00295"></a>00295 
+<a name="l00297"></a>00297                 <span class="comment">// Index //</span>
+<a name="l00299"></a>00299 <span class="comment"></span>
+<a name="l00300"></a>00300                 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Map, <span class="keyword">typename</span> K&gt;
+<a name="l00301"></a>00301                 <span class="keywordtype">int</span> getindex(Map&amp; m, <span class="keyword">const</span> K&amp; key) 
+<a name="l00302"></a>00302                 {
+<a name="l00303"></a>00303                         <span class="keyword">auto</span> itr = m.find( key );
+<a name="l00304"></a>00304                         <span class="keywordflow">if</span> ( itr == m.end() ) {
+<a name="l00305"></a>00305                                 m[key] = nlpvars;
+<a name="l00306"></a>00306                                 <span class="keywordflow">return</span> nlpvars++;
+<a name="l00307"></a>00307                         }
+<a name="l00308"></a>00308                         <span class="keywordflow">else</span> {
+<a name="l00309"></a>00309                                 <span class="keywordflow">return</span> itr-&gt;second;
+<a name="l00310"></a>00310                         }
+<a name="l00311"></a>00311                 }
+<a name="l00312"></a>00312 
+<a name="l00313"></a>00313                 <span class="comment">//int ib(int i);</span>
+<a name="l00314"></a>00314                 <span class="keywordtype">int</span> ib(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j);
+<a name="l00315"></a>00315                 <span class="keywordtype">int</span> ic(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j);
+<a name="l00316"></a>00316                 <span class="keywordtype">int</span> ib(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k);
+<a name="l00317"></a>00317                 <span class="keywordtype">int</span> ic(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k);
+<a name="l00318"></a>00318                 <span class="keywordtype">int</span> id(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k);
+<a name="l00319"></a>00319                 <span class="keywordtype">int</span> ie(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k);
+<a name="l00320"></a>00320                 <span class="keywordtype">int</span> ib(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
+<a name="l00321"></a>00321                 <span class="keywordtype">int</span> ic(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
+<a name="l00322"></a>00322                 <span class="keywordtype">int</span> id(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
+<a name="l00323"></a>00323                 <span class="keywordtype">int</span> ie(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
+<a name="l00324"></a>00324                 <span class="keywordtype">int</span> ip(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
+<a name="l00325"></a>00325                 <span class="keywordtype">int</span> iq(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
+<a name="l00326"></a>00326                 <span class="keywordtype">int</span> ir(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
+<a name="l00327"></a>00327                 <span class="keywordtype">int</span> is(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
+<a name="l00328"></a>00328 
+<a name="l00329"></a>00329                 <span class="comment">//These are not to be modified directly</span>
+<a name="l00330"></a>00330                 <span class="keywordtype">int</span> nlpvars;
+<a name="l00331"></a>00331                 map&lt;int, int&gt; indbi;
+<a name="l00332"></a>00332                 map&lt;pair, int&gt; indbij,indcij;
+<a name="l00333"></a>00333                 map&lt;triple, int&gt; indbijk,indcijk,inddijk,indeijk;
+<a name="l00334"></a>00334                 map&lt;quad  , int&gt; indbijkl,indcijkl,inddijkl,indeijkl,indpijkl,indqijkl,indrijkl,indsijkl;
+<a name="l00335"></a>00335         };
+<a name="l00336"></a>00336 
+<a name="l00337"></a>00337         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real&gt;
+<a name="l00338"></a><a class="code" href="namespace_petter.html#afe735bcbb54e75d07e5cbd436b2208d4">00338</a>         std::ostream&amp; operator&lt;&lt;(std::ostream&amp; out, SymmetricPseudoBoolean&lt;real&gt;&amp; pbf)
+<a name="l00339"></a>00339         {
+<a name="l00340"></a>00340                 pbf.print_helper(out);
+<a name="l00341"></a>00341                 <span class="keywordflow">return</span> out;
+<a name="l00342"></a>00342         }
 <a name="l00343"></a>00343 
-<a name="l00344"></a>00344                 <a class="code" href="class_petter_1_1_generators.html#a0ca3d542ef505dfed01caafc481d7c11">Generators</a>(<span class="keyword">const</span> std::string&amp; filename);
-<a name="l00345"></a>00345 
-<a name="l00346"></a>00346                 <span class="comment">// This internal struct holds a monomial of degrees 0 (i,j&lt;0), 1 (j&lt;0) or 2.</span>
-<a name="l00347"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html">00347</a>                 <span class="keyword">struct </span><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html">Monomial</a>
-<a name="l00348"></a>00348                 {
-<a name="l00349"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ad8237ae24e8819388ee962a6427679e9">00349</a>                         <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ad8237ae24e8819388ee962a6427679e9">Monomial</a>(real coef=0) 
-<a name="l00350"></a>00350                         {
-<a name="l00351"></a>00351                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ab9f1dc042ded45fde5fe26013094197b">i</a> = <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a23875eedce668b43ed01ca38b7037fc5">j</a> = -1;
-<a name="l00352"></a>00352                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a75a0ac8ad260af9a28b128d542a6a159">c</a> = coef;
-<a name="l00353"></a>00353                         }
-<a name="l00354"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a1523c056c6d158c42241cf11bfde13d2">00354</a>                         <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ad8237ae24e8819388ee962a6427679e9">Monomial</a>(<span class="keywordtype">int</span> i_in, real coef) 
-<a name="l00355"></a>00355                         {
-<a name="l00356"></a>00356                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ab9f1dc042ded45fde5fe26013094197b">i</a> = i_in;
-<a name="l00357"></a>00357                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a23875eedce668b43ed01ca38b7037fc5">j</a> = -1;
-<a name="l00358"></a>00358                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a75a0ac8ad260af9a28b128d542a6a159">c</a> = coef;
-<a name="l00359"></a>00359                         }
-<a name="l00360"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ae1f8fa14669fcb545e87cede766863f3">00360</a>                         <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ad8237ae24e8819388ee962a6427679e9">Monomial</a>(<span class="keywordtype">int</span> i_in, <span class="keywordtype">int</span> j_in, real coef) 
-<a name="l00361"></a>00361                         {
-<a name="l00362"></a>00362                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ab9f1dc042ded45fde5fe26013094197b">i</a> = i_in;
-<a name="l00363"></a>00363                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a23875eedce668b43ed01ca38b7037fc5">j</a> = j_in;
-<a name="l00364"></a>00364                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a75a0ac8ad260af9a28b128d542a6a159">c</a> = coef;
-<a name="l00365"></a>00365                         }
-<a name="l00366"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ade3d2b8e5a3924283aeafa1d32aeb9b4">00366</a>                         <span class="keywordtype">void</span> <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ade3d2b8e5a3924283aeafa1d32aeb9b4">check</a>()<span class="keyword"> const</span>
-<a name="l00367"></a>00367 <span class="keyword">                        </span>{
-<a name="l00368"></a>00368                                 <a class="code" href="_pseudo_boolean_8h.html#a0966b817b229d48e5ffc7feab19a0be6">ASSERT</a>(<a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ab9f1dc042ded45fde5fe26013094197b">i</a>&gt;=0 || <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a23875eedce668b43ed01ca38b7037fc5">j</a>&lt;0);
-<a name="l00369"></a>00369                         }
-<a name="l00370"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a23875eedce668b43ed01ca38b7037fc5">00370</a>                         <span class="keywordtype">int</span> <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ab9f1dc042ded45fde5fe26013094197b">i</a>,<a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a23875eedce668b43ed01ca38b7037fc5">j</a>;
-<a name="l00371"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a75a0ac8ad260af9a28b128d542a6a159">00371</a>                         real <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a75a0ac8ad260af9a28b128d542a6a159">c</a>;
-<a name="l00372"></a>00372                 };
-<a name="l00373"></a>00373 
-<a name="l00374"></a><a class="code" href="class_petter_1_1_generators.html#add2e5aaf6badcf3133604226f33be5a8">00374</a>                 <span class="keywordtype">int</span> <a class="code" href="class_petter_1_1_generators.html#ad8d74fca4c2fafd217ac627103ec3c23">ngen2</a>, <a class="code" href="class_petter_1_1_generators.html#ab516b9713b896431351a996ac0960822">ngen3</a>, <a class="code" href="class_petter_1_1_generators.html#a2d728b2fe1942e0aa1370b5af3830725">ngen4</a>, <a class="code" href="class_petter_1_1_generators.html#add2e5aaf6badcf3133604226f33be5a8">ngen4pos</a>, <a class="code" href="class_petter_1_1_generators.html#a1d2b52330e5c313808bebdef055450a0">ngen4neg</a>;
-<a name="l00375"></a><a class="code" href="class_petter_1_1_generators.html#afd07fc44e54bde871233b44f08e80e94">00375</a>                 <span class="keywordtype">size_t</span> <a class="code" href="class_petter_1_1_generators.html#ac2bdb9d48c4581f6bbaab92c4f4b7d4e">nentries2</a>, <a class="code" href="class_petter_1_1_generators.html#a2cf071f82c4eeb4ef2fbd59f34760233">nentries3</a>, <a class="code" href="class_petter_1_1_generators.html#afd07fc44e54bde871233b44f08e80e94">nentries4</a>;
-<a name="l00376"></a>00376 
-<a name="l00377"></a>00377                 <span class="comment">// These variables hold the information needed to build the constraint matrix</span>
-<a name="l00378"></a><a class="code" href="class_petter_1_1_generators.html#a4e7b59921daf86ed9dfdbc9a475403fd">00378</a>                 std::vector&lt;int&gt; <a class="code" href="class_petter_1_1_generators.html#a9b6e2d0e136052df29d77b91392f9261">cc</a>, <a class="code" href="class_petter_1_1_generators.html#a4e7b59921daf86ed9dfdbc9a475403fd">obj2</a>;
-<a name="l00379"></a><a class="code" href="class_petter_1_1_generators.html#a28a3a02db09c867f29ad721d39ff5a48">00379</a>                 std::vector&lt;int&gt; <a class="code" href="class_petter_1_1_generators.html#aa9540f2f93e336b52e0c17ac56ea90d8">bb12</a>, <a class="code" href="class_petter_1_1_generators.html#a0090516e2b27efe7d6a20d64e7e931fa">bb13</a>, <a class="code" href="class_petter_1_1_generators.html#aae2821b223f94ceefc7d9fb3a3cd952e">bb23</a>, <a class="code" href="class_petter_1_1_generators.html#a6c5c32be4e2c665aec55d6b1c6e187d8">bb123</a>, <a class="code" href="class_petter_1_1_generators.html#a28a3a02db09c867f29ad721d39ff5a48">obj3</a>;
-<a name="l00380"></a><a class="code" href="class_petter_1_1_generators.html#ae492764ad1b06673262930e9cd71f26d">00380</a>                 std::vector&lt;int&gt; <a class="code" href="class_petter_1_1_generators.html#aa9527b1a59133a075399a1d3e1688165">aa12pos</a>, <a class="code" href="class_petter_1_1_generators.html#a5577d7e888229676ad720a11b3dee39d">aa13pos</a>, <a class="code" href="class_petter_1_1_generators.html#ad17c4d7123814aa5b5afe75629752ab8">aa14pos</a>, <a class="code" href="class_petter_1_1_generators.html#ace57921e2303b34924ed1d4282e52bc3">aa23pos</a>, <a class="code" href="class_petter_1_1_generators.html#a58202112c2440afd78a8ab7b90249e90">aa24pos</a>, <a class="code" href="class_petter_1_1_generators.html#afeb01938aa383ee19e723ecb6676ca38">aa34pos</a>, <a class="code" href="class_petter_1_1_generators.html#ac29af66bf846494451045c90f845577a">aa123pos</a>, <a class="code" href="class_petter_1_1_generators.html#ae8f8ddbf75687dca5da6fbdd6190d7f9">aa124pos</a>, <a class="code" href="class_petter_1_1_generators.html#a824a82d1409b153b680f4cb2ed7dcf20">aa134pos</a>, <a class="code" href="class_petter_1_1_generators.html#aaa6ff26e5499b4b55bf0123d42c8cee2">aa234pos</a>, <a class="code" href="class_petter_1_1_generators.html#ada4b8643beb6f94ce101da6bbacc76c3">aa1234pos</a>, <a class="code" href="class_petter_1_1_generators.html#ae492764ad1b06673262930e9cd71f26d">obj4pos</a>;
-<a name="l00381"></a><a class="code" href="class_petter_1_1_generators.html#ae9c0213f86edb26984e48b2c6cbdb3ce">00381</a>                 std::vector&lt;int&gt; <a class="code" href="class_petter_1_1_generators.html#a6ce4374de48ff433a9eaa16e1898840a">aa12neg</a>, <a class="code" href="class_petter_1_1_generators.html#a181d7a758ee4413c6cb2920ee96795ef">aa13neg</a>, <a class="code" href="class_petter_1_1_generators.html#a98564b94f98365b1fc0658d15d41fa5b">aa14neg</a>, <a class="code" href="class_petter_1_1_generators.html#a2642877827405e2b9f11557ec2823c49">aa23neg</a>, <a class="code" href="class_petter_1_1_generators.html#a81f12394d627f5c360eae23c3a1a2f4d">aa24neg</a>, <a class="code" href="class_petter_1_1_generators.html#abef12ea0dc587901cb2df3bfebb250b6">aa34neg</a>, <a class="code" href="class_petter_1_1_generators.html#a7900bbea23e60fbd9d1ab991f36d5f3a">aa123neg</a>, <a class="code" href="class_petter_1_1_generators.html#a8f6a8233a9ecd2bfc1db1492cbc83349">aa124neg</a>, <a class="code" href="class_petter_1_1_generators.html#a97e0d98c0fe8a93f827ada9b4f241c77">aa134neg</a>, <a class="code" href="class_petter_1_1_generators.html#a4b5e4b7ed43df0a7d3a9cb269361556e">aa234neg</a>, <a class="code" href="class_petter_1_1_generators.html#a3b770c266c166ea53c2e0a8f7c2b7ed4">aa1234neg</a>, <a class="code" href="class_petter_1_1_generators.html#ae9c0213f86edb26984e48b2c6cbdb3ce">obj4neg</a>;
+<a name="l00344"></a>00344 
+<a name="l00345"></a>00345         <span class="comment">//</span>
+<a name="l00347"></a>00347 <span class="comment"></span>        <span class="comment">//</span>
+<a name="l00348"></a>00348         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real&gt;
+<a name="l00349"></a><a class="code" href="class_petter_1_1_generators.html">00349</a>         <span class="keyword">class </span><a class="code" href="class_petter_1_1_generators.html" title="Helper class that holds informations about generators and how to reduce them.">Generators</a>
+<a name="l00350"></a>00350         {
+<a name="l00351"></a>00351         <span class="keyword">public</span>:
+<a name="l00352"></a>00352 
+<a name="l00353"></a>00353                 <a class="code" href="class_petter_1_1_generators.html#a0ca3d542ef505dfed01caafc481d7c11">Generators</a>(<span class="keyword">const</span> std::string&amp; filename);
+<a name="l00354"></a>00354 
+<a name="l00355"></a>00355                 <span class="comment">// This internal struct holds a monomial of degrees 0 (i,j&lt;0), 1 (j&lt;0) or 2.</span>
+<a name="l00356"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html">00356</a>                 <span class="keyword">struct </span><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html">Monomial</a>
+<a name="l00357"></a>00357                 {
+<a name="l00358"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ad8237ae24e8819388ee962a6427679e9">00358</a>                         <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ad8237ae24e8819388ee962a6427679e9">Monomial</a>(real coef=0) 
+<a name="l00359"></a>00359                         {
+<a name="l00360"></a>00360                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ab9f1dc042ded45fde5fe26013094197b">i</a> = <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a23875eedce668b43ed01ca38b7037fc5">j</a> = -1;
+<a name="l00361"></a>00361                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a75a0ac8ad260af9a28b128d542a6a159">c</a> = coef;
+<a name="l00362"></a>00362                         }
+<a name="l00363"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a1523c056c6d158c42241cf11bfde13d2">00363</a>                         <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ad8237ae24e8819388ee962a6427679e9">Monomial</a>(<span class="keywordtype">int</span> i_in, real coef) 
+<a name="l00364"></a>00364                         {
+<a name="l00365"></a>00365                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ab9f1dc042ded45fde5fe26013094197b">i</a> = i_in;
+<a name="l00366"></a>00366                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a23875eedce668b43ed01ca38b7037fc5">j</a> = -1;
+<a name="l00367"></a>00367                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a75a0ac8ad260af9a28b128d542a6a159">c</a> = coef;
+<a name="l00368"></a>00368                         }
+<a name="l00369"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ae1f8fa14669fcb545e87cede766863f3">00369</a>                         <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ad8237ae24e8819388ee962a6427679e9">Monomial</a>(<span class="keywordtype">int</span> i_in, <span class="keywordtype">int</span> j_in, real coef) 
+<a name="l00370"></a>00370                         {
+<a name="l00371"></a>00371                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ab9f1dc042ded45fde5fe26013094197b">i</a> = i_in;
+<a name="l00372"></a>00372                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a23875eedce668b43ed01ca38b7037fc5">j</a> = j_in;
+<a name="l00373"></a>00373                                 <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a75a0ac8ad260af9a28b128d542a6a159">c</a> = coef;
+<a name="l00374"></a>00374                         }
+<a name="l00375"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ade3d2b8e5a3924283aeafa1d32aeb9b4">00375</a>                         <span class="keywordtype">void</span> <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ade3d2b8e5a3924283aeafa1d32aeb9b4">check</a>()<span class="keyword"> const</span>
+<a name="l00376"></a>00376 <span class="keyword">                        </span>{
+<a name="l00377"></a>00377                                 <a class="code" href="_pseudo_boolean_8h.html#a0966b817b229d48e5ffc7feab19a0be6">ASSERT</a>(<a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ab9f1dc042ded45fde5fe26013094197b">i</a>&gt;=0 || <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a23875eedce668b43ed01ca38b7037fc5">j</a>&lt;0);
+<a name="l00378"></a>00378                         }
+<a name="l00379"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a23875eedce668b43ed01ca38b7037fc5">00379</a>                         <span class="keywordtype">int</span> <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#ab9f1dc042ded45fde5fe26013094197b">i</a>,<a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a23875eedce668b43ed01ca38b7037fc5">j</a>;
+<a name="l00380"></a><a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a75a0ac8ad260af9a28b128d542a6a159">00380</a>                         real <a class="code" href="struct_petter_1_1_generators_1_1_monomial.html#a75a0ac8ad260af9a28b128d542a6a159">c</a>;
+<a name="l00381"></a>00381                 };
 <a name="l00382"></a>00382 
-<a name="l00383"></a>00383                 <span class="comment">// These variables hold the reduced forms of the generators</span>
-<a name="l00384"></a><a class="code" href="class_petter_1_1_generators.html#a9ad7d06c095d77b2e76324fa380c34c7">00384</a>                 std::vector&lt; std::vector&lt; Monomial &gt; &gt; <a class="code" href="class_petter_1_1_generators.html#abb075a9032eacbee0a273d25a6aec1fc">gen2red</a>, <a class="code" href="class_petter_1_1_generators.html#a9c69d9c3bdc14d419bee016c750011d3">gen3red</a>, <a class="code" href="class_petter_1_1_generators.html#a9ad7d06c095d77b2e76324fa380c34c7">gen4redpos</a>, <a class="code" href="class_petter_1_1_generators.html#a2ed3d8dc171e0dc73eff083494a1528d">gen4redneg</a>;
-<a name="l00385"></a>00385         };
-<a name="l00386"></a>00386 
-<a name="l00387"></a>00387         <span class="comment">//</span>
-<a name="l00389"></a>00389 <span class="comment"></span>        <span class="comment">//</span>
-<a name="l00394"></a>00394 <span class="comment"></span>        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real&gt;
-<a name="l00395"></a><a class="code" href="class_petter_1_1_generator_pseudo_boolean.html">00395</a>         <span class="keyword">class </span><a class="code" href="class_petter_1_1_generator_pseudo_boolean.html" title="Represents a symmetric submodular pseudo-boolean function of degree &lt;= 4.">GeneratorPseudoBoolean</a>
-<a name="l00396"></a>00396         {
-<a name="l00397"></a>00397         <span class="keyword">public</span>:
-<a name="l00398"></a>00398 
-<a name="l00399"></a><a class="code" href="class_petter_1_1_generator_pseudo_boolean.html#a8c08f5f471ddf6750fe5670476469ff1">00399</a>                 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real2&gt; <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean</a>;
-<a name="l00401"></a>00401                 <span class="comment">//</span>
-<a name="l00403"></a>00403 <span class="comment"></span>                <a class="code" href="class_petter_1_1_generator_pseudo_boolean.html#af67081874c65b8ce0058b5edc15f135b" title="Creates the zero function.">GeneratorPseudoBoolean</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_generators.html" title="Helper class that holds informations about generators and how to reduce them.">Generators&lt;real&gt;</a>&amp; generators);
-<a name="l00405"></a>00405                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_generator_pseudo_boolean.html#ac54c774bd0647165935d983372eebefd" title="Resets the function to the zero function.">clear</a>();
-<a name="l00406"></a>00406 
-<a name="l00408"></a>00408                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_generator_pseudo_boolean.html#a676b77874242d0c4c9b1d457984d51d8" title="Creates using linear programming.">create_lp</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean&lt;real&gt;</a>&amp; pbf);
-<a name="l00409"></a>00409 
-<a name="l00411"></a>00411                 real <a class="code" href="class_petter_1_1_generator_pseudo_boolean.html#a3065de3546e07357bdade7c94c8d3f1c" title="Minimizes the function.">minimize</a>(vector&lt;label&gt;&amp; x, <span class="keywordtype">int</span>&amp; nlabelled) <span class="keyword">const</span>;
-<a name="l00412"></a>00412 
-<a name="l00413"></a>00413         <span class="keyword">private</span>:
-<a name="l00414"></a>00414 
-<a name="l00415"></a>00415                 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Map&gt;
-<a name="l00416"></a>00416                 <span class="keywordtype">int</span> getindex(Map&amp; m, <span class="keyword">const</span> <a class="code" href="namespace_petter.html#a0883fa1f589f648eb4efae39a36306e6" title="A pair of indices.">pair</a>&amp; key) 
-<a name="l00417"></a>00417                 {
-<a name="l00418"></a>00418                         <span class="keyword">auto</span> itr = m.find( key );
-<a name="l00419"></a>00419                         <span class="keywordflow">if</span> ( itr == m.end() ) {
-<a name="l00420"></a>00420                                 m[key] = nlpvars;
-<a name="l00421"></a>00421                                 <span class="keywordtype">int</span> tmp = nlpvars;
-<a name="l00422"></a>00422                                 nlpvars+=gen.ngen2;
-<a name="l00423"></a>00423                                 <span class="keywordflow">return</span> tmp;
-<a name="l00424"></a>00424                         }
-<a name="l00425"></a>00425                         <span class="keywordflow">else</span> {
-<a name="l00426"></a>00426                                 <span class="keywordflow">return</span> itr-&gt;second;
-<a name="l00427"></a>00427                         }
-<a name="l00428"></a>00428                 }
-<a name="l00429"></a>00429                 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Map&gt;
-<a name="l00430"></a>00430                 <span class="keywordtype">int</span> getindex(Map&amp; m, <span class="keyword">const</span> <a class="code" href="namespace_petter.html#aca672dbdaac7ad489859ad09e1b60fa8" title="A 3-tuple of indices.">triple</a>&amp; key) 
-<a name="l00431"></a>00431                 {
-<a name="l00432"></a>00432                         <span class="keyword">auto</span> itr = m.find( key );
-<a name="l00433"></a>00433                         <span class="keywordflow">if</span> ( itr == m.end() ) {
-<a name="l00434"></a>00434                                 m[key] = nlpvars;
-<a name="l00435"></a>00435                                 <span class="keywordtype">int</span> tmp = nlpvars;
-<a name="l00436"></a>00436                                 nlpvars+=gen.ngen3;
-<a name="l00437"></a>00437                                 <span class="keywordflow">return</span> tmp;
-<a name="l00438"></a>00438                         }
-<a name="l00439"></a>00439                         <span class="keywordflow">else</span> {
-<a name="l00440"></a>00440                                 <span class="keywordflow">return</span> itr-&gt;second;
-<a name="l00441"></a>00441                         }
-<a name="l00442"></a>00442                 }
-<a name="l00443"></a>00443                 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Map&gt;
-<a name="l00444"></a>00444                 <span class="keywordtype">int</span> getindex(Map&amp; m, <span class="keyword">const</span> <a class="code" href="namespace_petter.html#ad3e9af3b64b29f323b5ed79cfa3bf7e3" title="A 4-tuple of indices.">quad</a>&amp; key) 
-<a name="l00445"></a>00445                 {
-<a name="l00446"></a>00446                         <span class="keyword">auto</span> itr = m.find( key );
-<a name="l00447"></a>00447                         <span class="keywordflow">if</span> ( itr == m.end() ) {
-<a name="l00448"></a>00448                                 m[key] = nlpvars;
-<a name="l00449"></a>00449                                 <span class="keywordtype">int</span> tmp = nlpvars;
-<a name="l00450"></a>00450                                 nlpvars+=gen.ngen4pos;
-<a name="l00451"></a>00451                                 <span class="keywordflow">return</span> tmp;
-<a name="l00452"></a>00452                         }
-<a name="l00453"></a>00453                         <span class="keywordflow">else</span> {
-<a name="l00454"></a>00454                                 <span class="keywordflow">return</span> itr-&gt;second;
-<a name="l00455"></a>00455                         }
-<a name="l00456"></a>00456                 }
-<a name="l00457"></a>00457 
-<a name="l00460"></a>00460                 <span class="keywordtype">int</span> iaa(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
-<a name="l00463"></a>00463                 <span class="keywordtype">int</span> ibb(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k);
-<a name="l00466"></a>00466                 <span class="keywordtype">int</span> icc(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j);
-<a name="l00467"></a>00467 
-<a name="l00468"></a>00468                 <span class="keyword">const</span> Generators&lt;real&gt;&amp; gen;
-<a name="l00469"></a>00469 
-<a name="l00470"></a>00470                 <span class="comment">// LP indices</span>
-<a name="l00471"></a>00471                 <span class="keywordtype">int</span> nlpvars;
-<a name="l00472"></a>00472                 map&lt;pair, int&gt; indcc;
-<a name="l00473"></a>00473                 map&lt;triple, int&gt; indbb;
-<a name="l00474"></a>00474                 map&lt;quad, int&gt; indaa;
-<a name="l00475"></a>00475 
-<a name="l00476"></a>00476                 <span class="comment">// Constant</span>
-<a name="l00477"></a>00477                 real constant;
-<a name="l00478"></a>00478                 <span class="comment">// Linear terms</span>
-<a name="l00479"></a>00479                 map&lt;int, real&gt; alphai;
-<a name="l00480"></a>00480                 <span class="comment">// Coefficients in front of generators</span>
-<a name="l00481"></a>00481                 map&lt;pair,   vector&lt;real&gt; &gt; alphaij;
-<a name="l00482"></a>00482                 map&lt;triple, vector&lt;real&gt; &gt; alphaijk;
-<a name="l00483"></a>00483                 map&lt;quad,   vector&lt;real&gt; &gt; alphaijkl;
-<a name="l00484"></a>00484                 <span class="comment">// Positive or negative generator used</span>
-<a name="l00485"></a>00485                 map&lt;quad, bool&gt; posgen4;
-<a name="l00486"></a>00486                 <span class="comment">// Keeps track of variables present</span>
-<a name="l00487"></a>00487                 map&lt;int,bool&gt; var_used;
-<a name="l00488"></a>00488         };
-<a name="l00489"></a>00489 
-<a name="l00490"></a>00490 }
-<a name="l00491"></a>00491 
-<a name="l00492"></a>00492 <span class="preprocessor">#endif</span>
+<a name="l00383"></a><a class="code" href="class_petter_1_1_generators.html#add2e5aaf6badcf3133604226f33be5a8">00383</a>                 <span class="keywordtype">int</span> <a class="code" href="class_petter_1_1_generators.html#ad8d74fca4c2fafd217ac627103ec3c23">ngen2</a>, <a class="code" href="class_petter_1_1_generators.html#ab516b9713b896431351a996ac0960822">ngen3</a>, <a class="code" href="class_petter_1_1_generators.html#a2d728b2fe1942e0aa1370b5af3830725">ngen4</a>, <a class="code" href="class_petter_1_1_generators.html#add2e5aaf6badcf3133604226f33be5a8">ngen4pos</a>, <a class="code" href="class_petter_1_1_generators.html#a1d2b52330e5c313808bebdef055450a0">ngen4neg</a>;
+<a name="l00384"></a><a class="code" href="class_petter_1_1_generators.html#afd07fc44e54bde871233b44f08e80e94">00384</a>                 <span class="keywordtype">size_t</span> <a class="code" href="class_petter_1_1_generators.html#ac2bdb9d48c4581f6bbaab92c4f4b7d4e">nentries2</a>, <a class="code" href="class_petter_1_1_generators.html#a2cf071f82c4eeb4ef2fbd59f34760233">nentries3</a>, <a class="code" href="class_petter_1_1_generators.html#afd07fc44e54bde871233b44f08e80e94">nentries4</a>;
+<a name="l00385"></a>00385 
+<a name="l00386"></a>00386                 <span class="comment">// These variables hold the information needed to build the constraint matrix</span>
+<a name="l00387"></a><a class="code" href="class_petter_1_1_generators.html#a4e7b59921daf86ed9dfdbc9a475403fd">00387</a>                 std::vector&lt;int&gt; <a class="code" href="class_petter_1_1_generators.html#a9b6e2d0e136052df29d77b91392f9261">cc</a>, <a class="code" href="class_petter_1_1_generators.html#a4e7b59921daf86ed9dfdbc9a475403fd">obj2</a>;
+<a name="l00388"></a><a class="code" href="class_petter_1_1_generators.html#a28a3a02db09c867f29ad721d39ff5a48">00388</a>                 std::vector&lt;int&gt; <a class="code" href="class_petter_1_1_generators.html#aa9540f2f93e336b52e0c17ac56ea90d8">bb12</a>, <a class="code" href="class_petter_1_1_generators.html#a0090516e2b27efe7d6a20d64e7e931fa">bb13</a>, <a class="code" href="class_petter_1_1_generators.html#aae2821b223f94ceefc7d9fb3a3cd952e">bb23</a>, <a class="code" href="class_petter_1_1_generators.html#a6c5c32be4e2c665aec55d6b1c6e187d8">bb123</a>, <a class="code" href="class_petter_1_1_generators.html#a28a3a02db09c867f29ad721d39ff5a48">obj3</a>;
+<a name="l00389"></a><a class="code" href="class_petter_1_1_generators.html#ae492764ad1b06673262930e9cd71f26d">00389</a>                 std::vector&lt;int&gt; <a class="code" href="class_petter_1_1_generators.html#aa9527b1a59133a075399a1d3e1688165">aa12pos</a>, <a class="code" href="class_petter_1_1_generators.html#a5577d7e888229676ad720a11b3dee39d">aa13pos</a>, <a class="code" href="class_petter_1_1_generators.html#ad17c4d7123814aa5b5afe75629752ab8">aa14pos</a>, <a class="code" href="class_petter_1_1_generators.html#ace57921e2303b34924ed1d4282e52bc3">aa23pos</a>, <a class="code" href="class_petter_1_1_generators.html#a58202112c2440afd78a8ab7b90249e90">aa24pos</a>, <a class="code" href="class_petter_1_1_generators.html#afeb01938aa383ee19e723ecb6676ca38">aa34pos</a>, <a class="code" href="class_petter_1_1_generators.html#ac29af66bf846494451045c90f845577a">aa123pos</a>, <a class="code" href="class_petter_1_1_generators.html#ae8f8ddbf75687dca5da6fbdd6190d7f9">aa124pos</a>, <a class="code" href="class_petter_1_1_generators.html#a824a82d1409b153b680f4cb2ed7dcf20">aa134pos</a>, <a class="code" href="class_petter_1_1_generators.html#aaa6ff26e5499b4b55bf0123d42c8cee2">aa234pos</a>, <a class="code" href="class_petter_1_1_generators.html#ada4b8643beb6f94ce101da6bbacc76c3">aa1234pos</a>, <a class="code" href="class_petter_1_1_generators.html#ae492764ad1b06673262930e9cd71f26d">obj4pos</a>;
+<a name="l00390"></a><a class="code" href="class_petter_1_1_generators.html#ae9c0213f86edb26984e48b2c6cbdb3ce">00390</a>                 std::vector&lt;int&gt; <a class="code" href="class_petter_1_1_generators.html#a6ce4374de48ff433a9eaa16e1898840a">aa12neg</a>, <a class="code" href="class_petter_1_1_generators.html#a181d7a758ee4413c6cb2920ee96795ef">aa13neg</a>, <a class="code" href="class_petter_1_1_generators.html#a98564b94f98365b1fc0658d15d41fa5b">aa14neg</a>, <a class="code" href="class_petter_1_1_generators.html#a2642877827405e2b9f11557ec2823c49">aa23neg</a>, <a class="code" href="class_petter_1_1_generators.html#a81f12394d627f5c360eae23c3a1a2f4d">aa24neg</a>, <a class="code" href="class_petter_1_1_generators.html#abef12ea0dc587901cb2df3bfebb250b6">aa34neg</a>, <a class="code" href="class_petter_1_1_generators.html#a7900bbea23e60fbd9d1ab991f36d5f3a">aa123neg</a>, <a class="code" href="class_petter_1_1_generators.html#a8f6a8233a9ecd2bfc1db1492cbc83349">aa124neg</a>, <a class="code" href="class_petter_1_1_generators.html#a97e0d98c0fe8a93f827ada9b4f241c77">aa134neg</a>, <a class="code" href="class_petter_1_1_generators.html#a4b5e4b7ed43df0a7d3a9cb269361556e">aa234neg</a>, <a class="code" href="class_petter_1_1_generators.html#a3b770c266c166ea53c2e0a8f7c2b7ed4">aa1234neg</a>, <a class="code" href="class_petter_1_1_generators.html#ae9c0213f86edb26984e48b2c6cbdb3ce">obj4neg</a>;
+<a name="l00391"></a>00391 
+<a name="l00392"></a>00392                 <span class="comment">// These variables hold the reduced forms of the generators</span>
+<a name="l00393"></a><a class="code" href="class_petter_1_1_generators.html#a9ad7d06c095d77b2e76324fa380c34c7">00393</a>                 std::vector&lt; std::vector&lt; Monomial &gt; &gt; <a class="code" href="class_petter_1_1_generators.html#abb075a9032eacbee0a273d25a6aec1fc">gen2red</a>, <a class="code" href="class_petter_1_1_generators.html#a9c69d9c3bdc14d419bee016c750011d3">gen3red</a>, <a class="code" href="class_petter_1_1_generators.html#a9ad7d06c095d77b2e76324fa380c34c7">gen4redpos</a>, <a class="code" href="class_petter_1_1_generators.html#a2ed3d8dc171e0dc73eff083494a1528d">gen4redneg</a>;
+<a name="l00394"></a>00394         };
+<a name="l00395"></a>00395 
+<a name="l00396"></a>00396         <span class="comment">//</span>
+<a name="l00398"></a>00398 <span class="comment"></span>        <span class="comment">//</span>
+<a name="l00403"></a>00403 <span class="comment"></span>        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real&gt;
+<a name="l00404"></a><a class="code" href="class_petter_1_1_generator_pseudo_boolean.html">00404</a>         <span class="keyword">class </span><a class="code" href="class_petter_1_1_generator_pseudo_boolean.html" title="Represents a symmetric submodular pseudo-boolean function of degree &lt;= 4.">GeneratorPseudoBoolean</a>
+<a name="l00405"></a>00405         {
+<a name="l00406"></a>00406         <span class="keyword">public</span>:
+<a name="l00407"></a>00407 
+<a name="l00408"></a><a class="code" href="class_petter_1_1_generator_pseudo_boolean.html#a8c08f5f471ddf6750fe5670476469ff1">00408</a>                 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real2&gt; <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean</a>;
+<a name="l00410"></a>00410                 <span class="comment">//</span>
+<a name="l00412"></a>00412 <span class="comment"></span>                <a class="code" href="class_petter_1_1_generator_pseudo_boolean.html#af67081874c65b8ce0058b5edc15f135b" title="Creates the zero function.">GeneratorPseudoBoolean</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_generators.html" title="Helper class that holds informations about generators and how to reduce them.">Generators&lt;real&gt;</a>&amp; generators);
+<a name="l00414"></a>00414                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_generator_pseudo_boolean.html#ac54c774bd0647165935d983372eebefd" title="Resets the function to the zero function.">clear</a>();
+<a name="l00415"></a>00415 
+<a name="l00417"></a>00417                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_generator_pseudo_boolean.html#a676b77874242d0c4c9b1d457984d51d8" title="Creates using linear programming.">create_lp</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean&lt;real&gt;</a>&amp; pbf);
+<a name="l00418"></a>00418 
+<a name="l00420"></a>00420                 real <a class="code" href="class_petter_1_1_generator_pseudo_boolean.html#a3065de3546e07357bdade7c94c8d3f1c" title="Minimizes the function.">minimize</a>(vector&lt;label&gt;&amp; x, <span class="keywordtype">int</span>&amp; nlabelled) <span class="keyword">const</span>;
+<a name="l00421"></a>00421 
+<a name="l00422"></a>00422         <span class="keyword">private</span>:
+<a name="l00423"></a>00423 
+<a name="l00424"></a>00424                 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Map&gt;
+<a name="l00425"></a>00425                 <span class="keywordtype">int</span> getindex(Map&amp; m, <span class="keyword">const</span> <a class="code" href="namespace_petter.html#a0883fa1f589f648eb4efae39a36306e6" title="A pair of indices.">pair</a>&amp; key) 
+<a name="l00426"></a>00426                 {
+<a name="l00427"></a>00427                         <span class="keyword">auto</span> itr = m.find( key );
+<a name="l00428"></a>00428                         <span class="keywordflow">if</span> ( itr == m.end() ) {
+<a name="l00429"></a>00429                                 m[key] = nlpvars;
+<a name="l00430"></a>00430                                 <span class="keywordtype">int</span> tmp = nlpvars;
+<a name="l00431"></a>00431                                 nlpvars+=gen.ngen2;
+<a name="l00432"></a>00432                                 <span class="keywordflow">return</span> tmp;
+<a name="l00433"></a>00433                         }
+<a name="l00434"></a>00434                         <span class="keywordflow">else</span> {
+<a name="l00435"></a>00435                                 <span class="keywordflow">return</span> itr-&gt;second;
+<a name="l00436"></a>00436                         }
+<a name="l00437"></a>00437                 }
+<a name="l00438"></a>00438                 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Map&gt;
+<a name="l00439"></a>00439                 <span class="keywordtype">int</span> getindex(Map&amp; m, <span class="keyword">const</span> <a class="code" href="namespace_petter.html#aca672dbdaac7ad489859ad09e1b60fa8" title="A 3-tuple of indices.">triple</a>&amp; key) 
+<a name="l00440"></a>00440                 {
+<a name="l00441"></a>00441                         <span class="keyword">auto</span> itr = m.find( key );
+<a name="l00442"></a>00442                         <span class="keywordflow">if</span> ( itr == m.end() ) {
+<a name="l00443"></a>00443                                 m[key] = nlpvars;
+<a name="l00444"></a>00444                                 <span class="keywordtype">int</span> tmp = nlpvars;
+<a name="l00445"></a>00445                                 nlpvars+=gen.ngen3;
+<a name="l00446"></a>00446                                 <span class="keywordflow">return</span> tmp;
+<a name="l00447"></a>00447                         }
+<a name="l00448"></a>00448                         <span class="keywordflow">else</span> {
+<a name="l00449"></a>00449                                 <span class="keywordflow">return</span> itr-&gt;second;
+<a name="l00450"></a>00450                         }
+<a name="l00451"></a>00451                 }
+<a name="l00452"></a>00452                 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Map&gt;
+<a name="l00453"></a>00453                 <span class="keywordtype">int</span> getindex(Map&amp; m, <span class="keyword">const</span> <a class="code" href="namespace_petter.html#ad3e9af3b64b29f323b5ed79cfa3bf7e3" title="A 4-tuple of indices.">quad</a>&amp; key) 
+<a name="l00454"></a>00454                 {
+<a name="l00455"></a>00455                         <span class="keyword">auto</span> itr = m.find( key );
+<a name="l00456"></a>00456                         <span class="keywordflow">if</span> ( itr == m.end() ) {
+<a name="l00457"></a>00457                                 m[key] = nlpvars;
+<a name="l00458"></a>00458                                 <span class="keywordtype">int</span> tmp = nlpvars;
+<a name="l00459"></a>00459                                 nlpvars+=gen.ngen4pos;
+<a name="l00460"></a>00460                                 <span class="keywordflow">return</span> tmp;
+<a name="l00461"></a>00461                         }
+<a name="l00462"></a>00462                         <span class="keywordflow">else</span> {
+<a name="l00463"></a>00463                                 <span class="keywordflow">return</span> itr-&gt;second;
+<a name="l00464"></a>00464                         }
+<a name="l00465"></a>00465                 }
+<a name="l00466"></a>00466 
+<a name="l00469"></a>00469                 <span class="keywordtype">int</span> iaa(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k, <span class="keywordtype">int</span> l);
+<a name="l00472"></a>00472                 <span class="keywordtype">int</span> ibb(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="keywordtype">int</span> k);
+<a name="l00475"></a>00475                 <span class="keywordtype">int</span> icc(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j);
+<a name="l00476"></a>00476 
+<a name="l00477"></a>00477                 <span class="keyword">const</span> Generators&lt;real&gt;&amp; gen;
+<a name="l00478"></a>00478 
+<a name="l00479"></a>00479                 <span class="comment">// LP indices</span>
+<a name="l00480"></a>00480                 <span class="keywordtype">int</span> nlpvars;
+<a name="l00481"></a>00481                 map&lt;pair, int&gt; indcc;
+<a name="l00482"></a>00482                 map&lt;triple, int&gt; indbb;
+<a name="l00483"></a>00483                 map&lt;quad, int&gt; indaa;
+<a name="l00484"></a>00484 
+<a name="l00485"></a>00485                 <span class="comment">// Constant</span>
+<a name="l00486"></a>00486                 real constant;
+<a name="l00487"></a>00487                 <span class="comment">// Linear terms</span>
+<a name="l00488"></a>00488                 map&lt;int, real&gt; alphai;
+<a name="l00489"></a>00489                 <span class="comment">// Coefficients in front of generators</span>
+<a name="l00490"></a>00490                 map&lt;pair,   vector&lt;real&gt; &gt; alphaij;
+<a name="l00491"></a>00491                 map&lt;triple, vector&lt;real&gt; &gt; alphaijk;
+<a name="l00492"></a>00492                 map&lt;quad,   vector&lt;real&gt; &gt; alphaijkl;
+<a name="l00493"></a>00493                 <span class="comment">// Positive or negative generator used</span>
+<a name="l00494"></a>00494                 map&lt;quad, bool&gt; posgen4;
+<a name="l00495"></a>00495                 <span class="comment">// Keeps track of variables present</span>
+<a name="l00496"></a>00496                 map&lt;int,bool&gt; var_used;
+<a name="l00497"></a>00497         };
+<a name="l00498"></a>00498 
+<a name="l00499"></a>00499 }
+<a name="l00500"></a>00500 
+<a name="l00501"></a>00501 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 4 2012 11:22:10 for submodular by &#160;<a href="http://www.doxygen.org/index.html">
+Generated by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

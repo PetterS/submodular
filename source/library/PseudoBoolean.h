@@ -1,4 +1,4 @@
-/// \mainpage Generalized Roof Duality
+/// \mainpage 
 ///
 /// Petter Strandmark 2012
 /// petter@maths.lth.se
@@ -226,7 +226,7 @@ namespace Petter
 		return out;
 	}
 
-    /// Holds info about a branch-and-bound run.
+    /// Holds info about a branch-and-bound run. See branch_and_bound().
 	struct BBInfo
 	{
 		/// (input) What minimization method should be used
