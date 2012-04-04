@@ -152,7 +152,7 @@
 <a name="l00094"></a><a class="code" href="class_petter_1_1_posiform.html#a456299c376722b2ace11f1469af6cf19">00094</a>                 <span class="keyword">typedef</span> <a class="code" href="struct_petter_1_1_ind.html">Ind&lt;degree&gt;</a> <a class="code" href="class_petter_1_1_posiform.html#a456299c376722b2ace11f1469af6cf19">I</a>;
 <a name="l00095"></a>00095 
 <a name="l00096"></a>00096                 <a class="code" href="class_petter_1_1_posiform.html#a4faf5b9a854b514ecf894d079d7df0b4">Posiform</a>();
-<a name="l00097"></a>00097                 <a class="code" href="class_petter_1_1_posiform.html#a4faf5b9a854b514ecf894d079d7df0b4">Posiform</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_pseudo_boolean.html">PseudoBoolean&lt;real&gt;</a>&amp; f, <span class="keywordtype">bool</span> randomize=<span class="keyword">false</span>);
+<a name="l00097"></a>00097                 <a class="code" href="class_petter_1_1_posiform.html#a4faf5b9a854b514ecf894d079d7df0b4">Posiform</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean&lt;real&gt;</a>&amp; f, <span class="keywordtype">bool</span> randomize=<span class="keyword">false</span>);
 <a name="l00098"></a>00098 
 <a name="l00099"></a>00099                 <span class="keywordtype">void</span> <a class="code" href="class_petter_1_1_posiform.html#a7f3ab5bef3c85844f7538b5aa1036c10">print</a>();
 <a name="l00100"></a>00100 
@@ -186,7 +186,7 @@
 <a name="l00128"></a>00128         }
 <a name="l00129"></a>00129 
 <a name="l00130"></a>00130         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> real, <span class="keywordtype">int</span> degree&gt;
-<a name="l00131"></a><a class="code" href="class_petter_1_1_posiform.html#ae4c26e80a90d8ae4f5983e7a64b30d63">00131</a>         <a class="code" href="class_petter_1_1_posiform.html#a4faf5b9a854b514ecf894d079d7df0b4">Posiform&lt;real,degree&gt;::Posiform</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_pseudo_boolean.html">PseudoBoolean&lt;real&gt;</a>&amp; f, <span class="keywordtype">bool</span> randomize)
+<a name="l00131"></a><a class="code" href="class_petter_1_1_posiform.html#ae4c26e80a90d8ae4f5983e7a64b30d63">00131</a>         <a class="code" href="class_petter_1_1_posiform.html#a4faf5b9a854b514ecf894d079d7df0b4">Posiform&lt;real,degree&gt;::Posiform</a>(<span class="keyword">const</span> <a class="code" href="class_petter_1_1_pseudo_boolean.html" title="Represents a pseudo-boolean function of degree &lt;= 4.">PseudoBoolean&lt;real&gt;</a>&amp; f, <span class="keywordtype">bool</span> randomize)
 <a name="l00132"></a>00132         {
 <a name="l00133"></a>00133                 <a class="code" href="_minimizer_8h.html#a0966b817b229d48e5ffc7feab19a0be6">ASSERT</a>(degree &gt;= 4);
 <a name="l00134"></a>00134 
@@ -202,25 +202,25 @@
 <a name="l00144"></a>00144                 }
 <a name="l00145"></a>00145 
 <a name="l00146"></a>00146                 <span class="keywordflow">for</span> (<span class="keyword">auto</span> itr=f.<a class="code" href="class_petter_1_1_pseudo_boolean.html#aa143734a2d687dbabb81548f211787b2" title="Degree-1 terms.">aij</a>.begin(); itr!=f.<a class="code" href="class_petter_1_1_pseudo_boolean.html#aa143734a2d687dbabb81548f211787b2" title="Degree-1 terms.">aij</a>.end(); ++itr) {
-<a name="l00147"></a>00147                         <span class="keywordtype">int</span> i = <a class="code" href="namespace_petter.html#aadec558a3c86772d8307ad8df5639593">get_i</a>(itr-&gt;first);
-<a name="l00148"></a>00148                         <span class="keywordtype">int</span> j = <a class="code" href="namespace_petter.html#afed4e3abc6e7ff8eee209b10c18f26d1">get_j</a>(itr-&gt;first);
+<a name="l00147"></a>00147                         <span class="keywordtype">int</span> i = <a class="code" href="namespace_petter.html#aadec558a3c86772d8307ad8df5639593" title="Retrieves the first index.">get_i</a>(itr-&gt;first);
+<a name="l00148"></a>00148                         <span class="keywordtype">int</span> j = <a class="code" href="namespace_petter.html#afed4e3abc6e7ff8eee209b10c18f26d1" title="Retrieves the second index.">get_j</a>(itr-&gt;first);
 <a name="l00149"></a>00149                         real a = -itr-&gt;second;
 <a name="l00150"></a>00150                         add_monomial(i,j,a,randomize);
 <a name="l00151"></a>00151                 }
 <a name="l00152"></a>00152 
 <a name="l00153"></a>00153                 <span class="keywordflow">for</span> (<span class="keyword">auto</span> itr=f.<a class="code" href="class_petter_1_1_pseudo_boolean.html#a90473af16397a383bcde57eb21809a6f" title="Degree-2 terms.">aijk</a>.begin(); itr!=f.<a class="code" href="class_petter_1_1_pseudo_boolean.html#a90473af16397a383bcde57eb21809a6f" title="Degree-2 terms.">aijk</a>.end(); ++itr) {
-<a name="l00154"></a>00154                         <span class="keywordtype">int</span> i = <a class="code" href="namespace_petter.html#aadec558a3c86772d8307ad8df5639593">get_i</a>(itr-&gt;first);
-<a name="l00155"></a>00155                         <span class="keywordtype">int</span> j = <a class="code" href="namespace_petter.html#afed4e3abc6e7ff8eee209b10c18f26d1">get_j</a>(itr-&gt;first);
-<a name="l00156"></a>00156                         <span class="keywordtype">int</span> k = <a class="code" href="namespace_petter.html#a53fb1240dd02db530272c09d7053883b">get_k</a>(itr-&gt;first);
+<a name="l00154"></a>00154                         <span class="keywordtype">int</span> i = <a class="code" href="namespace_petter.html#aadec558a3c86772d8307ad8df5639593" title="Retrieves the first index.">get_i</a>(itr-&gt;first);
+<a name="l00155"></a>00155                         <span class="keywordtype">int</span> j = <a class="code" href="namespace_petter.html#afed4e3abc6e7ff8eee209b10c18f26d1" title="Retrieves the second index.">get_j</a>(itr-&gt;first);
+<a name="l00156"></a>00156                         <span class="keywordtype">int</span> k = <a class="code" href="namespace_petter.html#a53fb1240dd02db530272c09d7053883b" title="Retrieves the third index.">get_k</a>(itr-&gt;first);
 <a name="l00157"></a>00157                         real a = -itr-&gt;second;
 <a name="l00158"></a>00158                         add_monomial(i,j,k,a,randomize);
 <a name="l00159"></a>00159                 }
 <a name="l00160"></a>00160 
 <a name="l00161"></a>00161                 <span class="keywordflow">for</span> (<span class="keyword">auto</span> itr=f.<a class="code" href="class_petter_1_1_pseudo_boolean.html#ad935a19f75d890743a00cb9551d309c8" title="Degree-3 terms.">aijkl</a>.begin(); itr!=f.<a class="code" href="class_petter_1_1_pseudo_boolean.html#ad935a19f75d890743a00cb9551d309c8" title="Degree-3 terms.">aijkl</a>.end(); ++itr) {
-<a name="l00162"></a>00162                         <span class="keywordtype">int</span> i = <a class="code" href="namespace_petter.html#aadec558a3c86772d8307ad8df5639593">get_i</a>(itr-&gt;first);
-<a name="l00163"></a>00163                         <span class="keywordtype">int</span> j = <a class="code" href="namespace_petter.html#afed4e3abc6e7ff8eee209b10c18f26d1">get_j</a>(itr-&gt;first);
-<a name="l00164"></a>00164                         <span class="keywordtype">int</span> k = <a class="code" href="namespace_petter.html#a53fb1240dd02db530272c09d7053883b">get_k</a>(itr-&gt;first);
-<a name="l00165"></a>00165                         <span class="keywordtype">int</span> l = <a class="code" href="namespace_petter.html#a836dd659676459ea2f81bebb4fa5d41c">get_l</a>(itr-&gt;first);
+<a name="l00162"></a>00162                         <span class="keywordtype">int</span> i = <a class="code" href="namespace_petter.html#aadec558a3c86772d8307ad8df5639593" title="Retrieves the first index.">get_i</a>(itr-&gt;first);
+<a name="l00163"></a>00163                         <span class="keywordtype">int</span> j = <a class="code" href="namespace_petter.html#afed4e3abc6e7ff8eee209b10c18f26d1" title="Retrieves the second index.">get_j</a>(itr-&gt;first);
+<a name="l00164"></a>00164                         <span class="keywordtype">int</span> k = <a class="code" href="namespace_petter.html#a53fb1240dd02db530272c09d7053883b" title="Retrieves the third index.">get_k</a>(itr-&gt;first);
+<a name="l00165"></a>00165                         <span class="keywordtype">int</span> l = <a class="code" href="namespace_petter.html#a836dd659676459ea2f81bebb4fa5d41c" title="Retrieves the fourth index.">get_l</a>(itr-&gt;first);
 <a name="l00166"></a>00166                         real a = -itr-&gt;second;
 <a name="l00167"></a>00167                         add_monomial(i,j,k,l,a,randomize);
 <a name="l00168"></a>00168                 }
@@ -571,7 +571,7 @@
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 2 2012 22:45:12 for submodular by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 4 2012 11:05:41 for submodular by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

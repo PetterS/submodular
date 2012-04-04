@@ -68,13 +68,15 @@
 </div><!--header-->
 <div class="contents">
 
+<p>Represents a pseudo-boolean function of degree &lt;= 4.  
+ <a href="class_petter_1_1_pseudo_boolean.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="_pseudo_boolean_8h_source.html">PseudoBoolean.h</a>&gt;</code></p>
 
 <p><a href="class_petter_1_1_pseudo_boolean-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1f980982b9860d049690e0324fd0f410"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_pseudo_boolean.html#a1f980982b9860d049690e0324fd0f410">print_helper</a> (std::ostream &amp;out) const </td></tr>
 <tr class="memitem:a34765584117ee53443e3d3c8473640f7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_pseudo_boolean.html#a34765584117ee53443e3d3c8473640f7">PseudoBoolean</a> ()</td></tr>
 <tr class="memdesc:a34765584117ee53443e3d3c8473640f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the zero function.  <a href="#a34765584117ee53443e3d3c8473640f7"></a><br/></td></tr>
 <tr class="memitem:a1f62a64060d0894acfec7993adf48e9d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_pseudo_boolean.html#a1f62a64060d0894acfec7993adf48e9d">PseudoBoolean</a> (std::string filename)</td></tr>
@@ -109,13 +111,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a8c75a29c80e60b74b6c372102ff14b9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates the function.  <a href="#a8c75a29c80e60b74b6c372102ff14b9d"></a><br/></td></tr>
 <tr class="memitem:a4c899a420968792f6d6a86fd9d86431a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_pseudo_boolean.html#a4c899a420968792f6d6a86fd9d86431a">reduce</a> (const vector&lt; <a class="el" href="namespace_petter.html#afdaec9930d1d8fac3c5a445698336f7c">label</a> &gt; &amp;x)</td></tr>
 <tr class="memdesc:a4c899a420968792f6d6a86fd9d86431a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduce the function given a partial labeling.  <a href="#a4c899a420968792f6d6a86fd9d86431a"></a><br/></td></tr>
-<tr class="memitem:a31a701c245e74b64e264b5d3f4424620"><td class="memItemLeft" align="right" valign="top">real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_pseudo_boolean.html#a31a701c245e74b64e264b5d3f4424620">minimize_reduction</a> (vector&lt; <a class="el" href="namespace_petter.html#afdaec9930d1d8fac3c5a445698336f7c">label</a> &gt; &amp;x, int &amp;nlabelled) const </td></tr>
-<tr class="memitem:ab087e964a5ad73a3023b5bbbb4cb8ea2"><td class="memItemLeft" align="right" valign="top">real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_pseudo_boolean.html#ab087e964a5ad73a3023b5bbbb4cb8ea2">minimize_reduction_fixetal</a> (vector&lt; <a class="el" href="namespace_petter.html#afdaec9930d1d8fac3c5a445698336f7c">label</a> &gt; &amp;x, int &amp;nlabelled) const </td></tr>
 <tr class="memitem:adcda89f73986d72b93418f42ce69d375"><td class="memItemLeft" align="right" valign="top">real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_pseudo_boolean.html#adcda89f73986d72b93418f42ce69d375">minimize_lp</a> (vector&lt; <a class="el" href="namespace_petter.html#afdaec9930d1d8fac3c5a445698336f7c">label</a> &gt; &amp;x, bool verbose=false) const </td></tr>
 <tr class="memdesc:adcda89f73986d72b93418f42ce69d375"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimize using LP relaxation.  <a href="#adcda89f73986d72b93418f42ce69d375"></a><br/></td></tr>
 <tr class="memitem:adde807234d5313288d5866991b09df5b"><td class="memItemLeft" align="right" valign="top">real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_pseudo_boolean.html#adde807234d5313288d5866991b09df5b">minimize</a> (vector&lt; <a class="el" href="namespace_petter.html#afdaec9930d1d8fac3c5a445698336f7c">label</a> &gt; &amp;x, <a class="el" href="namespace_petter.html#a93fa000da5845fb68d971298016b1e1a">Method</a> method, const char *generators_file=0)</td></tr>
 <tr class="memdesc:adde807234d5313288d5866991b09df5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimizing using any method.  <a href="#adde807234d5313288d5866991b09df5b"></a><br/></td></tr>
 <tr class="memitem:ad7b744bba065db2b48caacb25187fd67"><td class="memItemLeft" align="right" valign="top">real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_pseudo_boolean.html#ad7b744bba065db2b48caacb25187fd67">minimize</a> (vector&lt; <a class="el" href="namespace_petter.html#afdaec9930d1d8fac3c5a445698336f7c">label</a> &gt; &amp;x, int &amp;labeled, <a class="el" href="namespace_petter.html#a93fa000da5845fb68d971298016b1e1a">Method</a> method=<a class="el" href="namespace_petter.html#a93fa000da5845fb68d971298016b1e1aab5264425ef8364a8cac972f588080d87">GRD</a>, const char *generators_file=0)</td></tr>
+<tr class="memdesc:ad7b744bba065db2b48caacb25187fd67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimizing using any method.  <a href="#ad7b744bba065db2b48caacb25187fd67"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a8ee351caa1f7e524584c6b9d1e5764b7"><td class="memItemLeft" align="right" valign="top">real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_pseudo_boolean.html#a8ee351caa1f7e524584c6b9d1e5764b7">constant</a></td></tr>
@@ -137,13 +138,14 @@ Friends</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename real&gt;<br/>
 class Petter::PseudoBoolean&lt; real &gt;</h3>
 
-<p>The main polynomial class </p>
+<p>Represents a pseudo-boolean function of degree &lt;= 4. </p>
+<p>Use this class to create and hold a pseudo-boolean function. The function can be saved to disk and minimized using various methods. </p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a34765584117ee53443e3d3c8473640f7"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html">PseudoBoolean</a> </td>
@@ -163,7 +165,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html">PseudoBoolean</a> </td>
@@ -177,6 +179,12 @@ template&lt;typename real &gt; </div>
 <div class="memdoc">
 
 <p>Reads a polynomial from file. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>the file name from which the contructor should read </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -185,7 +193,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a3cf20202c2e0207ad0edf623ea0d46ff">add_clique</a> </td>
@@ -222,7 +230,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a3cf20202c2e0207ad0edf623ea0d46ff">add_clique</a> </td>
@@ -277,7 +285,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a3cf20202c2e0207ad0edf623ea0d46ff">add_clique</a> </td>
@@ -320,7 +328,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a3cf20202c2e0207ad0edf623ea0d46ff">add_clique</a> </td>
@@ -405,7 +413,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a3cf20202c2e0207ad0edf623ea0d46ff">add_clique</a> </td>
@@ -454,7 +462,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a3cf20202c2e0207ad0edf623ea0d46ff">add_clique</a> </td>
@@ -593,7 +601,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a3d6f33f10cb3689f1ae26cce5a26669b">add_monomial</a> </td>
@@ -624,7 +632,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a3d6f33f10cb3689f1ae26cce5a26669b">add_monomial</a> </td>
@@ -661,7 +669,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a3d6f33f10cb3689f1ae26cce5a26669b">add_monomial</a> </td>
@@ -704,7 +712,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a3d6f33f10cb3689f1ae26cce5a26669b">add_monomial</a> </td>
@@ -753,7 +761,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a86532e5958089ff5051b724b401631ce">clear</a> </td>
@@ -773,7 +781,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">real <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a8c75a29c80e60b74b6c372102ff14b9d">eval</a> </td>
@@ -794,7 +802,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">real <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#adde807234d5313288d5866991b09df5b">minimize</a> </td>
@@ -824,7 +832,7 @@ template&lt;typename real &gt; </div>
 <div class="memdoc">
 
 <p>Minimizing using any method. </p>
-<p>NOTE: might change (reduce) *this </p>
+<p>Same functionality as below. </p>
 
 </div>
 </div>
@@ -832,7 +840,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">real <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#adde807234d5313288d5866991b09df5b">minimize</a> </td>
@@ -867,13 +875,25 @@ template&lt;typename real &gt; </div>
 </div>
 <div class="memdoc">
 
+<p>Minimizing using any method. </p>
+<p>NOTE: might change (reduce) *this </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>vector with solution. Has to have x.size() == n. </td></tr>
+    <tr><td class="paramname">labeled</td><td>The number of variables the function were able to assign. </td></tr>
+    <tr><td class="paramname">method</td><td>The minimization method to use </td></tr>
+    <tr><td class="paramname">generators_file</td><td>The file from which to read the generators. (optional) </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="adcda89f73986d72b93418f42ce69d375"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">real <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#adcda89f73986d72b93418f42ce69d375">minimize_lp</a> </td>
@@ -901,69 +921,11 @@ template&lt;typename real &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a31a701c245e74b64e264b5d3f4424620"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename real &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">real <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::minimize_reduction </td>
-          <td>(</td>
-          <td class="paramtype">vector&lt; <a class="el" href="namespace_petter.html#afdaec9930d1d8fac3c5a445698336f7c">label</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int &amp;&#160;</td>
-          <td class="paramname"><em>nlabelled</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ab087e964a5ad73a3023b5bbbb4cb8ea2"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename real &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">real <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::minimize_reduction_fixetal </td>
-          <td>(</td>
-          <td class="paramtype">vector&lt; <a class="el" href="namespace_petter.html#afdaec9930d1d8fac3c5a445698336f7c">label</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int &amp;&#160;</td>
-          <td class="paramname"><em>nlabelled</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a61605bc9d5af086ba7eb174cefcc3a4e"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">int <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a61605bc9d5af086ba7eb174cefcc3a4e">nvars</a> </td>
@@ -979,30 +941,11 @@ template&lt;typename real &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a1f980982b9860d049690e0324fd0f410"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename real &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a1f980982b9860d049690e0324fd0f410">print_helper</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::ostream &amp;&#160;</td>
-          <td class="paramname"><em>out</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a4c899a420968792f6d6a86fd9d86431a"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a4c899a420968792f6d6a86fd9d86431a">reduce</a> </td>
@@ -1023,7 +966,7 @@ template&lt;typename real &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename real &gt; </div>
+template&lt;typename real&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="class_petter_1_1_pseudo_boolean.html">Petter::PseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_pseudo_boolean.html#a570806c57df417f5db4a916ddbca008b">save_to_file</a> </td>
@@ -1037,6 +980,12 @@ template&lt;typename real &gt; </div>
 <div class="memdoc">
 
 <p>Saves the function to file. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>the file name the function should write to </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1170,19 +1119,14 @@ template&lt;typename real&gt; </div>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>source/library/<a class="el" href="_pseudo_boolean_8h_source.html">PseudoBoolean.h</a></li>
-<li>source/library/<a class="el" href="_pseudo_boolean_8cpp.html">PseudoBoolean.cpp</a></li>
-<li>source/library/<a class="el" href="_pseudo_boolean__complete_8cpp.html">PseudoBoolean_complete.cpp</a></li>
-<li>source/library/<a class="el" href="_pseudo_boolean__minimize__lp_8cpp.html">PseudoBoolean_minimize_lp.cpp</a></li>
-<li>source/library/<a class="el" href="_pseudo_boolean__minimize__reduction_8cpp.html">PseudoBoolean_minimize_reduction.cpp</a></li>
-<li>source/library/<a class="el" href="_pseudo_boolean__reduce_8cpp.html">PseudoBoolean_reduce.cpp</a></li>
 </ul>
 </div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 2 2012 22:45:15 for submodular by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 4 2012 11:05:41 for submodular by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

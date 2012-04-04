@@ -95,16 +95,16 @@
 <a name="l00037"></a>00037 }
 <a name="l00038"></a>00038 
 <a name="l00039"></a>00039 
-<a name="l00040"></a>00040 <span class="keyword">namespace </span>Petter {
+<a name="l00040"></a><a class="code" href="namespace_petter.html">00040</a> <span class="keyword">namespace </span>Petter {
 <a name="l00041"></a>00041 
 <a name="l00042"></a>00042         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
 <a name="l00043"></a>00043         std::pair&lt;T,T&gt; unordered_pair(T i, T j)
 <a name="l00044"></a>00044         {
 <a name="l00045"></a>00045                 <span class="keywordflow">if</span> (j&lt;i) {
-<a name="l00046"></a>00046                         <span class="keywordflow">return</span> <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed">std::make_pair</a>(j,i);
+<a name="l00046"></a>00046                         <span class="keywordflow">return</span> <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed" title="Creates a pair from two indices.">std::make_pair</a>(j,i);
 <a name="l00047"></a>00047                 }
 <a name="l00048"></a>00048                 <span class="keywordflow">else</span> {
-<a name="l00049"></a>00049                         <span class="keywordflow">return</span> <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed">std::make_pair</a>(i,j);
+<a name="l00049"></a>00049                         <span class="keywordflow">return</span> <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed" title="Creates a pair from two indices.">std::make_pair</a>(i,j);
 <a name="l00050"></a>00050                 }
 <a name="l00051"></a>00051         }
 <a name="l00052"></a>00052 
@@ -411,17 +411,17 @@
 <a name="l00353"></a>00353                                 <span class="keywordflow">if</span> (aijk &lt; 0) { 
 <a name="l00354"></a>00354                                         <span class="comment">// Use reduction</span>
 <a name="l00355"></a>00355                                         <span class="comment">// -xi*xj*xk = min{z} z*(2-xi-xj-xk) </span>
-<a name="l00356"></a>00356                                         <a class="code" href="class_petter_1_1_minimizer.html#a7da063d9978d139f24150af00d5a7b13">terms2_new</a>[ <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed">std::make_pair</a>(i,l)] += aijk;
-<a name="l00357"></a>00357                                         <a class="code" href="class_petter_1_1_minimizer.html#a7da063d9978d139f24150af00d5a7b13">terms2_new</a>[ <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed">std::make_pair</a>(j,l)] += aijk;
-<a name="l00358"></a>00358                                         <a class="code" href="class_petter_1_1_minimizer.html#a7da063d9978d139f24150af00d5a7b13">terms2_new</a>[ <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed">std::make_pair</a>(k,l)] += aijk;
+<a name="l00356"></a>00356                                         <a class="code" href="class_petter_1_1_minimizer.html#a7da063d9978d139f24150af00d5a7b13">terms2_new</a>[ <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed" title="Creates a pair from two indices.">std::make_pair</a>(i,l)] += aijk;
+<a name="l00357"></a>00357                                         <a class="code" href="class_petter_1_1_minimizer.html#a7da063d9978d139f24150af00d5a7b13">terms2_new</a>[ <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed" title="Creates a pair from two indices.">std::make_pair</a>(j,l)] += aijk;
+<a name="l00358"></a>00358                                         <a class="code" href="class_petter_1_1_minimizer.html#a7da063d9978d139f24150af00d5a7b13">terms2_new</a>[ <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed" title="Creates a pair from two indices.">std::make_pair</a>(k,l)] += aijk;
 <a name="l00359"></a>00359                                         <a class="code" href="class_petter_1_1_minimizer.html#ad7d02836dc12060e1e74cfc1c443a776">terms1_new</a>[ l ] += -2*aijk;
 <a name="l00360"></a>00360                                 }
 <a name="l00361"></a>00361                                 <span class="keywordflow">else</span> <span class="keywordflow">if</span> (aijk &gt; 0) { 
 <a name="l00362"></a>00362                                         <span class="comment">// Use reduction</span>
 <a name="l00363"></a>00363                                         <span class="comment">// xi*xj*xk = min{z} z*(1-xi-xj-xk)  + xi*xj + xi*xk + xj*xk</span>
-<a name="l00364"></a>00364                                         <a class="code" href="class_petter_1_1_minimizer.html#a7da063d9978d139f24150af00d5a7b13">terms2_new</a>[ <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed">std::make_pair</a>(i,l)] += -aijk;
-<a name="l00365"></a>00365                                         <a class="code" href="class_petter_1_1_minimizer.html#a7da063d9978d139f24150af00d5a7b13">terms2_new</a>[ <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed">std::make_pair</a>(j,l)] += -aijk;
-<a name="l00366"></a>00366                                         <a class="code" href="class_petter_1_1_minimizer.html#a7da063d9978d139f24150af00d5a7b13">terms2_new</a>[ <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed">std::make_pair</a>(k,l)] += -aijk;
+<a name="l00364"></a>00364                                         <a class="code" href="class_petter_1_1_minimizer.html#a7da063d9978d139f24150af00d5a7b13">terms2_new</a>[ <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed" title="Creates a pair from two indices.">std::make_pair</a>(i,l)] += -aijk;
+<a name="l00365"></a>00365                                         <a class="code" href="class_petter_1_1_minimizer.html#a7da063d9978d139f24150af00d5a7b13">terms2_new</a>[ <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed" title="Creates a pair from two indices.">std::make_pair</a>(j,l)] += -aijk;
+<a name="l00366"></a>00366                                         <a class="code" href="class_petter_1_1_minimizer.html#a7da063d9978d139f24150af00d5a7b13">terms2_new</a>[ <a class="code" href="namespace_petter.html#af2a4d5ec6fc7310325d795e4b3105eed" title="Creates a pair from two indices.">std::make_pair</a>(k,l)] += -aijk;
 <a name="l00367"></a>00367                                         <a class="code" href="class_petter_1_1_minimizer.html#ad7d02836dc12060e1e74cfc1c443a776">terms1_new</a>[l] += aijk;
 <a name="l00368"></a>00368                                         <a class="code" href="class_petter_1_1_minimizer.html#a97b1fbacea4c147c55fd13c0e36e9971">terms2</a>[ unordered_pair(i,j)] += aijk;
 <a name="l00369"></a>00369                                         <a class="code" href="class_petter_1_1_minimizer.html#a97b1fbacea4c147c55fd13c0e36e9971">terms2</a>[ unordered_pair(i,k)] += aijk;
@@ -560,7 +560,7 @@
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 2 2012 22:45:12 for submodular by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 4 2012 11:05:41 for submodular by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

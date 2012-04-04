@@ -67,6 +67,9 @@
 </div><!--header-->
 <div class="contents">
 
+<p>Represents a <em>symmetric</em> submodular pseudo-boolean function of degree &lt;= 4.  
+ <a href="class_petter_1_1_generator_pseudo_boolean.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="_pseudo_boolean_8h_source.html">PseudoBoolean.h</a>&gt;</code></p>
 
 <p><a href="class_petter_1_1_generator_pseudo_boolean-members.html">List of all members.</a></p>
@@ -74,28 +77,24 @@
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:af67081874c65b8ce0058b5edc15f135b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#af67081874c65b8ce0058b5edc15f135b">GeneratorPseudoBoolean</a> (const <a class="el" href="class_petter_1_1_generators.html">Generators</a>&lt; real &gt; &amp;generators)</td></tr>
+<tr class="memdesc:af67081874c65b8ce0058b5edc15f135b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the zero function.  <a href="#af67081874c65b8ce0058b5edc15f135b"></a><br/></td></tr>
 <tr class="memitem:ac54c774bd0647165935d983372eebefd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#ac54c774bd0647165935d983372eebefd">clear</a> ()</td></tr>
+<tr class="memdesc:ac54c774bd0647165935d983372eebefd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the function to the zero function.  <a href="#ac54c774bd0647165935d983372eebefd"></a><br/></td></tr>
 <tr class="memitem:a676b77874242d0c4c9b1d457984d51d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a676b77874242d0c4c9b1d457984d51d8">create_lp</a> (const <a class="el" href="class_petter_1_1_pseudo_boolean.html">PseudoBoolean</a>&lt; real &gt; &amp;pbf)</td></tr>
+<tr class="memdesc:a676b77874242d0c4c9b1d457984d51d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates using linear programming.  <a href="#a676b77874242d0c4c9b1d457984d51d8"></a><br/></td></tr>
 <tr class="memitem:a3065de3546e07357bdade7c94c8d3f1c"><td class="memItemLeft" align="right" valign="top">real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a3065de3546e07357bdade7c94c8d3f1c">minimize</a> (vector&lt; <a class="el" href="namespace_petter.html#afdaec9930d1d8fac3c5a445698336f7c">label</a> &gt; &amp;x, int &amp;nlabelled) const </td></tr>
-<tr class="memitem:a89359351e9dcd3c06be2dcf778cc4ba5"><td class="memTemplParams" colspan="2">template&lt;typename Map &gt; </td></tr>
-<tr class="memitem:a89359351e9dcd3c06be2dcf778cc4ba5"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a89359351e9dcd3c06be2dcf778cc4ba5">getindex</a> (Map &amp;m, const <a class="el" href="namespace_petter.html#a0883fa1f589f648eb4efae39a36306e6">pair</a> &amp;key)</td></tr>
-<tr class="memitem:a644f035fe16b8ad975f57f2540574507"><td class="memTemplParams" colspan="2">template&lt;typename Map &gt; </td></tr>
-<tr class="memitem:a644f035fe16b8ad975f57f2540574507"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a644f035fe16b8ad975f57f2540574507">getindex</a> (Map &amp;m, const <a class="el" href="namespace_petter.html#aca672dbdaac7ad489859ad09e1b60fa8">triple</a> &amp;key)</td></tr>
-<tr class="memitem:aee905f04baffcfd6db6c713533e6366b"><td class="memTemplParams" colspan="2">template&lt;typename Map &gt; </td></tr>
-<tr class="memitem:aee905f04baffcfd6db6c713533e6366b"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#aee905f04baffcfd6db6c713533e6366b">getindex</a> (Map &amp;m, const <a class="el" href="namespace_petter.html#ad3e9af3b64b29f323b5ed79cfa3bf7e3">quad</a> &amp;key)</td></tr>
-<tr class="memitem:a729da8901294315059daffd7e0d0b0f8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a729da8901294315059daffd7e0d0b0f8">iaa</a> (int i, int j, int k, int l)</td></tr>
-<tr class="memitem:a147ba4eb898c200c0117bcb3a4ad34b9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a147ba4eb898c200c0117bcb3a4ad34b9">ibb</a> (int i, int j, int k)</td></tr>
-<tr class="memitem:ae6ba8e803ab580a7c43ff780400cd77d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#ae6ba8e803ab580a7c43ff780400cd77d">icc</a> (int i, int j)</td></tr>
-<tr class="memitem:ab17be78cd66419df83beff8b32c5ecb1"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:ab17be78cd66419df83beff8b32c5ecb1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#ab17be78cd66419df83beff8b32c5ecb1">create_lp</a> (const <a class="el" href="class_petter_1_1_pseudo_boolean.html">PseudoBoolean</a>&lt; double &gt; &amp;pbf)</td></tr>
+<tr class="memdesc:a3065de3546e07357bdade7c94c8d3f1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimizes the function.  <a href="#a3065de3546e07357bdade7c94c8d3f1c"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr class="memitem:a8c08f5f471ddf6750fe5670476469ff1"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a8c08f5f471ddf6750fe5670476469ff1">PseudoBoolean</a></td></tr>
 </table>
-<h3>template&lt;typename real&gt;<br/>
- class Petter::GeneratorPseudoBoolean&lt; real &gt;</h3>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename real&gt;<br/>
+class Petter::GeneratorPseudoBoolean&lt; real &gt;</h3>
 
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<p>Represents a <em>symmetric</em> submodular pseudo-boolean function of degree &lt;= 4. </p>
+<p>This holds a symmetric pseudo-boolean function; it is typically only used when minimizing another pseudo-boolean function. The internal representation is based on the generators specified in the constructor. It can only be created from an existing pseudo-boolean function. </p>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="af67081874c65b8ce0058b5edc15f135b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -112,6 +111,9 @@ template&lt;typename real &gt; </div>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Creates the zero function. </p>
+<p>The internal representation of the function is specified by the generators. </p>
 
 </div>
 </div>
@@ -132,24 +134,7 @@ template&lt;typename real &gt; </div>
 </div>
 <div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="ab17be78cd66419df83beff8b32c5ecb1"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_petter_1_1_generator_pseudo_boolean.html">Petter::GeneratorPseudoBoolean</a>&lt; double &gt;::<a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a676b77874242d0c4c9b1d457984d51d8">create_lp</a> </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="class_petter_1_1_pseudo_boolean.html">PseudoBoolean</a>&lt; double &gt; &amp;&#160;</td>
-          <td class="paramname"><em>pbf</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>Resets the function to the zero function. </p>
 
 </div>
 </div>
@@ -170,203 +155,7 @@ template&lt;typename real &gt; </div>
 </div>
 <div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="a89359351e9dcd3c06be2dcf778cc4ba5"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename real &gt; </div>
-<div class="memtemplate">
-template&lt;typename Map &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="class_petter_1_1_generator_pseudo_boolean.html">Petter::GeneratorPseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a89359351e9dcd3c06be2dcf778cc4ba5">getindex</a> </td>
-          <td>(</td>
-          <td class="paramtype">Map &amp;&#160;</td>
-          <td class="paramname"><em>m</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="namespace_petter.html#a0883fa1f589f648eb4efae39a36306e6">pair</a> &amp;&#160;</td>
-          <td class="paramname"><em>key</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a644f035fe16b8ad975f57f2540574507"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename real &gt; </div>
-<div class="memtemplate">
-template&lt;typename Map &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="class_petter_1_1_generator_pseudo_boolean.html">Petter::GeneratorPseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a89359351e9dcd3c06be2dcf778cc4ba5">getindex</a> </td>
-          <td>(</td>
-          <td class="paramtype">Map &amp;&#160;</td>
-          <td class="paramname"><em>m</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="namespace_petter.html#aca672dbdaac7ad489859ad09e1b60fa8">triple</a> &amp;&#160;</td>
-          <td class="paramname"><em>key</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aee905f04baffcfd6db6c713533e6366b"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename real &gt; </div>
-<div class="memtemplate">
-template&lt;typename Map &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="class_petter_1_1_generator_pseudo_boolean.html">Petter::GeneratorPseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a89359351e9dcd3c06be2dcf778cc4ba5">getindex</a> </td>
-          <td>(</td>
-          <td class="paramtype">Map &amp;&#160;</td>
-          <td class="paramname"><em>m</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="namespace_petter.html#ad3e9af3b64b29f323b5ed79cfa3bf7e3">quad</a> &amp;&#160;</td>
-          <td class="paramname"><em>key</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a729da8901294315059daffd7e0d0b0f8"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename real &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="class_petter_1_1_generator_pseudo_boolean.html">Petter::GeneratorPseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a729da8901294315059daffd7e0d0b0f8">iaa</a> </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>i</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>j</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>k</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>l</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a147ba4eb898c200c0117bcb3a4ad34b9"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename real &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="class_petter_1_1_generator_pseudo_boolean.html">Petter::GeneratorPseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#a147ba4eb898c200c0117bcb3a4ad34b9">ibb</a> </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>i</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>j</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>k</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ae6ba8e803ab580a7c43ff780400cd77d"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename real &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="class_petter_1_1_generator_pseudo_boolean.html">Petter::GeneratorPseudoBoolean</a>&lt; real &gt;::<a class="el" href="class_petter_1_1_generator_pseudo_boolean.html#ae6ba8e803ab580a7c43ff780400cd77d">icc</a> </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>i</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>j</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>Creates using linear programming. </p>
 
 </div>
 </div>
@@ -397,6 +186,8 @@ template&lt;typename real &gt; </div>
 </div>
 <div class="memdoc">
 
+<p>Minimizes the function. </p>
+
 </div>
 </div>
 <hr/><h2>Friends And Related Function Documentation</h2>
@@ -415,15 +206,14 @@ template&lt;typename real &gt; </div>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>source/library/<a class="el" href="_pseudo_boolean_8h_source.html">PseudoBoolean.h</a></li>
-<li>source/library/<a class="el" href="_generator_pseudo_boolean_8cpp.html">GeneratorPseudoBoolean.cpp</a></li>
 </ul>
 </div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 2 2012 22:45:19 for submodular by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 4 2012 11:05:41 for submodular by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

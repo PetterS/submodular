@@ -71,17 +71,29 @@ namespace Petter
 	//typedef std::tuple<int,int,int> triple;
 	//typedef std::tuple<int,int,int,int> quad;
 
+	/// Creates a pair from two indices
 	pair make_pair(int i, int j);
+	/// Creates a triple from three indices
 	triple make_triple(int i, int j, int k);
+	/// Creates a quadruple from four indices
 	quad make_quad(int i, int j, int k, int l);
+	/// Retrieves the first index
 	int get_i(const pair& p);
+	/// Retrieves the second index
 	int get_j(const pair& p);
+	/// Retrieves the first index
 	int get_i(const triple& t);
+	/// Retrieves the second index
 	int get_j(const triple& t);
+	/// Retrieves the third index
 	int get_k(const triple& t);
+	/// Retrieves the first index
 	int get_i(const quad& q);
+	/// Retrieves the second index
 	int get_j(const quad& q);
+	/// Retrieves the third index
 	int get_k(const quad& q);
+	/// Retrieves the fourth index
 	int get_l(const quad& q);
 
 	template<typename real>
@@ -90,9 +102,11 @@ namespace Petter
 	template<typename real>
 	class GeneratorPseudoBoolean;
 
-    ///
-    /// The main polynomial class
-    ///
+	//
+	/// Represents a pseudo-boolean function of degree <= 4
+	//
+	/// Use this class to create and hold a pseudo-boolean function.
+    /// The function can be saved to disk and minimized using various methods.
 	template<typename real>
 	class PseudoBoolean
 	{
@@ -100,14 +114,19 @@ namespace Petter
 		template<typename real2> friend class SymmetricPseudoBoolean;
 		template<typename real2> friend class GeneratorPseudoBoolean;
 		template<typename real2,int degree> friend class Posiform;
+        /// \private
 		void print_helper(std::ostream& out) const;
 
 		/// Creates the zero function
 		PseudoBoolean(); 
 		/// Reads a polynomial from file
+		//
+		/// \param filename the file name from which the contructor should read
 		PseudoBoolean(std::string filename); 
 
 		/// Saves the function to file
+		//
+		/// \param filename the file name the function should write to
 		void save_to_file(std::string filename); 
 
 		/// Resets the function to the zero functions
@@ -149,10 +168,12 @@ namespace Petter
 
 		/// \private
 		real minimize_reduction(vector<label>& x) const;
+        /// \private
 		real minimize_reduction(vector<label>& x, int& nlabelled) const;
 
 		/// \private
 		real minimize_reduction_fixetal(vector<label>& x) const;
+        /// \private
 		real minimize_reduction_fixetal(vector<label>& x, int& nlabelled) const;
 		
 		/// Minimize using LP relaxation
@@ -163,8 +184,15 @@ namespace Petter
 
 		/// Minimizing using any method
 
-		/// NOTE: might change (reduce) *this
+		/// Same functionality as below.
 		real minimize(vector<label>& x, Method method, const char* generators_file=0);
+        /// Minimizing using any method
+
+		/// NOTE: might change (reduce) *this
+		/// \param x vector with solution. Has to have x.size() == n.
+		/// \param labeled The number of variables the function were able to assign.
+		/// \param method The minimization method to use
+		/// \param generators_file The file from which to read the generators. (optional)
 		real minimize(vector<label>& x, int& labeled, Method method = GRD, const char* generators_file=0);
 
 		/// \private
@@ -190,16 +218,29 @@ namespace Petter
 		return out;
 	}
 
-
+    /// Holds info about a branch-and-bound run.
 	struct BBInfo
 	{
-		Method method;
-		int iterations;
-		double total_time, solver_time;
+		Method method; /// (input) What minimization method should be used
+		int iterations; /// (output) How mant iterations were used
+		double total_time; /// (output) Total solver time
+        double solver_time; /// (output) Time spent in pseudo-boolean solver
 	};
+
+	/// Minimizes a pseudo-boolean function exactly using branch and bound
+	///
+	/// \param f the PseudoBoolean function to minimize
+	/// \param x vector which holds the solution. Should satisfy x.size()==n
+	/// \param bbinfo (optional) a BBInfo struct with extra input and output
 	template<typename real>
 	real branch_and_bound(const PseudoBoolean<real>& f, vector<label>& x, BBInfo* bbinfo=0);
-
+    
+	//
+	/// Represents a *symmetric* pseudo-boolean function of degree <= 4
+	//
+	/// This holds a symmetric pseudo-boolean function; it is typically only used when
+    /// minimizing another pseudo-boolean function.
+    /// It can only be created from an existing pseudo-boolean function.
 	template<typename real>
 	class SymmetricPseudoBoolean
 	{
@@ -229,7 +270,7 @@ namespace Petter
 
 		void make_submodular(const PseudoBoolean<real>& pbf);
 
-	//protected:
+	private:
 
 		/////////////////////////////
 		// Polynomial coefficients //
@@ -273,7 +314,6 @@ namespace Petter
 		int ir(int i, int j, int k, int l);
 		int is(int i, int j, int k, int l);
 
-	private:
 		//These are not to be modified directly
 		int nlpvars;
 		map<int, int> indbi;
@@ -291,8 +331,7 @@ namespace Petter
 
 
 	//
-	// Helper class which holds informations about generators and
-	// how to reduce them
+	/// Helper class that holds informations about generators and how to reduce them
 	//
 	template<typename real>
 	class Generators
@@ -342,24 +381,33 @@ namespace Petter
 		std::vector< std::vector< Monomial > > gen2red, gen3red, gen4redpos, gen4redneg;
 	};
 
+	//
+	/// Represents a *symmetric* submodular pseudo-boolean function of degree <= 4
+	//
+	/// This holds a symmetric pseudo-boolean function; it is typically only used when
+    /// minimizing another pseudo-boolean function. The internal representation is based on
+	/// the generators specified in the constructor.
+    /// It can only be created from an existing pseudo-boolean function.
 	template<typename real>
 	class GeneratorPseudoBoolean
 	{
 	public:
+
 		template<typename real2> friend class PseudoBoolean;
-		//GeneratorPseudoBoolean(std::string filename);
+		/// Creates the zero function. 
+		//
+		/// The internal representation of the function is specified by the generators.
 		GeneratorPseudoBoolean(const Generators<real>& generators);
+		/// Resets the function to the zero function.
 		void clear();
 
-		// Create using LP
+		/// Creates using linear programming
 		void create_lp(const PseudoBoolean<real>& pbf);
 
-		// Minimization
+		/// Minimizes the function. 
 		real minimize(vector<label>& x, int& nlabelled) const;
 
-		///////////
-		// Index //
-		///////////
+	private:
 
 		template <typename Map>
 		int getindex(Map& m, const pair& key) 
@@ -404,11 +452,15 @@ namespace Petter
 			}
 		}
 
+		/// Gives the linear programming variable index for aa_{i,j,k}.
+		/// Mostly used internally.
 		int iaa(int i, int j, int k, int l);
+		/// Gives the linear programming variable index for bb_{i,j,k}.
+		/// Mostly used internally.
 		int ibb(int i, int j, int k);
+		/// Gives the linear programming variable index for bb_{i,j,k}.
+		/// Mostly used internally.
 		int icc(int i, int j);
-
-	private:
 
 		const Generators<real>& gen;
 
