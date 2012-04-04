@@ -1,18 +1,20 @@
-//
-// Petter Strandmark 2011
-// petter@maths.lth.se
-//
-// class PseudoBoolean : represents a pseudo-boolean polynomial of degree <= 4
-// 
-// class SymmetricPseudoBoolean : represents a symmetric pseudo-boolean polynomial of degree <= 4
-//                                with special features, such as keeping a linear index for all
-//                                coefficients (for LP solving).
-// 
-// The template argument to the classes specifies the underlying type. The double type is prone to
-// rounding errors, although there is code to prevent that. But floating-point number is required
-// to use linear programming. If only heuristics is required, int can be used instead.
-//
-//
+/// \mainpage Generalized Roof Duality
+///
+/// Petter Strandmark 2012
+/// petter@maths.lth.se
+///
+/// \section classes Main Classes
+///  Petter::PseudoBoolean : represents a pseudo-boolean polynomial of degree <= 4
+/// 
+///  Petter::SymmetricPseudoBoolean : represents a symmetric pseudo-boolean polynomial of degree <= 4
+///                               with special features, such as keeping a linear index for all
+///                                coefficients (for LP solving).
+/// 
+/// The template argument to the classes specifies the underlying type. The double type is prone to
+/// rounding errors, although there is code to prevent that. But floating-point number is required
+/// to use linear programming. If only heuristics is required, int can be used instead.
+///
+///
 #ifndef PETTER_PSEUDOBOOLEAN_H
 #define PETTER_PSEUDOBOOLEAN_H
 
