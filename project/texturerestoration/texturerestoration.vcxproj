@@ -27,19 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\source\library\GeneratorPseudoBoolean.cpp" />
-    <ClCompile Include="..\..\source\library\PseudoBoolean.cpp" />
-    <ClCompile Include="..\..\source\library\PseudoBoolean_complete.cpp" />
-    <ClCompile Include="..\..\source\library\PseudoBoolean_create_g.cpp" />
-    <ClCompile Include="..\..\source\library\PseudoBoolean_heuristic.cpp" />
-    <ClCompile Include="..\..\source\library\PseudoBoolean_minimize.cpp" />
-    <ClCompile Include="..\..\source\library\PseudoBoolean_minimize_lp.cpp" />
-    <ClCompile Include="..\..\source\library\PseudoBoolean_minimize_reduction.cpp" />
-    <ClCompile Include="..\..\source\library\PseudoBoolean_reduce.cpp" />
     <ClCompile Include="..\..\source\image_denoising.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\source\library\PseudoBoolean.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FA3939A0-A497-433B-BD54-0B82F2E27776}</ProjectGuid>
@@ -222,7 +210,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>thirdpartylib.lib;libClp.lib;libCoinUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>grd.lib;thirdpartylib.lib;libClp.lib;libCoinUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Without heuristics|x64'">

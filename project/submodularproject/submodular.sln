@@ -3,6 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test program", "submodularproject.vcxproj", "{39D751BF-DCC7-4B62-8B1C-99B6047B2B11}"
 	ProjectSection(ProjectDependencies) = postProject
+		{B495796B-B3C0-4DA3-B0B5-977FAF403A88} = {B495796B-B3C0-4DA3-B0B5-977FAF403A88}
 		{BEC03BC9-532C-48A7-87A4-10B6C0F30E9F} = {BEC03BC9-532C-48A7-87A4-10B6C0F30E9F}
 	EndProjectSection
 EndProject
@@ -10,8 +11,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "thirdpartylib", "..\thirdpa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "image denoising", "..\texturerestoration\texturerestoration.vcxproj", "{FA3939A0-A497-433B-BD54-0B82F2E27776}"
 	ProjectSection(ProjectDependencies) = postProject
+		{B495796B-B3C0-4DA3-B0B5-977FAF403A88} = {B495796B-B3C0-4DA3-B0B5-977FAF403A88}
 		{BEC03BC9-532C-48A7-87A4-10B6C0F30E9F} = {BEC03BC9-532C-48A7-87A4-10B6C0F30E9F}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grdlibrary", "..\grdlibrary\grdlibrary.vcxproj", "{B495796B-B3C0-4DA3-B0B5-977FAF403A88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,12 @@ Global
 		{FA3939A0-A497-433B-BD54-0B82F2E27776}.Release|Win32.Build.0 = Release|Win32
 		{FA3939A0-A497-433B-BD54-0B82F2E27776}.Release|x64.ActiveCfg = Release|x64
 		{FA3939A0-A497-433B-BD54-0B82F2E27776}.Release|x64.Build.0 = Release|x64
+		{B495796B-B3C0-4DA3-B0B5-977FAF403A88}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B495796B-B3C0-4DA3-B0B5-977FAF403A88}.Debug|Win32.Build.0 = Debug|Win32
+		{B495796B-B3C0-4DA3-B0B5-977FAF403A88}.Debug|x64.ActiveCfg = Debug|Win32
+		{B495796B-B3C0-4DA3-B0B5-977FAF403A88}.Release|Win32.ActiveCfg = Release|Win32
+		{B495796B-B3C0-4DA3-B0B5-977FAF403A88}.Release|Win32.Build.0 = Release|Win32
+		{B495796B-B3C0-4DA3-B0B5-977FAF403A88}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
