@@ -170,7 +170,6 @@
     <ClCompile Include="..\..\source\library\PseudoBoolean_minimize_reduction.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_reduce.cpp" />
     <ClCompile Include="..\..\source\library\VertexPacking.cpp" />
-    <ClCompile Include="..\..\source\submodular_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\library\Minimizer.h" />

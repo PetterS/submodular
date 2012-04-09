@@ -44,9 +44,6 @@
     <ClCompile Include="..\..\source\library\PseudoBoolean_reduce.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\submodular_tests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\library\VertexPacking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
