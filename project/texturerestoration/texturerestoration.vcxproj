@@ -108,38 +108,39 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>..\..\bin\</OutDir>
+    <LibraryPath>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>..\..\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>..\..\bin\</OutDir>
     <TargetName>denoising32</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Without heuristics|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>..\..\bin\</OutDir>
     <TargetName>denoising32</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>..\..\bin\</OutDir>
     <TargetName>denoising</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Without heuristics|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>..\..\bin\</OutDir>
     <TargetName>denoising</TargetName>
   </PropertyGroup>

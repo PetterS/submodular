@@ -105,27 +105,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Without heuristics|Win32'">
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Without heuristics|x64'">
     <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
