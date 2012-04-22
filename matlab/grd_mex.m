@@ -3,6 +3,13 @@
 % Petter Strandmark 2012
 % petter@maths.lth.se
 function varargout = grd_mex(varargin)
+
+	% -------------------------------------------
+	% Modify these!
+	coinincludedir = 'C:\ProgramData\C\include';
+	coinlibdir     = 'C:\ProgramData\C\lib';
+	% --------------------------------------------
+
 	fprintf('Compiling GRD (first-time use)... ');
 	dir = fileparts(which(mfilename));
 	
@@ -11,8 +18,6 @@ function varargout = grd_mex(varargin)
 	hocrdir    = [dir filesep '..' filesep 'thirdparty' filesep 'HOCR'];
 	maxflowdir = [dir filesep '..' filesep 'thirdparty' filesep 'maxflow-v3.01.src'];
 	petterdir  = [dir filesep '..' filesep 'thirdparty' filesep 'Petter'];
-	coinincludedir = 'C:\ProgramData\C\include';
-	coinlibdir     = 'C:\ProgramData\C\lib';
 	
 	mex('grd_mex.cpp', ...
 		['-I"' libdir '"'], ...
