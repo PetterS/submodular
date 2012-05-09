@@ -426,7 +426,19 @@ namespace Petter
 		
 		int error = lpSolver.dual(); //primal, dual, barrier
 		if (error != 0) {
-			throw std::runtime_error("Clp failed");
+			// I think this is what the error codes mean
+			if (error == 1) {
+				throw std::runtime_error("The linear program is infeasible");
+			}
+			else if (error == 2) {
+				throw std::runtime_error("The linear program is unbounded");
+			}
+			else if (error == 3) {
+				throw std::runtime_error("Maximum number of iterations reached when solving the linear programming problem");
+			}
+			else {
+				throw std::runtime_error("Unknown problem with the linear programming solver (Clp)");
+			}
 		}
 
 		double* lpvars = lpSolver.primalColumnSolution();
