@@ -56,6 +56,7 @@ Global
 		{B495796B-B3C0-4DA3-B0B5-977FAF403A88}.Release|Win32.ActiveCfg = Release|Win32
 		{B495796B-B3C0-4DA3-B0B5-977FAF403A88}.Release|Win32.Build.0 = Release|Win32
 		{B495796B-B3C0-4DA3-B0B5-977FAF403A88}.Release|x64.ActiveCfg = Release|x64
+		{B495796B-B3C0-4DA3-B0B5-977FAF403A88}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
