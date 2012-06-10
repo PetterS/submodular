@@ -138,8 +138,8 @@ namespace Petter
 
 		inf *= 4;
 		for (auto itr = E.begin(); itr != E.end(); ++itr) {
-			graph.add_edge( int(itr->first), int(n+itr->second), 0, inf);
-			graph.add_edge( int(itr->second), int(n+itr->first), 0, inf);
+			graph.add_edge( int(n+itr->second), int(itr->first), inf, 0);
+			graph.add_edge( int(n+itr->first), int(itr->second), inf, 0);
 		}
 
 		graph.maxflow();
