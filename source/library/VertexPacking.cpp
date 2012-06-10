@@ -71,7 +71,7 @@ namespace Petter
 	}
 
 	template<typename real>
-	real VertexPacking<real>::solve(std::vector<signed char>& x)
+	real VertexPacking<real>::solve_slower(std::vector<signed char>& x)
 	{
 		size_t n = w.size();
 
@@ -99,6 +99,60 @@ namespace Petter
 			if (xm[i]==xn[i]) {
 				x[i] = xm[i];
 				energy += x[i]*w[i];
+			}
+			else {
+				x[i] = -1;
+				energy += w[i]/real(2);
+			}
+		}
+
+		return energy;
+	}
+
+	template<typename real>
+	real VertexPacking<real>::solve(std::vector<signed char>& x)
+	{
+		//
+		// Solves the LP relaxation of the vertex packing as a bipartite vertex 
+		// packing. However, the bipartite problem is not create explicitly; instead,
+		// the maximum flow graph is create directly.
+		//
+		// See solve_slow for details of what the bipartite problem looks like
+		//
+		size_t n = w.size();
+
+		#ifdef USE_IBFS
+			IBFSGraph<real,real,real> graph( int(m+n) , int(E.size()), err_function);
+		#else
+			Graph<real,real,real> graph( int(n+n) , int(2*E.size()), err_function);
+		#endif
+
+		graph.add_node( int(n+n) );
+
+		real inf = 0;
+		for (size_t i=0;i<n;++i) {
+			graph.add_tweights( int(i), 0, w[i]);
+			graph.add_tweights( int(n+i), w[i], 0);
+			inf += w[i];
+		}
+
+		inf *= 4;
+		for (auto itr = E.begin(); itr != E.end(); ++itr) {
+			graph.add_edge( int(itr->first), int(n+itr->second), 0, inf);
+			graph.add_edge( int(itr->second), int(n+itr->first), 0, inf);
+		}
+
+		graph.maxflow();
+
+		x.resize(n);
+		real energy = 0;
+
+		for (size_t i=0;i<n;++i) {
+			signed char x1 = graph.what_segment(i);
+			signed char x2 = graph.what_segment(i+n); 
+			if (x1!=x2) {
+				x[i] = x1;
+				energy += x1*w[i];
 			}
 			else {
 				x[i] = -1;

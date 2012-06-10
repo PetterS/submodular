@@ -32,6 +32,7 @@ namespace Petter
 		void add_edge(size_t i, size_t j);
 
 		real solve(std::vector<signed char>& x);
+		real solve_slower(std::vector<signed char>& x);
 		real solve_lp(std::vector<signed char>& x);
 		real solve_exhaustive(std::vector<signed char>& x);
 
