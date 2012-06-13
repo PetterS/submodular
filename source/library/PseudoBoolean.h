@@ -42,6 +42,8 @@ namespace Petter
 
 	/// Used to specify optimization method
 	enum Method {
+		/// Reductions described by Boros and Hammer (2002). For comparisons only---HOCR is better.
+		M_reduction,
 		/// HOCR (Ishikawa, 2011)
 		HOCR, 
 		/// Fix et al. (2001)
@@ -179,6 +181,9 @@ namespace Petter
         /// \private
 		real minimize_reduction_fixetal(vector<label>& x, int& nlabelled) const;
 		
+		/// \private
+		real minimize_reduction_M(vector<label>& x, int& nlabelled) const;
+
 		/// Minimize using LP relaxation
 
 		/// Persistency does not hold in general. This function is

@@ -288,6 +288,7 @@ int main_program(int num_args, char** args)
 
 
 
+	bool do_m = false;
 	bool do_hocr = true;
 	bool do_optimal = false;
 	bool do_generators = false;
@@ -305,6 +306,9 @@ int main_program(int num_args, char** args)
 	}
 	if (cmd_line.find("-fixetal") != cmd_line.end()) {
 		do_fixetal = true;
+	}
+	if (cmd_line.find("-m-reduction") != cmd_line.end() ) {
+		do_m = true;
 	}
     if (cmd_line.find("-hocr") != cmd_line.end()) {
 		do_hocr = true;
@@ -678,6 +682,7 @@ int main_program(int num_args, char** args)
 	// Solve using different methods //
 	///////////////////////////////////
 
+	int m_labeled = -1;
 	int hocr_labeled = -1;
 	int hocr_itr_labeled = -1;
 	int fixetal_labeled = -1;
@@ -687,6 +692,7 @@ int main_program(int num_args, char** args)
 	int heur_labeled = -1;
 	int packing_labeled = -1;
 
+	real m_bound = 100;
 	real hocr_bound = 100;
 	real hocr_itr_bound = 100;
 	real fixetal_bound = 100;
@@ -698,6 +704,7 @@ int main_program(int num_args, char** args)
 	real packing_bound = 100;
 	real packing_itr_bound = 100;
 
+	double m_time = -1;
 	double hocr_time = -1;
 	double hocr_itr_time = -1;
 	double fixetal_time = -1;
@@ -720,6 +727,9 @@ int main_program(int num_args, char** args)
 	}
 	if (do_lprelax) {
 		cout << NORMAL << "GRAY" << NORMAL << " is an LP relaxation (Rhys form)" << endl;
+	}
+	if (do_m) {
+		cout << DKRED << "DKRED" << NORMAL << " is M-reductions" << endl;
 	}
 	cout << RED << "RED" << NORMAL << " is HOCR" << endl;
 	if (iterate_reduction_methods) {
@@ -885,7 +895,21 @@ int main_program(int num_args, char** args)
 	
 		//vector<label> x(n,0),x1(n,0),x2(n,0);
 
-		
+		if (do_m) {
+			vector<label> x(n,0);
+			start();
+			m_bound = pb.minimize(x, m_labeled, M_reduction);
+			m_time = stop();
+
+			print_info("M-red.",x,m_bound,m_labeled,DKRED,m_time);
+
+			// If we know the optimal solution, we can verify 
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x, m_labeled);
+				check_bound(optimum, m_bound);
+			}
+		}
 
 		Petter::PseudoBoolean<real> f_hocrreduced;
 
@@ -1365,6 +1389,9 @@ int main_program(int num_args, char** args)
 			<< packing_labeled<<'\t' // 24
 			<< packing_bound << '\t' // 25
 			<< packing_time  << '\t' // 26
+			<< m_labeled << '\t' // 27
+			<< m_bound << '\t' //28
+			<< m_time << '\t' //29
             << endl;
 	}
 	//cin.get();

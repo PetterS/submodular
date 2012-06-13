@@ -410,6 +410,106 @@ namespace Petter
 		return energy;
 	}
 
+
+	template<typename real>
+	real PseudoBoolean<real>::minimize_reduction_M(vector<label>& x, int& nlabelled) const
+	{
+		//
+		// Compute a large enough value for M
+		//
+		real M = 0;
+		for (auto itr=aijkl.begin(); itr != aijkl.end(); ++itr) {
+			real a = itr->second;
+			M += abs(a);
+		}
+		for (auto itr=aijk.begin(); itr != aijk.end(); ++itr) {
+			real a = itr->second;
+			M += abs(a);
+		}
+		for (auto itr=aij.begin(); itr != aij.end(); ++itr) {
+			real a = itr->second;
+			M += abs(a);
+		}
+		for (auto itr=ai.begin(); itr != ai.end(); ++itr) {
+			real a = itr->second;
+			M += abs(a);
+		} 
+
+		// Copy of the polynomial. Will contain the reduced polynomial
+		PseudoBoolean<real> pb = *this;
+		// Number of variables (will be increased
+		int n = nvars();
+		int norg = n;
+
+		//
+		// Reduce the degree-4 terms 
+		//
+		double M2 = M;
+		for (auto itr=pb.aijkl.begin(); itr != pb.aijkl.end(); ++itr) {
+			int i = get_i(itr->first);
+			int j = get_j(itr->first);
+			int k = get_k(itr->first);
+			int l = get_l(itr->first);
+			real a = itr->second;
+
+			// a*xi*xj*xk*xl  will be converted to
+			// a*xi*xj*z + M( xk*xl - 2*xk*z - 2*xl*z + 3*z )
+			int z = n++;
+
+			pb.add_monomial(i,j,z, a);
+
+			pb.add_monomial(k,l,M);
+			pb.add_monomial(k,z, -2*M);
+			pb.add_monomial(l,z, -2*M);
+			pb.add_monomial(z, 3*M);
+
+			M2 += a + 4*M;
+		}
+		
+		// Remove all degree-4 terms.
+		pb.aijkl.clear();
+
+		//
+		// Reduce the degree-3 terms
+		//
+		for (auto itr=pb.aijk.begin(); itr != pb.aijk.end(); ++itr) {
+			int i = get_i(itr->first);
+			int j = get_j(itr->first);
+			int k = get_k(itr->first);
+			real a = itr->second;
+
+			// a*xi*xj*xk  will be converted to
+			// a*xi*z + M( xj*xk -2*xj*z -2*xk*z + 3*z )
+			int z = n++;
+
+			pb.add_monomial(i,z, a);
+
+			pb.add_monomial(j,k,M);
+			pb.add_monomial(j,z, -2*M);
+			pb.add_monomial(k,z, -2*M);
+			pb.add_monomial(z, 3*M);
+		}
+
+		// Remove all degree-3 terms.
+		pb.aijk.clear();
+
+		//
+		// Minimize the reduced polynomial
+		//
+		vector<label> xtmp(n,-1);
+		real bound = pb.minimize(xtmp, HOCR);
+
+		nlabelled = 0;
+		for (size_t i=0;i<norg;++i) {
+			x.at(i) = xtmp[i];
+			if (x[i] >= 0) {
+				nlabelled++;
+			}
+		}
+
+		return bound;
+	}
+
 }
 
 

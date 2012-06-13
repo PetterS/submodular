@@ -33,7 +33,9 @@ namespace Petter
 			labeled=0;
 			return minimize_lp(x);
 		}
-
+		else if (method==M_reduction) {
+			return minimize_reduction_M(x,labeled);
+		}
 
 		bool should_continue;
 		real bound;
