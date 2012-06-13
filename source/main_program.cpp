@@ -550,6 +550,14 @@ int main_program(int num_args, char** args)
 		n = pb.nvars();
 		m = 4; //TODO
 	}
+	else if (cmd_line.find("-kolmogorov") != cmd_line.end()) {
+		// Example from Kolmogorov's 2012 DAM paper
+		real E[16] = {3, 2, 4, 10, 2, 12, 13, 12, 1, 3, 0, 12, 7, 10, 12, 14};
+		vector<real> Evec(E, E+16);
+		pb.add_clique(0,1,2,3, Evec);
+		n = 4;
+		m = 4;
+	}
 	////////////////////////////////
 	// Generate random polynomial //
 	////////////////////////////////
