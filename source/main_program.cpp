@@ -656,12 +656,6 @@ int main_program(int num_args, char** args)
 			add_term(i,j,k,l);			
 		}
 
-		// Save to temporary file
-		if (std::getenv("TEMP")) {
-			string tmp = std::getenv("TEMP");
-			pb.save_to_file(tmp + "/pb.txt");
-		}
-
 		statusOK();
 		cout << "Number of used variables : " << used.size() << endl;
 	}
@@ -673,7 +667,11 @@ int main_program(int num_args, char** args)
 	cout << "m = " << m << endl << endl;
 	cout << NORMAL;
 
-
+	// Save to temporary file
+	if (std::getenv("TEMP")) {
+		string tmp = std::getenv("TEMP");
+		pb.save_to_file(tmp + "/pb.txt");
+	}
 	
 
 	///////////////////////////////////
