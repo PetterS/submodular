@@ -484,10 +484,10 @@ namespace Petter
 
 			pb.add_monomial(i,z, a);
 
-			pb.add_monomial(j,k,M);
-			pb.add_monomial(j,z, -2*M);
-			pb.add_monomial(k,z, -2*M);
-			pb.add_monomial(z, 3*M);
+			pb.add_monomial(j,k,M2);
+			pb.add_monomial(j,z, -2*M2);
+			pb.add_monomial(k,z, -2*M2);
+			pb.add_monomial(z, 3*M2);
 		}
 
 		// Remove all degree-3 terms.
