@@ -902,6 +902,7 @@ int main_program(int num_args, char** args)
 			m_time = stop();
 
 			print_info("M-red.",x,m_bound,m_labeled,DKRED,m_time);
+			cout << endl;
 
 			// If we know the optimal solution, we can verify 
 			// that the persistencies are correct
@@ -948,10 +949,10 @@ int main_program(int num_args, char** args)
 					hocr_labeled = new_labeled;
 					hocr_time = t_minimize;
 					hocr_itr_time = t_minimize + t_reduce;
-					COL = &DKRED;
+					COL = &RED;
 				}
 				else {
-					COL = &RED;
+					COL = &DKRED;
 					hocr_itr_time += t_minimize + t_reduce;
 				}
 
