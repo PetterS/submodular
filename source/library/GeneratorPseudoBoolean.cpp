@@ -1,15 +1,15 @@
 
 #include <fstream>
 #include <typeinfo>
-using namespace std;
-
-#include "PseudoBoolean.h"
-#include "Minimizer.h"
 
 // BK maxflow
 #include "graph.h"
 // LP solver
 #include <coin/ClpSimplex.hpp>
+
+#include "PseudoBoolean.h"
+#include "Minimizer.h"
+using namespace std;
 
 namespace Petter
 {

@@ -23,6 +23,7 @@ namespace Petter
 			switch_helper(GRD)
 			switch_helper(GRD_heur)
 			switch_helper(GRD_gen)
+			switch_helper(M_reduction)
 			switch_helper(LP)
 		}
 		return "Unknown";

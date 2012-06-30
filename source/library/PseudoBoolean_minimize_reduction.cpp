@@ -500,7 +500,7 @@ namespace Petter
 		real bound = pb.minimize(xtmp, HOCR);
 
 		nlabelled = 0;
-		for (size_t i=0;i<norg;++i) {
+		for (int i=0;i<norg;++i) {
 			x.at(i) = xtmp[i];
 			if (x[i] >= 0) {
 				nlabelled++;

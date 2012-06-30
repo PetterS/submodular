@@ -58,11 +58,11 @@ namespace Petter
 			values.push_back(value);
 		};
 		//Changes the right-hand side of the constraints
-		auto change_rhs = [&rhs_lower, &rhs_upper](size_t row, double lower, double upper) 
-		{
-			rhs_lower.at(row) = lower;
-			rhs_upper.at(row) = upper;
-		};
+		//auto change_rhs = [&rhs_lower, &rhs_upper](size_t row, double lower, double upper) 
+		//{
+		//	rhs_lower.at(row) = lower;
+		//	rhs_upper.at(row) = upper;
+		//};
 
 
 		// Linear terms
