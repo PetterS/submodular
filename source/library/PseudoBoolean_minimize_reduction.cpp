@@ -97,13 +97,18 @@ namespace Petter
 		qpbo.ComputeWeakPersistencies();
 
 		nlabelled = 0;
-		for (int i=0; i<nVars; ++i) {
+		for (int i=0; i<nVars && i<qpbf.size(); ++i) {
 			if (var_used[i] || x.at(i)<0) {
 				x[i] = qpbo.GetLabel(i);
 			}
 			if (x[i] >= 0) {
 				nlabelled++;
 			}
+		}
+
+		// These variables were not part of the minimization
+		for (int i=qpbf.size(); i<nVars; ++i) {
+				nlabelled++;
 		}
 
 		real energy = constant + qpbo.ComputeTwiceLowerBound()/2;
