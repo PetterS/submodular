@@ -492,7 +492,7 @@ namespace Petter {
 	inline double Minimizer<double>::submodular_coef(double coef)
 	{
 		// Check submodularity
-		ASSERT(coef <= 1e-9);
+		ASSERT_STR(coef <= 1e-9, "Encountered non-submodular term when minimizing. This is probably due to floating-point arithmetic errors");
 		return std::min(double(0),coef);
 	}
 }
