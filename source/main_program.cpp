@@ -51,7 +51,7 @@ template<typename real> void test_posiform();
 //Simple routine for conversion of strings
 //used for the command line
 template <typename T>
-T convert_string(const std::string s) 
+T convert_string(const std::string& s) 
 {
 	std::istringstream is(s);
 	T result;
