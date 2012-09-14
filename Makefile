@@ -21,7 +21,7 @@ QPBOOBJ = $(OBJDIR)QPBO.o $(OBJDIR)QPBO_extra.o $(OBJDIR)QPBO_maxflow.o $(OBJDIR
 MAXFLOWOBJ = $(OBJDIR)graph.o $(OBJDIR)maxflow.o 
 LIBDIR = $(OBJDIR)
 INCLUDE = -I source/library -I thirdparty/Petter -I thirdparty/HOCR -I thirdparty/QPBO -I thirdparty/maxflow-v3.01.src -I thirdparty/ibfs
-OPTIONS = -std=c++0x
+OPTIONS = -std=c++0x -O3
 
 
 
