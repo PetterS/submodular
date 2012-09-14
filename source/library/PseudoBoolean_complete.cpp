@@ -38,7 +38,7 @@ namespace Petter
 		}
 
 		bool should_continue;
-		real bound;
+		real bound = -1;
 		labeled = 0;
 		int n = int( x.size() );
 
