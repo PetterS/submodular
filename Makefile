@@ -5,14 +5,14 @@ COMPILER = g++ -c
 LINKER = g++
 
 # Temporary directory to store object files; needs to exist
-OBJDIR = ~/obj/submodularcygwin/
+OBJDIR = ~/obj/submodular/
 
 # Location of Clp if not installed where gcc can find it
-CLPLIBDIR = ~/Programming/cygwin/coin-Clp/lib/
-CLPINCLUDEDIR = ~/Programming/cygwin/coin-Clp/include/
+CLPLIBDIR = ~/source/coin-Clp/lib/
+CLPINCLUDEDIR = ~/source/coin-Clp/include/
 
 # Names of executables
-TARGET  = bin/submodular_gcc.exe
+TARGET  = bin/submodular
 
 ##################################################################################
 
