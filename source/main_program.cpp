@@ -193,7 +193,7 @@ void test_branchandbound(const PseudoBoolean<real>& pb,
 	cout << setw(10) << left << str(method) << color << bbinfo.iterations << NORMAL
 	     << " iterations, total_time = " << color << bbinfo.total_time << NORMAL
 	     << " s, solver_time = " << color << bbinfo.solver_time << endl;
-	fout << setw(10) << left << str(method) <<  bbinfo.iterations <<
+	fout << setw(10) << left << str(method) <<  bbinfo.iterations
 	     << " iterations, total_time = " << bbinfo.total_time
 	     << " s, solver_time = " << bbinfo.solver_time << endl;
 
