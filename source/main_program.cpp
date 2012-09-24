@@ -36,7 +36,7 @@ namespace {
 	#ifdef WIN32
 		// Time Stamp Counter gives better seeds than seconds
 		// when many small problems are generated consecutively
-		mt19937 engine((unsigned long)(__rdtsc()&0xffffffff)); 
+		mt19937 engine((unsigned long)(__rdtsc()&0xffffffff));
 	#else
 		mt19937 engine(unsigned(time(0)));
 	#endif
@@ -51,19 +51,19 @@ template<typename real> void test_posiform();
 //Simple routine for conversion of strings
 //used for the command line
 template <typename T>
-T convert_string(const std::string& s) 
+T convert_string(const std::string& s)
 {
 	std::istringstream is(s);
 	T result;
 	is >> result;
 	if (!is) {
-		throw std::runtime_error("conversion of \"" + s + "\" failed"); 
+		throw std::runtime_error("conversion of \"" + s + "\" failed");
 	}
 	return result;
 }
 
 template <typename T>
-T absolute(const T t) 
+T absolute(const T t)
 {
 	return t < 0 ? -t : t;
 }
@@ -85,7 +85,10 @@ void print_x(const std::vector<label>& x)
 }
 
 template<typename real>
-void print_info(std::string name, const std::vector<label>& x, real bound, int labeled, Petter::Color color, double time=-1)
+void print_info(std::string name,
+                const std::vector<label>& x,
+                real bound, int labeled,
+                Petter::Color color, double time=-1)
 {
 	using namespace std;
 	cout << left << setw(16) << name << "f(";
@@ -101,7 +104,8 @@ void print_info(std::string name, const std::vector<label>& x, real bound, int l
 //
 // Checks that the persistencies in x agrees with some optimal solution
 //
-void check_persistency( const vector< vector<label> >& optimal_solutions, const vector<label>& x, int reported_labelled=-1)
+void check_persistency( const vector< vector<label> >& optimal_solutions,
+                        const vector<label>& x, int reported_labelled=-1)
 {
 	bool any_ok = false;
 	for (auto itr = optimal_solutions.begin(); itr != optimal_solutions.end(); ++itr) {
@@ -139,16 +143,16 @@ void check_persistency( const vector< vector<label> >& optimal_solutions, const 
 // Checks that the lower bound agrees with the global optimum
 //
 template<typename real>
-void check_bound(real optimum, real lower_bound) 
+void check_bound(real optimum, real lower_bound)
 {
 	if (lower_bound > optimum) {
 		throw runtime_error("Lower bound error");
 	}
 }
 template<>
-void check_bound<double>(double optimum, double lower_bound) 
+void check_bound<double>(double optimum, double lower_bound)
 {
-	// We have to have a loose check, because doubles have 
+	// We have to have a loose check, because doubles have
 	// rounding errors
 	if ( (optimum - lower_bound) / abs(optimum) < -1e-7 ) {
 		throw runtime_error("Lower bound error (double)");
@@ -159,12 +163,12 @@ void check_bound<double>(double optimum, double lower_bound)
 // Checks for equality
 //
 template<typename T>
-bool isequal(T t1, T t2) 
+bool isequal(T t1, T t2)
 {
 	return t1 == t2;
 }
 template<>
-bool isequal<double>(double t1, double t2) 
+bool isequal<double>(double t1, double t2)
 {
 	if (t1==0 && t2==0) {
 		return true;
@@ -175,7 +179,9 @@ bool isequal<double>(double t1, double t2)
 
 
 template<typename real>
-void test_branchandbound(const PseudoBoolean<real>& pb, int n, Method method, ostream& fout, Petter::Color color)
+void test_branchandbound(const PseudoBoolean<real>& pb,
+                         int n, Method method, ostream& fout,
+                         Petter::Color color)
 {
 	vector<label> x(n,0);
 	real val;
@@ -183,13 +189,17 @@ void test_branchandbound(const PseudoBoolean<real>& pb, int n, Method method, os
 
 	bbinfo.method = method;
 	val = branch_and_bound(pb,x,&bbinfo);
-	
-	if (!isequal(val, pb.eval(x))) {
+
+	cout << setw(10) << left << str(method) << color << bbinfo.iterations << NORMAL
+	     << " iterations, total_time = " << color << bbinfo.total_time << NORMAL
+	     << " s, solver_time = " << color << bbinfo.solver_time << endl;
+	fout << setw(10) << left << str(method) <<  bbinfo.iterations <<
+	     << " iterations, total_time = " << bbinfo.total_time
+	     << " s, solver_time = " << bbinfo.solver_time << endl;
+
+  if (!isequal(val, pb.eval(x))) {
 		throw runtime_error("Branch and bound value inconsistent");
 	}
-
-	cout << setw(10) << left << str(method) << color << bbinfo.iterations << NORMAL << " iterations, total_time = " << color << bbinfo.total_time << NORMAL << " s, solver_time = " << color << bbinfo.solver_time << NORMAL << endl; 
-	fout << setw(10) << left << str(method) <<  bbinfo.iterations << " iterations, total_time = " << bbinfo.total_time << " s, solver_time = " << bbinfo.solver_time << endl; 
 }
 
 
@@ -245,7 +255,7 @@ int main_program(int num_args, char** args)
 		cerr << endl;
 		cerr << "    -optimal                         : use linear programming" << endl;
 		cerr << "    -generators                      : use generators (with linear programming)" << endl;
-		cerr << "        -generators-file             : file with generators to use (optional)" << endl; 
+		cerr << "        -generators-file             : file with generators to use (optional)" << endl;
 		cerr << "    -heuristic                       : use heuristics" << endl;
 		cerr << "    -fixetal                         : use reductions from Fix et al." << endl;
 		cerr << "    -exhaustive                      : use exhaustive search (n<=30)" << endl;
@@ -433,7 +443,7 @@ int main_program(int num_args, char** args)
 			sort(vars.begin(), vars.end());
 
 			clauses.push_back( vars );
-			
+
 			m = max(m, (int)vars.size());
 		}
 
@@ -512,7 +522,7 @@ int main_program(int num_args, char** args)
 	// Examples from paper //
 	/////////////////////////
 	else if (cmd_line.find("-example") != cmd_line.end() ) {
-		
+
 		if (m == 3) {
 			n = 3;
 
@@ -584,7 +594,8 @@ int main_program(int num_args, char** args)
 		map< quad, bool> exists;
 		map< int, bool > used;
 
-		auto add_term = [&nterms,&used,&exists,&pb,&random_coef,&random_coef2,m,n](int i, int j, int k, int l) 
+		auto add_term = [&nterms,&used,&exists,&pb,&random_coef,&random_coef2,m,n]
+		                (int i, int j, int k, int l)
 		{
 			if (m<4) {
 				l = 3*n;
@@ -628,7 +639,7 @@ int main_program(int num_args, char** args)
 
 				nterms--;
 			}
-		}; 
+		};
 
 		//First make sure every variable is used once
 		for (int i=0; i<=n-m-1 && nterms>0; i+=m) {
@@ -658,7 +669,7 @@ int main_program(int num_args, char** args)
 				}
 			} while (i>=j || i>=k || j>=k || k>=l);
 
-			add_term(i,j,k,l);			
+			add_term(i,j,k,l);
 		}
 
 		statusOK();
@@ -677,7 +688,7 @@ int main_program(int num_args, char** args)
 		string tmp = std::getenv("TEMP");
 		pb.save_to_file(tmp + "/pb.txt");
 	}
-	
+
 
 	///////////////////////////////////
 	// Solve using different methods //
@@ -753,7 +764,7 @@ int main_program(int num_args, char** args)
 	}
 	cout << endl;
 
-	
+
 	try {
 
 		//Holds optimal solutions
@@ -780,7 +791,7 @@ int main_program(int num_args, char** args)
 				if (i==n) {
 					break;
 				}
-			
+
 				real energy = pb.eval(x);
 				if (energy < optimum) {
 					optimum = energy;
@@ -804,7 +815,7 @@ int main_program(int num_args, char** args)
 				if (i==n) {
 					break;
 				}
-			
+
 				real energy = pb.eval(x);
 				if (energy == optimum) {
 					optimal_solutions.push_back(x);
@@ -814,7 +825,7 @@ int main_program(int num_args, char** args)
 			cout << endl;
 		}
 
-		if (do_packing) {		
+		if (do_packing) {
 			packing_bound = -1000000000;
 			for (int num_tests=1;num_tests<=10;++num_tests) {
 
@@ -827,14 +838,14 @@ int main_program(int num_args, char** args)
 
 				cout << " *** " << endl;
 				bool first_time = true;
-        
+
 				packing_time = 0;
 				do {
 					// Create posiform for -pb
-					Posiform<real,4> phi(f,true); 
+					Posiform<real,4> phi(f,true);
 
 					start();
-					// Maximize it	
+					// Maximize it
 					real bound = -phi.maximize(x);
 					int new_labeled=0;
 					for (int i=0;i<n;++i) {
@@ -872,7 +883,7 @@ int main_program(int num_args, char** args)
 					packing_labeled = labeled;
 				}
 
-				// If we know the optimal solution, we can verify 
+				// If we know the optimal solution, we can verify
 				// that the persistencies are correct
 				if (do_exhaustive) {
 					check_persistency(optimal_solutions, x, labeled);
@@ -893,7 +904,7 @@ int main_program(int num_args, char** args)
 			cout << endl;
 		}
 
-	
+
 		//vector<label> x(n,0),x1(n,0),x2(n,0);
 
 		if (do_m) {
@@ -905,7 +916,7 @@ int main_program(int num_args, char** args)
 			print_info("M-red.",x,m_bound,m_labeled,DKRED,m_time);
 			cout << endl;
 
-			// If we know the optimal solution, we can verify 
+			// If we know the optimal solution, we can verify
 			// that the persistencies are correct
 			if (do_exhaustive) {
 				check_persistency(optimal_solutions, x, m_labeled);
@@ -973,7 +984,7 @@ int main_program(int num_args, char** args)
 			hocr_itr_bound = bound;
 			hocr_itr_labeled = labeled;
 
-			// If we know the optimal solution, we can verify 
+			// If we know the optimal solution, we can verify
 			// that the persistencies are correct
 			if (do_exhaustive) {
 				check_persistency(optimal_solutions, x, hocr_itr_labeled);
@@ -1043,7 +1054,7 @@ int main_program(int num_args, char** args)
 			fixetal_itr_bound = bound;
 			fixetal_itr_labeled = labeled;
 
-			// If we know the optimal solution, we can verify 
+			// If we know the optimal solution, we can verify
 			// that the persistencies are correct
 			if (do_exhaustive) {
 				check_persistency(optimal_solutions, x, fixetal_itr_labeled);
@@ -1052,7 +1063,7 @@ int main_program(int num_args, char** args)
 			}
 		}
 
-		
+
 		if (do_optimal) {
 
 			int iters = 0;
@@ -1099,7 +1110,7 @@ int main_program(int num_args, char** args)
 				if (verbose) {
 					cout << "Relaxation g : " << spb << endl;
 				}
-	
+
 				print_info("GRD solution",x,bound,labeled,GREEN);
 				if (verbose) {
 					cout << "time (create)   : " << GREEN << t_create <<  NORMAL << endl;
@@ -1119,7 +1130,7 @@ int main_program(int num_args, char** args)
 			optimal_bound = bound;
 			optimal_labeled = labeled;
 
-			// If we know the optimal solution, we can verify 
+			// If we know the optimal solution, we can verify
 			// that the persistencies are correct
 			if (do_exhaustive) {
 				check_persistency(optimal_solutions, x, optimal_labeled);
@@ -1154,7 +1165,7 @@ int main_program(int num_args, char** args)
 				iters++;
 
 				//TODO: Reading the file every iteration is not optimal
-				GeneratorPseudoBoolean<real> gpb(generators); 
+				GeneratorPseudoBoolean<real> gpb(generators);
 				start();
 				gpb.create_lp(f);
 				double t_create = stop();
@@ -1177,7 +1188,7 @@ int main_program(int num_args, char** args)
 				if (verbose) {
 					//cout << "Relaxation g : " << gpb << endl;
 				}
-	
+
 				print_info("Gener. solution",x,bound,labeled,DKGREEN);
 				if (verbose) {
 					cout << "time (create)   : " << DKGREEN << t_create <<  NORMAL << endl;
@@ -1197,7 +1208,7 @@ int main_program(int num_args, char** args)
 			generators_bound = bound;
 			generators_labeled = labeled;
 
-			// If we know the optimal solution, we can verify 
+			// If we know the optimal solution, we can verify
 			// that the persistencies are correct
 			if (do_exhaustive) {
 				check_persistency(optimal_solutions, x, generators_labeled);
@@ -1205,7 +1216,7 @@ int main_program(int num_args, char** args)
 			}
 		}
 
-		
+
 		if (do_heuristic) {
 			//
 			// For the heuristic relaxations, we use
@@ -1273,9 +1284,9 @@ int main_program(int num_args, char** args)
 				if (verbose) {
 					cout << "time (create)   : " << YELLOW << t_create <<  NORMAL << endl;
 					cout << "time (minimize) : " << YELLOW << t_minimize <<  NORMAL << endl;
-					cout << "time (reduce)   : " << YELLOW << t_reduce <<  NORMAL << endl;	
+					cout << "time (reduce)   : " << YELLOW << t_reduce <<  NORMAL << endl;
 				}
-				
+
 
 				heur_time += t_create + t_minimize + t_reduce;
 
@@ -1289,7 +1300,7 @@ int main_program(int num_args, char** args)
 			heur_bound = bound;
 			heur_labeled = labeled;
 
-			// If we know the optimal solution, we can verify 
+			// If we know the optimal solution, we can verify
 			// that the persistencies are correct
 			if (do_exhaustive) {
 				check_persistency(optimal_solutions, x, heur_labeled);
@@ -1310,21 +1321,21 @@ int main_program(int num_args, char** args)
 
 
 			if (do_generators) {
-				test_branchandbound(pb, n,  GRD_gen, fout, DKGREEN); 
+				test_branchandbound(pb, n,  GRD_gen, fout, DKGREEN);
 			}
 			if (do_optimal) {
-				test_branchandbound(pb, n,  GRD, fout, GREEN); 
+				test_branchandbound(pb, n,  GRD, fout, GREEN);
 			}
 			if (do_heuristic) {
-				test_branchandbound(pb, n, GRD_heur, fout, YELLOW); 
+				test_branchandbound(pb, n, GRD_heur, fout, YELLOW);
 			}
 			if (do_fixetal) {
-				test_branchandbound(pb, n, Fix, fout, BLUE); 
+				test_branchandbound(pb, n, Fix, fout, BLUE);
 			}
 			if (cmd_line.find("-hocr") != cmd_line.end()) {
-				test_branchandbound(pb, n,  HOCR, fout, RED); 
+				test_branchandbound(pb, n,  HOCR, fout, RED);
 			}
-			
+
 		}
 
 
@@ -1353,9 +1364,12 @@ int main_program(int num_args, char** args)
 			time(&now);
 			current = localtime(&now);
 		ofstream errorfile(errorlogfile.str(), ios::app);
-		errorfile << 1900+current->tm_year << "-" << setw(2) << setfill('0') << current->tm_mon+1 << '-' << current->tm_mday << ' ' 
-		          << current->tm_hour << ':' << current->tm_min << ":" << current->tm_sec << "  ";
-		errorfile << "Solver error \"" << e.what() << ",\" polynomial saved to " << filename.str() << endl;
+		errorfile << 1900+current->tm_year << "-" << setw(2) << setfill('0')
+		          << current->tm_mon+1 << '-' << current->tm_mday << ' '
+		          << current->tm_hour << ':' << current->tm_min << ":"
+		          << current->tm_sec << "  ";
+		errorfile << "Solver error \"" << e.what()
+		          << ",\" polynomial saved to " << filename.str() << endl;
 
 		// Rethrow exception
 		throw;
@@ -1364,7 +1378,7 @@ int main_program(int num_args, char** args)
 	// Write to log file
 	if (cmd_line.find("-nolog") == cmd_line.end()) {
 		ofstream log("logfile.data", ios::app);
-		log << n                << '\t' // 0 
+		log << n                << '\t' // 0
 			<< nterms           << '\t' // 1
 			<< griddim          << '\t' // 2
 			<< hocr_labeled     << '\t' // 3
@@ -1388,12 +1402,12 @@ int main_program(int num_args, char** args)
 			<< generators_labeled<<'\t' // 21
 			<< generators_bound << '\t' // 22
 			<< generators_time  << '\t' // 23
-			<< packing_labeled<<'\t' // 24
-			<< packing_bound << '\t' // 25
-			<< packing_time  << '\t' // 26
-			<< m_labeled << '\t' // 27
-			<< m_bound << '\t' //28
-			<< m_time << '\t' //29
+			<< packing_labeled  <<'\t'  // 24
+			<< packing_bound    << '\t' // 25
+			<< packing_time     << '\t' // 26
+			<< m_labeled        << '\t' // 27
+			<< m_bound          << '\t' // 28
+			<< m_time           << '\t' // 29
             << endl;
 	}
 	//cin.get();
@@ -1401,7 +1415,7 @@ int main_program(int num_args, char** args)
 	return 0;
 }
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
 	using namespace std;
 	using namespace Petter;
