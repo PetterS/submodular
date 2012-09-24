@@ -92,7 +92,7 @@ namespace Petter
 
 		real upper_bound = 1000000000;
 		vector<label> x_best;
-		real f_best;
+		real f_best = -1;
 
 		double solver_time = 0;
 		double total_time  = 0;

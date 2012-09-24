@@ -769,7 +769,7 @@ int main_program(int num_args, char** args)
 
 		//Holds optimal solutions
 		vector< vector<label> > optimal_solutions;
-		real optimum;
+		real optimum = -1;
 
 		if (do_exhaustive) {
 			ASSERT(n<=30); // Otherwise too big
