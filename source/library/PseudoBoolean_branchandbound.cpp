@@ -244,7 +244,7 @@ namespace Petter
 			}
 			
 			if (verbose) {
-				cout << setprecision(1) << problem.bound << NORMAL;
+				cout << problem.bound << NORMAL;
 				cout << " upper = " << upper_bound << endl;
 			}
 

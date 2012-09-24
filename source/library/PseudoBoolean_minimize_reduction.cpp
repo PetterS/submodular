@@ -86,6 +86,7 @@ namespace Petter
 			var_used[l] = true;
 		}
 
+		index nOptimizedVars = hocr.maxID() + 1;
 
 		PBF<real,2> qpbf;
 		hocr.toQuadratic(qpbf); 
@@ -97,7 +98,7 @@ namespace Petter
 		qpbo.ComputeWeakPersistencies();
 
 		nlabelled = 0;
-		for (int i=0; i<nVars && i<qpbf.size(); ++i) {
+		for (int i=0; i < nOptimizedVars; ++i) {
 			if (var_used[i] || x.at(i)<0) {
 				x[i] = qpbo.GetLabel(i);
 			}
@@ -107,9 +108,8 @@ namespace Petter
 		}
 
 		// These variables were not part of the minimization
-		for (int i=qpbf.size(); i<nVars; ++i) {
-				nlabelled++;
-		}
+		ASSERT(nVars >= nOptimizedVars);
+		nlabelled += nVars - nOptimizedVars;
 
 		real energy = constant + qpbo.ComputeTwiceLowerBound()/2;
 		//double energy = eval(x); //Only when x is fully labelled
