@@ -12,4 +12,5 @@ script:
  - mkdir ~/obj
  - mkdir ~/obj/submodular
  - make
- - ./bin/submodular
+ - cd bin
+ - ./submodular
