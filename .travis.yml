@@ -1,8 +1,12 @@
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq coinor-libclp-dev
+ - cd thirdparty
+ - chmod 777 download_thirdparty.sh
+ - ./download_thirdparty.sh
+ - cd ..
 language: cpp
 compiler:
   - gcc
-script:
+script: echo OK
 
