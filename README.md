@@ -1,4 +1,6 @@
 
+[![Build Status](https://travis-ci.org/PetterS/submodular.png)](https://travis-ci.org/PetterS/submodular)
+
 Please refer to Readme.pdf for documentation. Automatically generated documentation is available in doc/html.
 
 This library implements the optimization method decribed in [1]. The code may be freely used as long as this publication is cited.
@@ -17,26 +19,32 @@ and it is able to use
 
 if the software is downloaded. If you use the methods/software from [3-5], you should cite them.
 
+Building
+--------
+Readme.pdf contains build instructions. Users of Ubuntu can look at the .travis.yml file, which contains all commands neccessary for downloading all requirements and building the library.
+
+The current build status on Ubuntu is:
+[![Build Status](https://travis-ci.org/PetterS/submodular.png)](https://travis-ci.org/PetterS/submodular)
+
 Reproducing figures 1 and 2 in the paper
-==========================================
- 1. Compile the demo program (see PDF)
- 2. Run:
+----------------------------------------
+ * Compile the demo program (see PDF)
+ * Run:
 	batchrun3
 	batchrun4
- 3. From MATLAB, run:
+ * From MATLAB, run:
 	plot_batchrun('run_3_1000_1000.data')
 	plot_batchrun('run_4_1000_300.data')
-		
- This will reproduce the figures from [2] (similar to [1]). 
- 
+
+This will reproduce the figures from [2] (similar to [1]).
+
  4. (optional) Use Python to run:
 	python parse_batchrun.py
-		
+
  This will generate statistics.
- 
- 
+
+
 Running the examples from the papers
-=====================================
+------------------------------------
  The file "examples from paper.cmd" will run the two examples
- which appear in the papers. 
- 
+ which appear in the papers.
