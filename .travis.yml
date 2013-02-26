@@ -8,5 +8,8 @@ before_install:
 language: cpp
 compiler:
   - gcc
-script: echo OK
+script:
+ - make
+ - ./bin/submodular
+
 
