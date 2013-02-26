@@ -9,7 +9,7 @@ language: cpp
 compiler:
   - gcc
 script:
+ - mkdir ~/obj
+ - mkdir ~/obj/submodular
  - make
  - ./bin/submodular
-
-
