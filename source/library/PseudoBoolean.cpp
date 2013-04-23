@@ -666,6 +666,79 @@ namespace Petter
 	}
 
 
+	template<typename real>
+	void PseudoBoolean<real>::make_submodular()
+	{
+		ASSERT_STR(aijkl.size() == 0, "Can not make a function of degree > 3 submodular.");
+
+		std::map<pair, real> submodular_sum;
+		for (auto itr = aijk.begin(); itr != aijk.end(); ++itr) {
+			real coefficient = itr->second;
+			if (coefficient > 0) {
+				int i = get_i(itr->first);
+				int j = get_j(itr->first);
+				int k = get_k(itr->first);
+			
+				submodular_sum[make_pair(i, j)] += coefficient;
+				submodular_sum[make_pair(i, k)] += coefficient;
+				submodular_sum[make_pair(j, k)] += coefficient;
+			}
+		}
+
+		for (auto itr = aij.begin(); itr != aij.end(); ++itr) {
+			int i = get_i(itr->first);
+			int j = get_j(itr->first);
+
+			real& coef = itr->second;
+			real sum = submodular_sum[make_pair(i, j)];
+			if (coef >= -sum) {
+				coef = -sum;
+			}
+		}
+	}
+
+	bool next_boolean_vector(std::vector<label>& x)
+	{
+		size_t n = x.size();
+		size_t i = 0;
+		x[0]++;
+		while (x[i] > 1) {
+			x[i]=0;
+			i++;
+			if (i==n) {
+				return false;
+			}
+			x[i]+=1;
+		}
+		return true;
+	}
+
+	template<typename real>
+	bool PseudoBoolean<real>::is_submodular() const
+	{
+		size_t n = nvars();
+		ASSERT_STR(n <= 10, "is_submodular can not handle functions with more than 10 variables.");
+
+		vector<label> x(n, 0);
+		vector<label> y(n, 0);
+		vector<label> minxy(n);
+		vector<label> maxxy(n);
+		do {
+		do {
+			for (int i = 0; i < n; ++i) {
+				minxy[i] = std::min(x[i], y[i]);
+				maxxy[i] = std::max(x[i], y[i]);
+			}
+			real lhs = eval(minxy) + eval(maxxy);
+			real rhs = eval(x) + eval(y);
+			if (lhs > rhs) {
+				return false;
+			}
+		} while (next_boolean_vector(x));
+		} while (next_boolean_vector(y));
+		return true;
+	}
+
 
 	template<typename real>
 	SymmetricPseudoBoolean<real>::SymmetricPseudoBoolean()

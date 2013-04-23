@@ -13,6 +13,18 @@
     <Filter Include="Petter">
       <UniqueIdentifier>{315698d8-c8e1-4272-8768-fbea3b820c16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GC">
+      <UniqueIdentifier>{284760ec-df70-4aba-ba41-dfdf4bd44a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GC\APGC">
+      <UniqueIdentifier>{fa6ecc56-0161-43cf-9ff2-63830e3545d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GC\PRGC">
+      <UniqueIdentifier>{840a8d97-52b0-448b-9195-5a3eeeb10ebc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GC\Util">
+      <UniqueIdentifier>{634dd5e6-7b81-4c67-b299-155c8d12b6a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\thirdparty\QPBO\QPBO.cpp">
@@ -35,6 +47,66 @@
     </ClCompile>
     <ClCompile Include="..\..\thirdparty\Petter\Petter-Color.cc">
       <Filter>Petter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGC.cpp">
+      <Filter>GC\APGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGC_AugmentFlow.cpp">
+      <Filter>GC\APGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGC_Expand.cpp">
+      <Filter>GC\APGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGC_ProcessAuxOrphans.cpp">
+      <Filter>GC\APGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGC_ProcessOrphans.cpp">
+      <Filter>GC\APGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGC_ProcessPixOrphans.cpp">
+      <Filter>GC\APGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGCConfig.cpp">
+      <Filter>GC\APGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGCDataStructures.cpp">
+      <Filter>GC\APGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGCDebug.cpp">
+      <Filter>GC\APGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGCDump.cpp">
+      <Filter>GC\APGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\prgc\PRGC.cpp">
+      <Filter>GC\PRGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\prgc\PRGC_Expand.cpp">
+      <Filter>GC\PRGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\prgc\PRGCConfig.cpp">
+      <Filter>GC\PRGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\prgc\PRGCDataStructures.cpp">
+      <Filter>GC\PRGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\prgc\PRGCDebug.cpp">
+      <Filter>GC\PRGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\prgc\PRGCDump.cpp">
+      <Filter>GC\PRGC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\util\GadgetGraphConfig.cpp">
+      <Filter>GC\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\util\DebugUtils.cpp">
+      <Filter>GC\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\util\GadgetGraph.cpp">
+      <Filter>GC\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\thirdparty\gc-source\stdafx.cpp">
+      <Filter>GC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,10 @@
 
 #include "PseudoBoolean.h"
 #include "Minimizer.h"
+
+#include "StdAfx.h"
+#include "apgc/APGC.h"
+
 using namespace std;
 
 namespace Petter

@@ -208,6 +208,12 @@ namespace Petter
         /// \private
 		real minimize_generators(vector<label>& x, int& labeled, bool heuristic = false);
 
+		/// Makes the function submodular by modifying the quadratic monomials.
+		void make_submodular();
+
+		/// Checks whether the function is submodular by exhaustive evaluation
+		bool is_submodular() const;
+
 	protected:
 		// //////////////////////////
 		// Polynomial coefficients //
@@ -230,6 +236,10 @@ namespace Petter
 		pbf.print_helper(out);
 		return out;
 	}
+
+	/// Computes the next boolean vector. Returns false if the vector is 
+	/// already all ones.
+	bool next_boolean_vector(std::vector<label>& x);
 
     /// Holds info about a branch-and-bound run. See branch_and_bound().
 	struct BBInfo

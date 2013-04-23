@@ -3,5 +3,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\source\main_program.cpp" />
     <ClCompile Include="..\..\source\submodular_tests.cpp" />
+    <ClCompile Include="..\..\source\get_polynomial.cpp" />
   </ItemGroup>
 </Project>

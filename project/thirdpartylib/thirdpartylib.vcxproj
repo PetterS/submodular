@@ -19,6 +19,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGC.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGCConfig.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGCDataStructures.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGCDebug.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGCDump.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGC_AugmentFlow.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGC_Expand.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGC_ProcessAuxOrphans.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGC_ProcessOrphans.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\apgc\APGC_ProcessPixOrphans.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\prgc\PRGC.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\prgc\PRGCConfig.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\prgc\PRGCDataStructures.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\prgc\PRGCDebug.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\prgc\PRGCDump.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\prgc\PRGC_Expand.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\stdafx.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\util\DebugUtils.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\util\GadgetGraph.cpp" />
+    <ClCompile Include="..\..\thirdparty\gc-source\util\GadgetGraphConfig.cpp" />
     <ClCompile Include="..\..\thirdparty\maxflow-v3.01.src\graph.cpp" />
     <ClCompile Include="..\..\thirdparty\maxflow-v3.01.src\maxflow.cpp" />
     <ClCompile Include="..\..\thirdparty\Petter\Petter-Color.cc" />
@@ -42,24 +62,28 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -78,19 +102,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <IncludePath>../../thirdparty/gc-source;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <IncludePath>../../thirdparty/gc-source;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <IncludePath>../../thirdparty/gc-source;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <IncludePath>../../thirdparty/gc-source;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\Clp-1.10.1\CoinUtils\src;../../thirdparty\Clp-1.10.1\CoinUtils\inc;../../thirdparty\Clp-1.10.1\Clp\src;../../thirdparty\Clp-1.10.1\Clp\inc;../../thirdparty\Clp-1.10.1\BuildTools\headers;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
