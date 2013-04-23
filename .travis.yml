@@ -14,3 +14,8 @@ script:
  - make
  - cd bin
  - ./submodular
+
+# whitelist
+branches:
+  only:
+    - master
