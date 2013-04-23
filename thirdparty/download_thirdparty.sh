@@ -1,9 +1,9 @@
 #!/bin/bash
 
-wget http://www.cs.ucl.ac.uk/staff/V.Kolmogorov/software/maxflow-v3.01.src.tar.gz 
+wget http://pub.ist.ac.at/~vnk/software/maxflow-v3.01.src.tar.gz 
 tar -xzf maxflow-v3.01.src.tar.gz 
 
-wget http://www.cs.ucl.ac.uk/staff/V.Kolmogorov/software/QPBO-v1.3.src.tar.gz 
+wget http://pub.ist.ac.at/~vnk/software/QPBO-v1.3.src.tar.gz 
 tar -xzf QPBO-v1.3.src.tar.gz 
 mv QPBO-v1.3.src/* QPBO  
 
