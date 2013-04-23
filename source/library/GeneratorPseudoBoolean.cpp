@@ -78,89 +78,107 @@ namespace Petter
 	{
 		ifstream fin(filename);
 
-		fin >> ngen2 >> ngen3 >> ngen4pos;
-		ASSERT_STR(fin, "Could not read file");
-
-		ngen4=2*ngen4pos; //Half of generators required to be positive!
-		ngen4neg = ngen4pos;
-
-
-		//
-		// Read generated forms
-		// 
-
-		// Read quadratic generators
-		gen2red.resize(ngen2);
-		for (int i=0;i<ngen2;++i) {
-			read_reduced_polynomial<real>( gen2red.at(i), fin);
+		// First try to read the version of the file. 
+		string V;
+		int version = 0;
+		fin >> V >> version;
+		if (V != "Version") {
+			// There was no version string. Reset the file stream.
+			fin.close();
+			fin.open(filename);
+			version = 1;
 		}
 
-		// Read cubic generators
-		gen3red.resize(ngen3);
-		for (int i=0;i<ngen3;++i) {
-			read_reduced_polynomial<real>( gen3red.at(i), fin);
+		ASSERT_STR(version == 1 || version == 2, "Invalid version number.");
+
+		if (version == 1) {
+			fin >> ngen2 >> ngen3 >> ngen4pos;
+			ASSERT_STR(fin, "Could not read file");
+
+			ngen4=2*ngen4pos; //Half of generators required to be positive!
+			ngen4neg = ngen4pos;
+
+
+			//
+			// Read generated forms
+			// 
+
+			// Read quadratic generators
+			gen2red.resize(ngen2);
+			for (int i=0;i<ngen2;++i) {
+				read_reduced_polynomial<real>( gen2red.at(i), fin);
+			}
+
+			// Read cubic generators
+			gen3red.resize(ngen3);
+			for (int i=0;i<ngen3;++i) {
+				read_reduced_polynomial<real>( gen3red.at(i), fin);
+			}
+
+			// Read quadratic generators
+			gen4redpos.resize(ngen4pos);
+			for (int i=0;i<ngen4pos;++i) {
+				read_reduced_polynomial<real>( gen4redpos.at(i), fin);
+			}
+			gen4redneg.resize(ngen4neg);
+			for (int i=0;i<ngen4neg;++i) {
+				read_reduced_polynomial<real>( gen4redneg.at(i), fin);
+			}
+
+			//
+			// Read aa,bb and cc
+			// 
+
+			nentries2 = read_vec(cc,fin,ngen2);
+			read_vec(obj2,fin,ngen2);
+
+			ASSERT_STR(fin, "Could not read cc");
+
+			nentries3  = read_vec(bb12,fin,ngen3);
+			nentries3 += read_vec(bb13,fin,ngen3);
+			nentries3 += read_vec(bb23,fin,ngen3);
+			nentries3 += read_vec(bb123,fin,ngen3);
+
+			read_vec(obj3,fin,ngen3);
+
+
+			ASSERT_STR(fin, "Could not read bb");
+
+			nentries4  = read_vec(aa12pos,fin,ngen4pos);
+			nentries4 += read_vec(aa13pos,fin,ngen4pos);
+			nentries4 += read_vec(aa14pos,fin,ngen4pos);
+			nentries4 += read_vec(aa23pos,fin,ngen4pos);
+			nentries4 += read_vec(aa24pos,fin,ngen4pos);
+			nentries4 += read_vec(aa34pos,fin,ngen4pos);
+			nentries4 += read_vec(aa123pos,fin,ngen4pos);
+			nentries4 += read_vec(aa124pos,fin,ngen4pos);
+			nentries4 += read_vec(aa134pos,fin,ngen4pos);
+			nentries4 += read_vec(aa234pos,fin,ngen4pos);
+			nentries4 += read_vec(aa1234pos,fin,ngen4pos);
+
+			read_vec(obj4pos,fin,ngen4pos);
+
+			size_t ndummy = read_vec(aa12neg,fin,ngen4neg);
+			ndummy += read_vec(aa13neg,fin,ngen4neg);
+			ndummy += read_vec(aa14neg,fin,ngen4neg);
+			ndummy += read_vec(aa23neg,fin,ngen4neg);
+			ndummy += read_vec(aa24neg,fin,ngen4neg);
+			ndummy += read_vec(aa34neg,fin,ngen4neg);
+			ndummy += read_vec(aa123neg,fin,ngen4neg);
+			ndummy += read_vec(aa124neg,fin,ngen4neg);
+			ndummy += read_vec(aa134neg,fin,ngen4neg);
+			ndummy += read_vec(aa234neg,fin,ngen4neg);
+			ndummy += read_vec(aa1234neg,fin,ngen4neg);
+
+			read_vec(obj4neg,fin,ngen4neg);
+
+			ASSERT_STR(ndummy==nentries4,"Not same number of entries in pos and neg");
+
+			ASSERT_STR(fin, "Could not read aa");
 		}
+		else if (version == 2) {
 
-		// Read quadratic generators
-		gen4redpos.resize(ngen4pos);
-		for (int i=0;i<ngen4pos;++i) {
-			read_reduced_polynomial<real>( gen4redpos.at(i), fin);
 		}
-		gen4redneg.resize(ngen4neg);
-		for (int i=0;i<ngen4neg;++i) {
-			read_reduced_polynomial<real>( gen4redneg.at(i), fin);
-		}
-
-		//
-		// Read aa,bb and cc
-		// 
-
-		nentries2 = read_vec(cc,fin,ngen2);
-		read_vec(obj2,fin,ngen2);
-
-		ASSERT_STR(fin, "Could not read cc");
-
-		nentries3  = read_vec(bb12,fin,ngen3);
-		nentries3 += read_vec(bb13,fin,ngen3);
-		nentries3 += read_vec(bb23,fin,ngen3);
-		nentries3 += read_vec(bb123,fin,ngen3);
-
-		read_vec(obj3,fin,ngen3);
-
-
-		ASSERT_STR(fin, "Could not read bb");
-
-		nentries4  = read_vec(aa12pos,fin,ngen4pos);
-		nentries4 += read_vec(aa13pos,fin,ngen4pos);
-		nentries4 += read_vec(aa14pos,fin,ngen4pos);
-		nentries4 += read_vec(aa23pos,fin,ngen4pos);
-		nentries4 += read_vec(aa24pos,fin,ngen4pos);
-		nentries4 += read_vec(aa34pos,fin,ngen4pos);
-		nentries4 += read_vec(aa123pos,fin,ngen4pos);
-		nentries4 += read_vec(aa124pos,fin,ngen4pos);
-		nentries4 += read_vec(aa134pos,fin,ngen4pos);
-		nentries4 += read_vec(aa234pos,fin,ngen4pos);
-		nentries4 += read_vec(aa1234pos,fin,ngen4pos);
-
-		read_vec(obj4pos,fin,ngen4pos);
-
-		size_t ndummy = read_vec(aa12neg,fin,ngen4neg);
-		ndummy += read_vec(aa13neg,fin,ngen4neg);
-		ndummy += read_vec(aa14neg,fin,ngen4neg);
-		ndummy += read_vec(aa23neg,fin,ngen4neg);
-		ndummy += read_vec(aa24neg,fin,ngen4neg);
-		ndummy += read_vec(aa34neg,fin,ngen4neg);
-		ndummy += read_vec(aa123neg,fin,ngen4neg);
-		ndummy += read_vec(aa124neg,fin,ngen4neg);
-		ndummy += read_vec(aa134neg,fin,ngen4neg);
-		ndummy += read_vec(aa234neg,fin,ngen4neg);
-		ndummy += read_vec(aa1234neg,fin,ngen4neg);
-
-		read_vec(obj4neg,fin,ngen4neg);
-
-		ASSERT_STR(ndummy==nentries4,"Not same number of entries in pos and neg");
-
-		ASSERT_STR(fin, "Could not read aa");
 	}
 
 
