@@ -1,14 +1,17 @@
-function plot_batchrun_new(filename,nedges,use_packing)
+function plot_batchrun_new(filename,nedges,use_packing,use_m)
     if nargin<2
         nedges=20;
 	end
 	if nargin<3
 		use_packing = false;
 	end
+	if nargin<4
+		use_m = false;
+	end
 
     data = load(filename);
-	if size(data,2) < 24
-		data(end,24)=0;
+	if size(data,2) < 30
+		data(end,30)=0;
 	end
 		
     disp(filename)
@@ -23,6 +26,7 @@ function plot_batchrun_new(filename,nedges,use_packing)
     fixetal    = data(:,15+1);
     fixetal_itr= data(:,16+1);
 	generators = data(:,21+1);
+	m          = data(:,27+1);
 	if use_packing
 		packing    = data(:,24+1);
 	end
@@ -32,6 +36,7 @@ function plot_batchrun_new(filename,nedges,use_packing)
     heuristicbound = data(:,10+1);
     fixetalbound   = data(:,17+1);
 	generatorsbound= data(:,22+1);
+	mbound         = data(:,28+1);
 	if use_packing
 		packingbound = data(:,25+1);
 	end
@@ -41,6 +46,7 @@ function plot_batchrun_new(filename,nedges,use_packing)
 	heuristictime   = data(:,14+1);
 	fixetaltime     = data(:,19+1);
 	generatorstime  = data(:,23+1);
+	mtime           = data(:,29+1);
 	if use_packing
 		packingtime = data(:,26+1);
 	end
@@ -62,6 +68,9 @@ function plot_batchrun_new(filename,nedges,use_packing)
     disp('HOCR');
     print_bound(optimalbound, hocrbound);
 	print_time(hocrtime);
+	disp('M-reductions');
+    print_bound(optimalbound, mbound);
+	print_time(mtime);
 	if use_packing
 		disp('Packing');
 		print_bound(optimalbound, packingbound);
@@ -84,6 +93,11 @@ function plot_batchrun_new(filename,nedges,use_packing)
 		h5 = plot_hist(generators,   edges,[0 0 0],':');
 		h = [h5 h4 h3 h2 h1];
 		leg_str = {'GRD-gen','GRD','GRD-heur.','Fix et al.','HOCR'};
+		if use_m
+			leg_str{end+1} = 'M';
+			h6 = plot_hist(m,   edges,[0.5 0.5 0.5],'-');
+			h(end+1) = h6;
+		end
 	else
 		h1 = plot_hist(hocr,      edges,[ 0.9526    0.5773    0.8113],'-');
 		h5 = plot_hist(generators,   edges,[0 0 0],':');
