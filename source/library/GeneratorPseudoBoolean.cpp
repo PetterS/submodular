@@ -814,7 +814,7 @@ namespace Petter
 		int extra1 = n;
 		int extra2 = n + 1;
 
-		PseudoBoolean<real> f_debug;
+		//PseudoBoolean<real> f_debug;
 
 		//
 		// Degree-1 terms.
@@ -826,8 +826,8 @@ namespace Petter
 			graph.AddUnaryTerm(i,         0,     alpha);
 			graph.AddUnaryTerm(i + nVars, alpha,     0);
 
-			f_debug.add_clique(i, 0, alpha);
-			f_debug.add_clique(i + nVars, alpha, 0);
+			//f_debug.add_clique(i, 0, alpha);
+			//f_debug.add_clique(i + nVars, alpha, 0);
 		}
 
 		//
@@ -851,39 +851,39 @@ namespace Petter
 				if (alpha > 0) {
 					// Add cliques for this generator to the graph
 					{
-						float E1[]= {generator.values1.at(0), // E000
-									 generator.values1.at(1), // E001
-									 generator.values1.at(2), // E010
-									 generator.values1.at(3), // E011
-									 generator.values1.at(0), // E100
-									 generator.values1.at(1), // E101
-									 generator.values1.at(2), // E110
-									 generator.values1.at(3)};// E111
+						float E1[]= {alpha * generator.values1.at(0), // E000
+									 alpha * generator.values1.at(1), // E001
+									 alpha * generator.values1.at(2), // E010
+									 alpha * generator.values1.at(3), // E011
+									 alpha * generator.values1.at(0), // E100
+									 alpha * generator.values1.at(1), // E101
+									 alpha * generator.values1.at(2), // E110
+									 alpha * generator.values1.at(3)};// E111
 						int indices1[] = {extra1,
 										  idx.at(generator.indices1.at(0)),
 										  idx.at(generator.indices1.at(1))};
 						C += make_clique_positive(clique_size, E1);
 						graph.AddHigherTerm(indices1, E1);
-						f_debug.add_clique(indices1[0], indices1[1], indices1[2],
-							E1[0], E1[1], E1[2], E1[3], E1[4], E1[5], E1[6], E1[7]);
+						//f_debug.add_clique(indices1[0], indices1[1], indices1[2],
+						//	E1[0], E1[1], E1[2], E1[3], E1[4], E1[5], E1[6], E1[7]);
 					}
 
 					{
-						float E2[]= {generator.values2.at(0), // E000
-									 generator.values2.at(1), // E001
-									 generator.values2.at(2), // E010
-									 generator.values2.at(3), // E011
-									 generator.values2.at(0), // E100
-									 generator.values2.at(1), // E101
-									 generator.values2.at(2), // E110
-									 generator.values2.at(3)};// E111
+						float E2[]= {alpha * generator.values2.at(0), // E000
+									 alpha * generator.values2.at(1), // E001
+									 alpha * generator.values2.at(2), // E010
+									 alpha * generator.values2.at(3), // E011
+									 alpha * generator.values2.at(0), // E100
+									 alpha * generator.values2.at(1), // E101
+									 alpha * generator.values2.at(2), // E110
+									 alpha * generator.values2.at(3)};// E111
 						int indices2[] = {extra1,
 										  idx.at(generator.indices2.at(0)),
 										  idx.at(generator.indices2.at(1))};
 						C += make_clique_positive(clique_size, E2);
 						graph.AddHigherTerm(indices2, E2);
-						f_debug.add_clique(indices2[0], indices2[1], indices2[2],
-							E2[0], E2[1], E2[2], E2[3], E2[4], E2[5], E2[6], E2[7]);
+						//f_debug.add_clique(indices2[0], indices2[1], indices2[2],
+						//	E2[0], E2[1], E2[2], E2[3], E2[4], E2[5], E2[6], E2[7]);
 					}
 				}
 			}
@@ -914,48 +914,48 @@ namespace Petter
 					// Add cliques for this generator to the graph
 
 					{
-						float E1[]= {generator.values1.at(0), // E000
-									 generator.values1.at(1), // E001
-									 generator.values1.at(2), // E010
-									 generator.values1.at(3), // E011
-									 generator.values1.at(4), // E100
-									 generator.values1.at(5), // E101
-									 generator.values1.at(6), // E110
-									 generator.values1.at(7)};// E111
+						float E1[]= {alpha * generator.values1.at(0), // E000
+									 alpha * generator.values1.at(1), // E001
+									 alpha * generator.values1.at(2), // E010
+									 alpha * generator.values1.at(3), // E011
+									 alpha * generator.values1.at(4), // E100
+									 alpha * generator.values1.at(5), // E101
+									 alpha * generator.values1.at(6), // E110
+									 alpha * generator.values1.at(7)};// E111
 						int indices1[] = {idx.at(generator.indices1.at(0)),
 										  idx.at(generator.indices1.at(1)),
 										  idx.at(generator.indices1.at(2))};
 						C += make_clique_positive(clique_size, E1);
 						graph.AddHigherTerm(indices1, E1);
-						f_debug.add_clique(indices1[0], indices1[1], indices1[2],
-							E1[0], E1[1], E1[2], E1[3], E1[4], E1[5], E1[6], E1[7]);
+						//f_debug.add_clique(indices1[0], indices1[1], indices1[2],
+						//	E1[0], E1[1], E1[2], E1[3], E1[4], E1[5], E1[6], E1[7]);
 					}
 
 					{
-						float E2[]= {generator.values2.at(0), // E000
-									 generator.values2.at(1), // E001
-									 generator.values2.at(2), // E010
-									 generator.values2.at(3), // E011
-									 generator.values2.at(4), // E100
-									 generator.values2.at(5), // E101
-									 generator.values2.at(6), // E110
-									 generator.values2.at(7)};// E111
+						float E2[]= {alpha * generator.values2.at(0), // E000
+									 alpha * generator.values2.at(1), // E001
+									 alpha * generator.values2.at(2), // E010
+									 alpha * generator.values2.at(3), // E011
+									 alpha * generator.values2.at(4), // E100
+									 alpha * generator.values2.at(5), // E101
+									 alpha * generator.values2.at(6), // E110
+									 alpha * generator.values2.at(7)};// E111
 						int indices2[] = {idx.at(generator.indices2.at(0)),
 										  idx.at(generator.indices2.at(1)),
 										  idx.at(generator.indices2.at(2))};
 						C += make_clique_positive(clique_size, E2);
 						graph.AddHigherTerm(indices2, E2);
-						f_debug.add_clique(indices2[0], indices2[1], indices2[2],
-							E2[0], E2[1], E2[2], E2[3], E2[4], E2[5], E2[6], E2[7]);
+						//f_debug.add_clique(indices2[0], indices2[1], indices2[2],
+						//	E2[0], E2[1], E2[2], E2[3], E2[4], E2[5], E2[6], E2[7]);
 					}
 				}
 			}
 		}
 
 
-		double min_g = C + graph.FindMaxFlow();
-		std::cout << "Generic cuts\n";
-		std::cout << "C=" << C << " min_g=" << min_g << "\n";
+		double min_g = constant + C + graph.FindMaxFlow();
+		//std::cout << "Generic cuts\n";
+		//std::cout << "C=" << C << " min_g=" << min_g << "\n";
 
 		vector<label> xfull(n);
 		for (int i = 0; i < n; ++i) {
@@ -1003,40 +1003,40 @@ namespace Petter
 		//
 		// Minimize f_debug with exhaustive search.
 		//
-		vector<label> x_debug(n + 2, 0), x_debug_opt(n + 2, 0);
-		real optimum = f_debug.eval(x_debug);
-		while (true) {
-			x_debug[0]++;
-			int i=0;
-			while (x_debug[i]>1) {
-				x_debug[i]=0;
-				i++;
-				if (i == n + 2) {
-					break;
-				}
-				x_debug[i]+=1;
-			}
-			if (i == n + 2) {
-				break;
-			}
+		//vector<label> x_debug(n + 2, 0), x_debug_opt(n + 2, 0);
+		//real optimum = f_debug.eval(x_debug);
+		//while (true) {
+		//	x_debug[0]++;
+		//	int i=0;
+		//	while (x_debug[i]>1) {
+		//		x_debug[i]=0;
+		//		i++;
+		//		if (i == n + 2) {
+		//			break;
+		//		}
+		//		x_debug[i]+=1;
+		//	}
+		//	if (i == n + 2) {
+		//		break;
+		//	}
 
-			real energy = f_debug.eval(x_debug);
-			if (energy < optimum) {
-				optimum = energy;
-				x_debug_opt = x_debug;
-			}
-		}
+		//	real energy = f_debug.eval(x_debug);
+		//	if (energy < optimum) {
+		//		optimum = energy;
+		//		x_debug_opt = x_debug;
+		//	}
+		//}
 
-		std::cout << "Exhaustive debug\n";
-		std::cout << "C=" << C << " min_f_debug=" << C + optimum << "\n";
-		for (int i = 0; i < nVars; ++i) {
-			std::cout << x_debug_opt[i];
-		}
-		std::cout << ", ";
-		for (int i = 0; i < nVars; ++i) {
-			std::cout << x_debug_opt[i + nVars];
-		}
-		std::cout << "\n";
+		//std::cout << "Exhaustive debug\n";
+		//std::cout << "C=" << C << " min_f_debug=" << C + optimum << "\n";
+		//for (int i = 0; i < nVars; ++i) {
+		//	std::cout << x_debug_opt[i];
+		//}
+		//std::cout << ", ";
+		//for (int i = 0; i < nVars; ++i) {
+		//	std::cout << x_debug_opt[i + nVars];
+		//}
+		//std::cout << "\n";
 
 		return min_g;
 	}
