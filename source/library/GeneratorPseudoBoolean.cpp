@@ -962,14 +962,14 @@ namespace Petter
 			xfull[i] = graph.GetLabel(i);
 		}
 
-		for (int i = 0; i < nVars; ++i) {
-			std::cout << xfull[i];
-		}
-		std::cout << ", ";
-		for (int i = 0; i < nVars; ++i) {
-			std::cout << xfull[i + nVars];
-		}
-		std::cout << "\n";
+		//for (int i = 0; i < nVars; ++i) {
+		//	std::cout << xfull[i];
+		//}
+		//std::cout << ", ";
+		//for (int i = 0; i < nVars; ++i) {
+		//	std::cout << xfull[i + nVars];
+		//}
+		//std::cout << "\n";
 
 		nlabelled = 0;
 		for (int i=0; i<nVars; ++i) {
