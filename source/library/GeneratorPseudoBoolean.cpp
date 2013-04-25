@@ -83,6 +83,7 @@ namespace Petter
 		for (int i = 0; i < degree; ++i) {
 			int tmp;
 			fin >> tmp;
+			tmp--; // Convert between Maple indexing and C++ indexing 
 			this->indices1.push_back(tmp);
 		}
 
@@ -96,6 +97,7 @@ namespace Petter
 		for (int i = 0; i < degree; ++i) {
 			int tmp;
 			fin >> tmp;
+			tmp--; // Convert between Maple indexing and C++ indexing 
 			this->indices2.push_back(tmp);
 		}
 
@@ -744,7 +746,7 @@ namespace Petter
 	template<typename real>
 	real GeneratorPseudoBoolean<real>::minimize(vector<label>& x, int& nlabelled) const
 	{
-		ASSERT(this->gen.version == 1);
+		ASSERT(this->gen.version == 1 || this->gen.version == 2);
 		if (this->gen.version == 1) {
 			return minimize_version_1(x, nlabelled);
 		}
@@ -753,10 +755,290 @@ namespace Petter
 		}
 	}
 
+	float make_clique_positive(int clique_size, float* E)
+	{
+		float min_value = 0.0f;
+		int num_values = 1 << clique_size;
+		for (int i = 0; i < num_values; ++i) {
+			min_value = std::min(min_value, E[i]);
+		}
+
+		for (int i = 0; i < num_values; ++i) {
+			E[i] -= min_value;
+		}
+
+		return min_value;
+	}
+
 	template<typename real>
 	real GeneratorPseudoBoolean<real>::minimize_version_2(vector<label>& x, int& nlabelled) const
 	{
-		ASSERT_STR(false, "Version 2 not supported yet.");
+		ASSERT_STR(this->gen.ngen4 == 0, "Degree-4 generators are not yet supported.");
+
+		index nVars = index( x.size() ); // Number of variables.
+		int n = 2 * nVars;  // Because we have x and y.
+		int num_cliques = 0;
+
+		for (auto itr = alphaij.begin(); itr != alphaij.end(); ++itr) {
+			const auto& vec = itr->second;
+			for (int ii=0;ii<gen.ngen2;++ii) {
+				real alpha = vec.at(ii);
+				if (alpha > 0) {
+					num_cliques++;
+				}
+			}
+		}
+
+		for (auto itr = alphaijk.begin(); itr != alphaijk.end(); ++itr) {
+			const auto& vec = itr->second;
+			for (int ii=0;ii<gen.ngen3;++ii) {
+				real alpha = vec.at(ii);
+				if (alpha > 0) {
+					// Add monomials for this generator to the graph
+					num_cliques++;
+				}
+			}
+		}
+
+
+		real C = 0; // Constant in objective function.
+		int clique_size = 3;
+		int num_cliques_per_node = 100*n; // TODO: Fix this. (Is this parameter used by GC?)
+
+		// We add two extra variables in order to be able to add degree-2 cliques
+		// as degree-4 cliques.
+		APGC graph(n + 2,
+		           2 * num_cliques, // Each generator gives two cliques.
+		           clique_size,
+		           num_cliques_per_node);
+		int extra1 = n;
+		int extra2 = n + 1;
+
+		PseudoBoolean<real> f_debug;
+
+		//
+		// Degree-1 terms.
+		//
+		for (auto itr = alphai.begin(); itr != alphai.end(); ++itr) {
+			int i = itr->first;
+			real alpha = itr->second;
+
+			graph.AddUnaryTerm(i,         0,     alpha);
+			graph.AddUnaryTerm(i + nVars, alpha,     0);
+
+			f_debug.add_clique(i, 0, alpha);
+			f_debug.add_clique(i + nVars, alpha, 0);
+		}
+
+		//
+		// Go through all alphas which correspond to quadratic generators
+		// 
+		for (auto itr = alphaij.begin(); itr != alphaij.end(); ++itr) {
+			const pair& ind = itr->first;
+			int i=get_i(ind);
+			int j=get_j(ind);
+
+			vector<int> idx(4); // Translates from "local" indices to "global"
+			idx[0] = i; // x variables
+			idx[1] = j;
+			idx[2] = i + nVars; // y variables
+			idx[3] = j + nVars;
+
+			const auto& vec = itr->second;
+			for (int ii=0;ii<gen.ngen2;++ii) {
+				real alpha = vec.at(ii);
+				auto& generator = gen.gen2.at(ii);
+				if (alpha > 0) {
+					// Add cliques for this generator to the graph
+					{
+						float E1[]= {generator.values1.at(0), // E000
+									 generator.values1.at(1), // E001
+									 generator.values1.at(2), // E010
+									 generator.values1.at(3), // E011
+									 generator.values1.at(0), // E100
+									 generator.values1.at(1), // E101
+									 generator.values1.at(2), // E110
+									 generator.values1.at(3)};// E111
+						int indices1[] = {extra1,
+										  idx.at(generator.indices1.at(0)),
+										  idx.at(generator.indices1.at(1))};
+						C += make_clique_positive(clique_size, E1);
+						graph.AddHigherTerm(indices1, E1);
+						f_debug.add_clique(indices1[0], indices1[1], indices1[2],
+							E1[0], E1[1], E1[2], E1[3], E1[4], E1[5], E1[6], E1[7]);
+					}
+
+					{
+						float E2[]= {generator.values2.at(0), // E000
+									 generator.values2.at(1), // E001
+									 generator.values2.at(2), // E010
+									 generator.values2.at(3), // E011
+									 generator.values2.at(0), // E100
+									 generator.values2.at(1), // E101
+									 generator.values2.at(2), // E110
+									 generator.values2.at(3)};// E111
+						int indices2[] = {extra1,
+										  idx.at(generator.indices2.at(0)),
+										  idx.at(generator.indices2.at(1))};
+						C += make_clique_positive(clique_size, E2);
+						graph.AddHigherTerm(indices2, E2);
+						f_debug.add_clique(indices2[0], indices2[1], indices2[2],
+							E2[0], E2[1], E2[2], E2[3], E2[4], E2[5], E2[6], E2[7]);
+					}
+				}
+			}
+		}
+
+		//
+		// Go through all alphas which correspond to cubic generators
+		// 
+		for (auto itr = alphaijk.begin(); itr != alphaijk.end(); ++itr) {
+			const triple& ind = itr->first;
+			int i=get_i(ind);
+			int j=get_j(ind);
+			int k=get_k(ind);
+
+			vector<int> idx(6); // Translates from "local" indices to "global"
+			idx.at(0) = i; // x variables
+			idx.at(1) = j;
+			idx.at(2) = k;
+			idx.at(3) = i + nVars; // y variables
+			idx.at(4) = j + nVars;
+			idx.at(5) = k + nVars;
+
+			const auto& vec = itr->second;
+			for (int ii=0;ii<gen.ngen3;++ii) {
+				real alpha = vec.at(ii);
+				auto& generator = gen.gen3.at(ii);
+				if (alpha > 0) {
+					// Add cliques for this generator to the graph
+
+					{
+						float E1[]= {generator.values1.at(0), // E000
+									 generator.values1.at(1), // E001
+									 generator.values1.at(2), // E010
+									 generator.values1.at(3), // E011
+									 generator.values1.at(4), // E100
+									 generator.values1.at(5), // E101
+									 generator.values1.at(6), // E110
+									 generator.values1.at(7)};// E111
+						int indices1[] = {idx.at(generator.indices1.at(0)),
+										  idx.at(generator.indices1.at(1)),
+										  idx.at(generator.indices1.at(2))};
+						C += make_clique_positive(clique_size, E1);
+						graph.AddHigherTerm(indices1, E1);
+						f_debug.add_clique(indices1[0], indices1[1], indices1[2],
+							E1[0], E1[1], E1[2], E1[3], E1[4], E1[5], E1[6], E1[7]);
+					}
+
+					{
+						float E2[]= {generator.values2.at(0), // E000
+									 generator.values2.at(1), // E001
+									 generator.values2.at(2), // E010
+									 generator.values2.at(3), // E011
+									 generator.values2.at(4), // E100
+									 generator.values2.at(5), // E101
+									 generator.values2.at(6), // E110
+									 generator.values2.at(7)};// E111
+						int indices2[] = {idx.at(generator.indices2.at(0)),
+										  idx.at(generator.indices2.at(1)),
+										  idx.at(generator.indices2.at(2))};
+						C += make_clique_positive(clique_size, E2);
+						graph.AddHigherTerm(indices2, E2);
+						f_debug.add_clique(indices2[0], indices2[1], indices2[2],
+							E2[0], E2[1], E2[2], E2[3], E2[4], E2[5], E2[6], E2[7]);
+					}
+				}
+			}
+		}
+
+
+		double min_g = C + graph.FindMaxFlow();
+		std::cout << "Generic cuts\n";
+		std::cout << "C=" << C << " min_g=" << min_g << "\n";
+
+		vector<label> xfull(n);
+		for (int i = 0; i < n; ++i) {
+			xfull[i] = graph.GetLabel(i);
+		}
+
+		for (int i = 0; i < nVars; ++i) {
+			std::cout << xfull[i];
+		}
+		std::cout << ", ";
+		for (int i = 0; i < nVars; ++i) {
+			std::cout << xfull[i + nVars];
+		}
+		std::cout << "\n";
+
+		nlabelled = 0;
+		for (int i=0; i<nVars; ++i) {
+			bool used = false;
+			auto itr = var_used.find(i);
+			if (itr != var_used.end()) {
+				used = itr->second;
+			}
+
+			if (used) {
+			    x[i]     = xfull[i];
+				label yi = xfull[i+nVars];
+				if (x[i] == yi) {
+					x[i] = -1;
+				}
+				else {
+					nlabelled++;
+				}
+			}
+			else {
+				// This variable is not part of the polynomial,
+				// therefore labelled
+				if (x[i]<0) {
+					x[i]=0;
+				}
+				nlabelled++;
+			}
+		}
+
+
+		//
+		// Minimize f_debug with exhaustive search.
+		//
+		vector<label> x_debug(n + 2, 0), x_debug_opt(n + 2, 0);
+		real optimum = f_debug.eval(x_debug);
+		while (true) {
+			x_debug[0]++;
+			int i=0;
+			while (x_debug[i]>1) {
+				x_debug[i]=0;
+				i++;
+				if (i == n + 2) {
+					break;
+				}
+				x_debug[i]+=1;
+			}
+			if (i == n + 2) {
+				break;
+			}
+
+			real energy = f_debug.eval(x_debug);
+			if (energy < optimum) {
+				optimum = energy;
+				x_debug_opt = x_debug;
+			}
+		}
+
+		std::cout << "Exhaustive debug\n";
+		std::cout << "C=" << C << " min_f_debug=" << C + optimum << "\n";
+		for (int i = 0; i < nVars; ++i) {
+			std::cout << x_debug_opt[i];
+		}
+		std::cout << ", ";
+		for (int i = 0; i < nVars; ++i) {
+			std::cout << x_debug_opt[i + nVars];
+		}
+		std::cout << "\n";
+
+		return min_g;
 	}
 
 	template<typename real>
