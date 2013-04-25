@@ -73,6 +73,40 @@ namespace Petter
 		}
 	}
 
+	// Creates a generator of a specified degree and
+	// reads it from the input stream.
+	template<typename real>
+	SymmetricGenerator<real>::SymmetricGenerator(int degree, std::ifstream& fin)
+	{
+		ASSERT(fin);
+		ASSERT(degree == 2 || degree == 3 || degree == 4);
+		for (int i = 0; i < degree; ++i) {
+			int tmp;
+			fin >> tmp;
+			this->indices1.push_back(tmp);
+		}
+
+		int nvalues = 1 << degree;
+		for (int i = 0; i < nvalues; ++i) {
+			real tmp;
+			fin >> tmp;
+			this->values1.push_back(tmp);
+		}
+
+		for (int i = 0; i < degree; ++i) {
+			int tmp;
+			fin >> tmp;
+			this->indices2.push_back(tmp);
+		}
+
+		for (int i = 0; i < nvalues; ++i) {
+			real tmp;
+			fin >> tmp;
+			this->values2.push_back(tmp);
+		}
+		ASSERT_STR(fin, "Could not read generator.");
+	}
+
 	template<typename real> 
 	Generators<real>::Generators(const string& filename)
 	{
@@ -80,7 +114,7 @@ namespace Petter
 
 		// First try to read the version of the file. 
 		string V;
-		int version = 0;
+		version = 0;
 		fin >> V >> version;
 		if (V != "Version") {
 			// There was no version string. Reset the file stream.
@@ -91,16 +125,17 @@ namespace Petter
 
 		ASSERT_STR(version == 1 || version == 2, "Invalid version number.");
 
+		fin >> ngen2 >> ngen3 >> ngen4pos;
+		ASSERT_STR(fin, "Could not read file");
+
+		ngen4=2*ngen4pos; //Half of generators required to be positive!
+		ngen4neg = ngen4pos;
+
+		std::cout << "\nGenerator version : " << version << "\n";
+
 		if (version == 1) {
-			fin >> ngen2 >> ngen3 >> ngen4pos;
-			ASSERT_STR(fin, "Could not read file");
-
-			ngen4=2*ngen4pos; //Half of generators required to be positive!
-			ngen4neg = ngen4pos;
-
-
 			//
-			// Read generated forms
+			// Read reduced forms
 			// 
 
 			// Read quadratic generators
@@ -124,61 +159,77 @@ namespace Petter
 			for (int i=0;i<ngen4neg;++i) {
 				read_reduced_polynomial<real>( gen4redneg.at(i), fin);
 			}
-
-			//
-			// Read aa,bb and cc
-			// 
-
-			nentries2 = read_vec(cc,fin,ngen2);
-			read_vec(obj2,fin,ngen2);
-
-			ASSERT_STR(fin, "Could not read cc");
-
-			nentries3  = read_vec(bb12,fin,ngen3);
-			nentries3 += read_vec(bb13,fin,ngen3);
-			nentries3 += read_vec(bb23,fin,ngen3);
-			nentries3 += read_vec(bb123,fin,ngen3);
-
-			read_vec(obj3,fin,ngen3);
-
-
-			ASSERT_STR(fin, "Could not read bb");
-
-			nentries4  = read_vec(aa12pos,fin,ngen4pos);
-			nentries4 += read_vec(aa13pos,fin,ngen4pos);
-			nentries4 += read_vec(aa14pos,fin,ngen4pos);
-			nentries4 += read_vec(aa23pos,fin,ngen4pos);
-			nentries4 += read_vec(aa24pos,fin,ngen4pos);
-			nentries4 += read_vec(aa34pos,fin,ngen4pos);
-			nentries4 += read_vec(aa123pos,fin,ngen4pos);
-			nentries4 += read_vec(aa124pos,fin,ngen4pos);
-			nentries4 += read_vec(aa134pos,fin,ngen4pos);
-			nentries4 += read_vec(aa234pos,fin,ngen4pos);
-			nentries4 += read_vec(aa1234pos,fin,ngen4pos);
-
-			read_vec(obj4pos,fin,ngen4pos);
-
-			size_t ndummy = read_vec(aa12neg,fin,ngen4neg);
-			ndummy += read_vec(aa13neg,fin,ngen4neg);
-			ndummy += read_vec(aa14neg,fin,ngen4neg);
-			ndummy += read_vec(aa23neg,fin,ngen4neg);
-			ndummy += read_vec(aa24neg,fin,ngen4neg);
-			ndummy += read_vec(aa34neg,fin,ngen4neg);
-			ndummy += read_vec(aa123neg,fin,ngen4neg);
-			ndummy += read_vec(aa124neg,fin,ngen4neg);
-			ndummy += read_vec(aa134neg,fin,ngen4neg);
-			ndummy += read_vec(aa234neg,fin,ngen4neg);
-			ndummy += read_vec(aa1234neg,fin,ngen4neg);
-
-			read_vec(obj4neg,fin,ngen4neg);
-
-			ASSERT_STR(ndummy==nentries4,"Not same number of entries in pos and neg");
-
-			ASSERT_STR(fin, "Could not read aa");
 		}
 		else if (version == 2) {
+			//
+			// Read actual generator.
+			//
+			for (int i=0;i<ngen2;++i) {
+				SymmetricGenerator<real> generator(2, fin);
+				this->gen2.push_back(generator);
+			}
 
+			for (int i=0;i<ngen3;++i) {
+				SymmetricGenerator<real> generator(3, fin);
+				this->gen3.push_back(generator);
+			}
+
+			for (int i=0;i<ngen4;++i) {
+				SymmetricGenerator<real> generator(4, fin);
+				this->gen4.push_back(generator);
+			}
 		}
+
+		//
+		// Read aa,bb and cc
+		// 
+
+		nentries2 = read_vec(cc,fin,ngen2); ASSERT(nentries2 == 2);
+		read_vec(obj2,fin,ngen2);
+
+		ASSERT_STR(fin, "Could not read cc");
+
+		nentries3  = read_vec(bb12,fin,ngen3); ASSERT(nentries3 == 4);
+		nentries3 += read_vec(bb13,fin,ngen3); ASSERT(nentries3 == 8);
+		nentries3 += read_vec(bb23,fin,ngen3); ASSERT(nentries3 == 12);
+		nentries3 += read_vec(bb123,fin,ngen3); ASSERT(nentries3 == 20);
+
+		read_vec(obj3,fin,ngen3);
+
+
+		ASSERT_STR(fin, "Could not read bb");
+
+		nentries4  = read_vec(aa12pos,fin,ngen4pos);
+		nentries4 += read_vec(aa13pos,fin,ngen4pos);
+		nentries4 += read_vec(aa14pos,fin,ngen4pos);
+		nentries4 += read_vec(aa23pos,fin,ngen4pos);
+		nentries4 += read_vec(aa24pos,fin,ngen4pos);
+		nentries4 += read_vec(aa34pos,fin,ngen4pos);
+		nentries4 += read_vec(aa123pos,fin,ngen4pos);
+		nentries4 += read_vec(aa124pos,fin,ngen4pos);
+		nentries4 += read_vec(aa134pos,fin,ngen4pos);
+		nentries4 += read_vec(aa234pos,fin,ngen4pos);
+		nentries4 += read_vec(aa1234pos,fin,ngen4pos);
+
+		read_vec(obj4pos,fin,ngen4pos);
+
+		size_t ndummy = read_vec(aa12neg,fin,ngen4neg);
+		ndummy += read_vec(aa13neg,fin,ngen4neg);
+		ndummy += read_vec(aa14neg,fin,ngen4neg);
+		ndummy += read_vec(aa23neg,fin,ngen4neg);
+		ndummy += read_vec(aa24neg,fin,ngen4neg);
+		ndummy += read_vec(aa34neg,fin,ngen4neg);
+		ndummy += read_vec(aa123neg,fin,ngen4neg);
+		ndummy += read_vec(aa124neg,fin,ngen4neg);
+		ndummy += read_vec(aa134neg,fin,ngen4neg);
+		ndummy += read_vec(aa234neg,fin,ngen4neg);
+		ndummy += read_vec(aa1234neg,fin,ngen4neg);
+
+		read_vec(obj4neg,fin,ngen4neg);
+
+		ASSERT_STR(ndummy==nentries4,"Not same number of entries in pos and neg");
+
+		ASSERT_STR(fin, "Could not read aa");
 	}
 
 
@@ -690,10 +741,26 @@ namespace Petter
 	}
 
 
-
-
 	template<typename real>
 	real GeneratorPseudoBoolean<real>::minimize(vector<label>& x, int& nlabelled) const
+	{
+		ASSERT(this->gen.version == 1);
+		if (this->gen.version == 1) {
+			return minimize_version_1(x, nlabelled);
+		}
+		else if (this->gen.version == 2) {
+			return minimize_version_2(x, nlabelled);
+		}
+	}
+
+	template<typename real>
+	real GeneratorPseudoBoolean<real>::minimize_version_2(vector<label>& x, int& nlabelled) const
+	{
+		ASSERT_STR(false, "Version 2 not supported yet.");
+	}
+
+	template<typename real>
+	real GeneratorPseudoBoolean<real>::minimize_version_1(vector<label>& x, int& nlabelled) const
 	{
 		index nVars = index( x.size() ); // Number of variables
 		index var = 2*nVars; // Current variable

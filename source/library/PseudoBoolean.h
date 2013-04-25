@@ -357,6 +357,22 @@ namespace Petter
 	}
 
 
+
+	template<typename real>
+	class SymmetricGenerator
+	{
+	public:
+		// Creates a generator of a specified degree and
+		// reads it from the input stream.
+		SymmetricGenerator(int degree, std::ifstream& fin);
+
+		vector<int> indices1;
+		vector<real> values1;
+
+		vector<int> indices2;
+		vector<real> values2;
+	};
+
 	//
 	/// Helper class that holds informations about generators and how to reduce them
 	//
@@ -395,6 +411,8 @@ namespace Petter
 			real c;
 		};
 
+		int version;
+
 		int ngen2, ngen3, ngen4, ngen4pos, ngen4neg;
 		size_t nentries2, nentries3, nentries4;
 
@@ -404,8 +422,13 @@ namespace Petter
 		std::vector<int> aa12pos, aa13pos, aa14pos, aa23pos, aa24pos, aa34pos, aa123pos, aa124pos, aa134pos, aa234pos, aa1234pos, obj4pos;
 		std::vector<int> aa12neg, aa13neg, aa14neg, aa23neg, aa24neg, aa34neg, aa123neg, aa124neg, aa134neg, aa234neg, aa1234neg, obj4neg;
 
-		// These variables hold the reduced forms of the generators
+		// These variables hold the reduced forms of the generators (version 1).
 		std::vector< std::vector< Monomial > > gen2red, gen3red, gen4redpos, gen4redneg;
+
+		// These variables hold the actual generators (version 2).
+		std::vector<SymmetricGenerator<real>> gen2;
+		std::vector<SymmetricGenerator<real>> gen3;
+		std::vector<SymmetricGenerator<real>> gen4;
 	};
 
 	//
@@ -435,6 +458,9 @@ namespace Petter
 		real minimize(vector<label>& x, int& nlabelled) const;
 
 	private:
+
+		real minimize_version_1(vector<label>& x, int& nlabelled) const;
+		real minimize_version_2(vector<label>& x, int& nlabelled) const;
 
 		template <typename Map>
 		int getindex(Map& m, const pair& key) 

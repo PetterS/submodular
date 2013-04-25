@@ -628,33 +628,6 @@ int main_program(int num_args, char** args)
 			}
 			cout << endl;
 
-			ofstream fout("sol_global.txt");
-			if (fout) {
-				for (int i = 0; i < n; ++i) {
-					fout << x[i] << ' ';
-				}
-			}
-			fout.close();
-
-			ifstream fin("sol_gc.txt");
-				if (fin) {
-				for (int i = 0; i < n; ++i) {
-					char ch;
-					fin >> ch;
-					if (ch == '0') {
-						x[i] = 0;
-					}
-					else if (ch == '1') {
-						x[i] = 1;
-					}
-					else {
-						throw std::runtime_error("P");
-					}
-				}
-				cout << "GC sol: " << pb.eval(x) << endl;
-			}
-			fin.close();
-
 			hocr_itr_bound = bound;
 			hocr_itr_labeled = labeled;
 
