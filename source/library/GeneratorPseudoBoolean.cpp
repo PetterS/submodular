@@ -12,6 +12,7 @@
 
 #include "StdAfx.h"
 #include "apgc/APGC.h"
+#include "prgc/PRGC.h"
 
 using namespace std;
 
@@ -176,9 +177,14 @@ namespace Petter
 				this->gen3.push_back(generator);
 			}
 
-			for (int i=0;i<ngen4;++i) {
+			for (int i=0;i<ngen4pos;++i) {
 				SymmetricGenerator<real> generator(4, fin);
-				this->gen4.push_back(generator);
+				this->gen4pos.push_back(generator);
+			}
+
+			for (int i=0;i<ngen4neg;++i) {
+				SymmetricGenerator<real> generator(4, fin);
+				this->gen4neg.push_back(generator);
 			}
 		}
 
@@ -774,6 +780,33 @@ namespace Petter
 		return min_value;
 	}
 
+	template<typename GC, typename real>
+	void add_generator_to_graph(GC* graph, real* C, int i, int j, int k, int l,
+	                            const std::vector<real>& values,
+	                            real alpha)
+	{
+		ASSERT(values.size() == 16);
+		float E[] = {alpha * values.at(0), // E0000
+		             alpha * values.at(1), // E0001
+		             alpha * values.at(2), // E0010
+		             alpha * values.at(3), // E0011
+		             alpha * values.at(4), // E0100
+		             alpha * values.at(5), // E0101
+		             alpha * values.at(6), // E0110
+		             alpha * values.at(7), // E0111
+		             alpha * values.at(8), // E1000
+		             alpha * values.at(9), // E1001
+		             alpha * values.at(10), // E1010
+		             alpha * values.at(11), // E1011
+		             alpha * values.at(12), // E1100
+		             alpha * values.at(13), // E1101
+		             alpha * values.at(14), // E1110
+		             alpha * values.at(15)};// E1111
+		int indices[] = {i, j, k, l};
+		*C += make_clique_positive(4, E);
+		graph->AddHigherTerm(indices, E);
+	}
+
 	template<typename real>
 	real GeneratorPseudoBoolean<real>::minimize_version_2(vector<label>& x, int& nlabelled) const
 	{
@@ -804,17 +837,30 @@ namespace Petter
 			}
 		}
 
+		for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
+			const auto& vec = itr->second;
+			for (int ii = 0; ii < std::max(gen.ngen4pos, gen.ngen4neg); ++ii) {
+				real alpha = vec.at(ii);
+				if (alpha > 0) {
+					// Add monomials for this generator to the graph
+					num_cliques++;
+				}
+			}
+		}
 
 		real C = 0; // Constant in objective function.
 		int clique_size = 4;
-		int num_cliques_per_node = 100*n; // TODO: Fix this. (Is this parameter used by GC?)
+		int num_cliques_per_node = 2 * num_cliques; // TODO: Fix this. (Is this parameter used by GC?)
 
 		// We add two extra variables in order to be able to add degree-2 cliques
 		// as degree-4 cliques.
-		APGC graph(n + 2,
-		           2 * num_cliques, // Each generator gives two cliques.
-		           clique_size,
-		           num_cliques_per_node);
+
+		//typedef PRGC GCType;
+		typedef APGC GCType;
+		GCType graph(n + 2,
+		             2 * num_cliques, // Each generator gives two cliques.
+		             clique_size,
+		             num_cliques_per_node);
 		int extra1 = n;
 		int extra2 = n + 1;
 
@@ -1004,6 +1050,16 @@ namespace Petter
 			int l=get_l(ind);
 			const auto& vec = itr->second;
 
+			vector<int> idx(8); // Translates from "local" indices to "global"
+			idx.at(0) = i; // x variables
+			idx.at(1) = j;
+			idx.at(2) = k;
+			idx.at(3) = l;
+			idx.at(4) = i + nVars; // y variables
+			idx.at(5) = j + nVars;
+			idx.at(6) = k + nVars;
+			idx.at(7) = l + nVars;
+
 			// Was a positive or negative generator used?
 			bool pos = false;
 			auto mitr = posgen4.find(ind);
@@ -1012,21 +1068,48 @@ namespace Petter
 			}
 
 			ASSERT(gen.ngen4pos == gen.ngen4neg);
+			// The code below assumes a clique size of 4.
+			ASSERT(clique_size == 4);
 
 			for (int ii=0;ii<gen.ngen4pos;++ii) {
 				real alpha = vec.at(ii);
-				if (alpha > 0) {
 
-					throw std::runtime_error("No support for degree-4 generators yet.");
+				if (alpha > 0) {
 
 					// Add monomials for this generator to the graph
 					if (pos) {
 						// Positive generator was used
+						auto& generator = gen.gen4pos.at(ii);
+						int ii, jj, kk, ll;
 
+						ii = idx.at(generator.indices1.at(0));
+						jj = idx.at(generator.indices1.at(1));
+						kk = idx.at(generator.indices1.at(2));
+						ll = idx.at(generator.indices1.at(3));
+						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values1, alpha);
+
+						ii = idx.at(generator.indices2.at(0));
+						jj = idx.at(generator.indices2.at(1));
+						kk = idx.at(generator.indices2.at(2));
+						ll = idx.at(generator.indices2.at(3));
+						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values2, alpha);
 					}
 					else {
 						// Negative generator was used
+						auto& generator = gen.gen4neg.at(ii);
+						int ii, jj, kk, ll;
 
+						ii = idx.at(generator.indices1.at(0));
+						jj = idx.at(generator.indices1.at(1));
+						kk = idx.at(generator.indices1.at(2));
+						ll = idx.at(generator.indices1.at(3));
+						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values1, alpha);
+
+						ii = idx.at(generator.indices2.at(0));
+						jj = idx.at(generator.indices2.at(1));
+						kk = idx.at(generator.indices2.at(2));
+						ll = idx.at(generator.indices2.at(3));
+						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values2, alpha);
 					}
 				}
 			}

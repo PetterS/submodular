@@ -428,7 +428,7 @@ namespace Petter
 		// These variables hold the actual generators (version 2).
 		std::vector<SymmetricGenerator<real>> gen2;
 		std::vector<SymmetricGenerator<real>> gen3;
-		std::vector<SymmetricGenerator<real>> gen4;
+		std::vector<SymmetricGenerator<real>> gen4pos, gen4neg;
 	};
 
 	//
