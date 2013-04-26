@@ -64,7 +64,7 @@ namespace Petter
 		for (int ind=0;ind<n;++ind) {
 			fin >> i >> j >> c;
 			i--; // Convert between Maple indexing and C++ indexing
-			j--; // Convert between Maple indexing and C++ indexing 
+			j--; // Convert between Maple indexing and C++ indexing
 			ASSERT(fin);
 			ASSERT(i>=0 && j>=0);
 			if (c!=0) {
@@ -83,7 +83,7 @@ namespace Petter
 		for (int i = 0; i < degree; ++i) {
 			int tmp;
 			fin >> tmp;
-			tmp--; // Convert between Maple indexing and C++ indexing 
+			tmp--; // Convert between Maple indexing and C++ indexing
 			this->indices1.push_back(tmp);
 		}
 
@@ -97,7 +97,7 @@ namespace Petter
 		for (int i = 0; i < degree; ++i) {
 			int tmp;
 			fin >> tmp;
-			tmp--; // Convert between Maple indexing and C++ indexing 
+			tmp--; // Convert between Maple indexing and C++ indexing
 			this->indices2.push_back(tmp);
 		}
 
@@ -109,12 +109,12 @@ namespace Petter
 		ASSERT_STR(fin, "Could not read generator.");
 	}
 
-	template<typename real> 
+	template<typename real>
 	Generators<real>::Generators(const string& filename)
 	{
 		ifstream fin(filename);
 
-		// First try to read the version of the file. 
+		// First try to read the version of the file.
 		string V;
 		version = 0;
 		fin >> V >> version;
@@ -138,7 +138,7 @@ namespace Petter
 		if (version == 1) {
 			//
 			// Read reduced forms
-			// 
+			//
 
 			// Read quadratic generators
 			gen2red.resize(ngen2);
@@ -184,7 +184,7 @@ namespace Petter
 
 		//
 		// Read aa,bb and cc
-		// 
+		//
 
 		nentries2 = read_vec(cc,fin,ngen2); ASSERT(nentries2 == 2);
 		read_vec(obj2,fin,ngen2);
@@ -230,8 +230,12 @@ namespace Petter
 		read_vec(obj4neg,fin,ngen4neg);
 
 		ASSERT_STR(ndummy==nentries4,"Not same number of entries in pos and neg");
-
 		ASSERT_STR(fin, "Could not read aa");
+
+		// The file should now be empty.
+		int tmp;
+		fin >> tmp;
+		ASSERT_STR( !fin, "There is more information in the file.");
 	}
 
 
@@ -290,13 +294,13 @@ namespace Petter
 	// For doubles, LP is available
 	//
 	template<>
-	void GeneratorPseudoBoolean<double>::create_lp(const PseudoBoolean<double>& pbf) 
+	void GeneratorPseudoBoolean<double>::create_lp(const PseudoBoolean<double>& pbf)
 	{
 		// Convenient to have this name available
 		typedef double real;
 		clear();
 
-		// Save the constant 
+		// Save the constant
 		constant = pbf.constant;
 
 		// Save the linear coefficients
@@ -313,10 +317,10 @@ namespace Petter
 		int nConstraints = int( pbf.aij.size() + pbf.aijk.size() + pbf.aijkl.size() ); // equality constraints
 
 
-		// Compute the number of entries in the 
+		// Compute the number of entries in the
 		// constraint matrix
 		size_t nEntries = gen.nentries2*pbf.aij.size() + gen.nentries3*pbf.aijk.size() + gen.nentries4*pbf.aijkl.size();
-			
+
 		//Description of sparse matrix
 		vector<int> rows;
 		vector<int> cols;
@@ -329,21 +333,21 @@ namespace Petter
 		vector<double> rhs_eq(nConstraints, 0.0); // only equality constraints
 		double var_limit = 100000000;
 		vector<double> var_lb(nLPVars, 0.0);      // only non-negative variables
-		vector<double> var_ub(nLPVars, var_limit); 
+		vector<double> var_ub(nLPVars, var_limit);
 		vector<double> cost(nLPVars, 0.0);
 
 		//Keeps track of the current row
 		int con = 0;
 
 		//Adds a value to the sparse matrix
-		auto add_element = [&rows,&cols,&values](size_t row, size_t col, double value) 
+		auto add_element = [&rows,&cols,&values](size_t row, size_t col, double value)
 		{
 			rows.push_back(int(row));
 			cols.push_back(int(col));
 			values.push_back(value);
 		};
 		//Changes the right-hand side of the constraints
-		auto change_rhs = [&rhs_eq](size_t row, double eq) 
+		auto change_rhs = [&rhs_eq](size_t row, double eq)
 		{
 			rhs_eq.at(row) = eq;
 		};
@@ -537,7 +541,7 @@ namespace Petter
 		ClpSimplex lpSolver;
 		lpSolver.loadProblem (coinMatrix, &var_lb[0], &var_ub[0], &cost[0], &rhs_eq[0], &rhs_eq[0]);
 		lpSolver.setLogLevel(0);
-		
+
 		int error = lpSolver.dual(); //primal, dual, barrier
 		if (error != 0) {
 			throw std::runtime_error("Clp failed");
@@ -634,7 +638,7 @@ namespace Petter
 	//
 	// Adds alpha times a monomial to a graph
 	//
-	template<typename real> 
+	template<typename real>
 	void add_monomial_to_graph( real& C, Graph<real,real,real>& graph, real alpha, const typename Generators<real>::Monomial& monomial, const vector<int>& idx)
 	{
 		monomial.check(); //Debug
@@ -700,7 +704,7 @@ namespace Petter
 		idx.at(3) = i + nVars; // y variables
 		idx.at(4) = j + nVars;
 		idx.at(5) = k + nVars;
-		
+
 		for (int n=6; n<=maxi; ++n) {
 			idx.at(n) = graph.add_node(); // Extra variable
 		}
@@ -773,7 +777,7 @@ namespace Petter
 	template<typename real>
 	real GeneratorPseudoBoolean<real>::minimize_version_2(vector<label>& x, int& nlabelled) const
 	{
-		ASSERT_STR(this->gen.ngen4 == 0, "Degree-4 generators are not yet supported.");
+		//ASSERT_STR(this->gen.ngen4 == 0, "Degree-4 generators are not yet supported.");
 
 		index nVars = index( x.size() ); // Number of variables.
 		int n = 2 * nVars;  // Because we have x and y.
@@ -802,7 +806,7 @@ namespace Petter
 
 
 		real C = 0; // Constant in objective function.
-		int clique_size = 3;
+		int clique_size = 4;
 		int num_cliques_per_node = 100*n; // TODO: Fix this. (Is this parameter used by GC?)
 
 		// We add two extra variables in order to be able to add degree-2 cliques
@@ -832,7 +836,7 @@ namespace Petter
 
 		//
 		// Go through all alphas which correspond to quadratic generators
-		// 
+		//
 		for (auto itr = alphaij.begin(); itr != alphaij.end(); ++itr) {
 			const pair& ind = itr->first;
 			int i=get_i(ind);
@@ -851,17 +855,26 @@ namespace Petter
 				if (alpha > 0) {
 					// Add cliques for this generator to the graph
 					{
-						float E1[]= {alpha * generator.values1.at(0), // E000
-									 alpha * generator.values1.at(1), // E001
-									 alpha * generator.values1.at(2), // E010
-									 alpha * generator.values1.at(3), // E011
-									 alpha * generator.values1.at(0), // E100
-									 alpha * generator.values1.at(1), // E101
-									 alpha * generator.values1.at(2), // E110
-									 alpha * generator.values1.at(3)};// E111
+						float E1[]= {alpha * generator.values1.at(0), // E0000
+						             alpha * generator.values1.at(1), // E0001
+						             alpha * generator.values1.at(2), // E0010
+						             alpha * generator.values1.at(3), // E0011
+						             alpha * generator.values1.at(0), // E0100
+						             alpha * generator.values1.at(1), // E0101
+						             alpha * generator.values1.at(2), // E0110
+						             alpha * generator.values1.at(3), // E0111
+						             alpha * generator.values1.at(0), // E1000
+						             alpha * generator.values1.at(1), // E1001
+						             alpha * generator.values1.at(2), // E1010
+						             alpha * generator.values1.at(3), // E1011
+						             alpha * generator.values1.at(0), // E1100
+						             alpha * generator.values1.at(1), // E1101
+						             alpha * generator.values1.at(2), // E1110
+						             alpha * generator.values1.at(3)};// E1111
 						int indices1[] = {extra1,
-										  idx.at(generator.indices1.at(0)),
-										  idx.at(generator.indices1.at(1))};
+						                  extra2,
+						                  idx.at(generator.indices1.at(0)),
+						                  idx.at(generator.indices1.at(1))};
 						C += make_clique_positive(clique_size, E1);
 						graph.AddHigherTerm(indices1, E1);
 						//f_debug.add_clique(indices1[0], indices1[1], indices1[2],
@@ -869,17 +882,26 @@ namespace Petter
 					}
 
 					{
-						float E2[]= {alpha * generator.values2.at(0), // E000
-									 alpha * generator.values2.at(1), // E001
-									 alpha * generator.values2.at(2), // E010
-									 alpha * generator.values2.at(3), // E011
-									 alpha * generator.values2.at(0), // E100
-									 alpha * generator.values2.at(1), // E101
-									 alpha * generator.values2.at(2), // E110
-									 alpha * generator.values2.at(3)};// E111
+						float E2[]= {alpha * generator.values2.at(0), // E0000
+						             alpha * generator.values2.at(1), // E0001
+						             alpha * generator.values2.at(2), // E0010
+						             alpha * generator.values2.at(3), // E0011
+						             alpha * generator.values2.at(0), // E0100
+						             alpha * generator.values2.at(1), // E0101
+						             alpha * generator.values2.at(2), // E0110
+						             alpha * generator.values2.at(3), // E0111
+						             alpha * generator.values2.at(0), // E1000
+						             alpha * generator.values2.at(1), // E1001
+						             alpha * generator.values2.at(2), // E1010
+						             alpha * generator.values2.at(3), // E1011
+						             alpha * generator.values2.at(0), // E1100
+						             alpha * generator.values2.at(1), // E1101
+						             alpha * generator.values2.at(2), // E1110
+						             alpha * generator.values2.at(3)};// E1111
 						int indices2[] = {extra1,
-										  idx.at(generator.indices2.at(0)),
-										  idx.at(generator.indices2.at(1))};
+						                  extra2,
+						                  idx.at(generator.indices2.at(0)),
+						                  idx.at(generator.indices2.at(1))};
 						C += make_clique_positive(clique_size, E2);
 						graph.AddHigherTerm(indices2, E2);
 						//f_debug.add_clique(indices2[0], indices2[1], indices2[2],
@@ -891,7 +913,7 @@ namespace Petter
 
 		//
 		// Go through all alphas which correspond to cubic generators
-		// 
+		//
 		for (auto itr = alphaijk.begin(); itr != alphaijk.end(); ++itr) {
 			const triple& ind = itr->first;
 			int i=get_i(ind);
@@ -914,15 +936,24 @@ namespace Petter
 					// Add cliques for this generator to the graph
 
 					{
-						float E1[]= {alpha * generator.values1.at(0), // E000
-									 alpha * generator.values1.at(1), // E001
-									 alpha * generator.values1.at(2), // E010
-									 alpha * generator.values1.at(3), // E011
-									 alpha * generator.values1.at(4), // E100
-									 alpha * generator.values1.at(5), // E101
-									 alpha * generator.values1.at(6), // E110
-									 alpha * generator.values1.at(7)};// E111
-						int indices1[] = {idx.at(generator.indices1.at(0)),
+						float E1[]= {alpha * generator.values1.at(0), // E0000
+						             alpha * generator.values1.at(1), // E0001
+						             alpha * generator.values1.at(2), // E0010
+						             alpha * generator.values1.at(3), // E0011
+						             alpha * generator.values1.at(4), // E0100
+						             alpha * generator.values1.at(5), // E0101
+						             alpha * generator.values1.at(6), // E0110
+						             alpha * generator.values1.at(7), // E0111
+						             alpha * generator.values1.at(0), // E1000
+						             alpha * generator.values1.at(1), // E1001
+						             alpha * generator.values1.at(2), // E1010
+						             alpha * generator.values1.at(3), // E1011
+						             alpha * generator.values1.at(4), // E1100
+						             alpha * generator.values1.at(5), // E1101
+						             alpha * generator.values1.at(6), // E1110
+						             alpha * generator.values1.at(7)};// E1111
+						int indices1[] = {extra1,
+						                  idx.at(generator.indices1.at(0)),
 										  idx.at(generator.indices1.at(1)),
 										  idx.at(generator.indices1.at(2))};
 						C += make_clique_positive(clique_size, E1);
@@ -932,21 +963,70 @@ namespace Petter
 					}
 
 					{
-						float E2[]= {alpha * generator.values2.at(0), // E000
-									 alpha * generator.values2.at(1), // E001
-									 alpha * generator.values2.at(2), // E010
-									 alpha * generator.values2.at(3), // E011
-									 alpha * generator.values2.at(4), // E100
-									 alpha * generator.values2.at(5), // E101
-									 alpha * generator.values2.at(6), // E110
-									 alpha * generator.values2.at(7)};// E111
-						int indices2[] = {idx.at(generator.indices2.at(0)),
-										  idx.at(generator.indices2.at(1)),
-										  idx.at(generator.indices2.at(2))};
+						float E2[]= {alpha * generator.values2.at(0), // E0000
+						             alpha * generator.values2.at(1), // E0001
+						             alpha * generator.values2.at(2), // E0010
+						             alpha * generator.values2.at(3), // E0011
+						             alpha * generator.values2.at(4), // E0100
+						             alpha * generator.values2.at(5), // E0101
+						             alpha * generator.values2.at(6), // E0110
+						             alpha * generator.values2.at(7), // E0111
+						             alpha * generator.values2.at(0), // E1000
+						             alpha * generator.values2.at(1), // E1001
+						             alpha * generator.values2.at(2), // E1010
+						             alpha * generator.values2.at(3), // E1011
+						             alpha * generator.values2.at(4), // E1100
+						             alpha * generator.values2.at(5), // E1101
+						             alpha * generator.values2.at(6), // E1110
+						             alpha * generator.values2.at(7)};// E1111
+						int indices2[] = {extra1,
+						                  idx.at(generator.indices2.at(0)),
+						                  idx.at(generator.indices2.at(1)),
+						                  idx.at(generator.indices2.at(2))};
 						C += make_clique_positive(clique_size, E2);
 						graph.AddHigherTerm(indices2, E2);
 						//f_debug.add_clique(indices2[0], indices2[1], indices2[2],
 						//	E2[0], E2[1], E2[2], E2[3], E2[4], E2[5], E2[6], E2[7]);
+					}
+				}
+			}
+		}
+
+		//
+		// Go through all alphas which correspond to quartic generators
+		//
+
+		for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
+			const quad& ind = itr->first;
+			int i=get_i(ind);
+			int j=get_j(ind);
+			int k=get_k(ind);
+			int l=get_l(ind);
+			const auto& vec = itr->second;
+
+			// Was a positive or negative generator used?
+			bool pos = false;
+			auto mitr = posgen4.find(ind);
+			if (mitr != posgen4.end()) {
+				pos = mitr->second;
+			}
+
+			ASSERT(gen.ngen4pos == gen.ngen4neg);
+
+			for (int ii=0;ii<gen.ngen4pos;++ii) {
+				real alpha = vec.at(ii);
+				if (alpha > 0) {
+
+					throw std::runtime_error("No support for degree-4 generators yet.");
+
+					// Add monomials for this generator to the graph
+					if (pos) {
+						// Positive generator was used
+
+					}
+					else {
+						// Negative generator was used
+
 					}
 				}
 			}
@@ -1050,7 +1130,7 @@ namespace Petter
 		real C = 0; // Constant in energy function
 		Graph<real,real,real> graph(var, 50*var); //TODO: calculate the number of nodes and edges
 		graph.add_node(var);
-		
+
 		//
 		// Linear generator
 		//
@@ -1065,7 +1145,7 @@ namespace Petter
 
 		//
 		// Go through all alphas which correspond to quadratic generators
-		// 
+		//
 		for (auto itr = alphaij.begin(); itr != alphaij.end(); ++itr) {
 			const pair& ind = itr->first;
 			int i=get_i(ind);
@@ -1082,7 +1162,7 @@ namespace Petter
 
 		//
 		// Go through all alphas which correspond to cubic generators
-		// 
+		//
 		for (auto itr = alphaijk.begin(); itr != alphaijk.end(); ++itr) {
 			const triple& ind = itr->first;
 			int i=get_i(ind);
@@ -1100,7 +1180,7 @@ namespace Petter
 
 		//
 		// Go through all alphas which correspond to quartic generators
-		// 
+		//
 		for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
 			const quad& ind = itr->first;
 			int i=get_i(ind);
@@ -1149,7 +1229,7 @@ namespace Petter
 		//  does not matter that much for random polynomials
 			vector<std::pair<int,int> > pairs;
 			for (int i=0;i<nVars;++i) {
-				pairs.push_back( std::make_pair(i, i+nVars) ); 
+				pairs.push_back( std::make_pair(i, i+nVars) );
 			}
 			resolve_different(graph,xfull,pairs);
 
