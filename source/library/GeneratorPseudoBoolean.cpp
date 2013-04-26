@@ -1,5 +1,6 @@
 
 #include <fstream>
+#include <memory>
 #include <typeinfo>
 
 // BK maxflow
@@ -763,6 +764,8 @@ namespace Petter
 		else if (this->gen.version == 2) {
 			return minimize_version_2(x, nlabelled);
 		}
+
+		return 0;  // Not used.
 	}
 
 	float make_clique_positive(int clique_size, float* E)
@@ -783,7 +786,7 @@ namespace Petter
 	template<typename GC, typename real>
 	void add_generator_to_graph(GC* graph, real* C, int i, int j, int k, int l,
 	                            const std::vector<real>& values,
-	                            real alpha)
+	                            real alpha, std::unique_ptr<PseudoBoolean<real>>& f_debug)
 	{
 		ASSERT(values.size() == 16);
 		float E[] = {alpha * values.at(0), // E0000
@@ -803,8 +806,13 @@ namespace Petter
 		             alpha * values.at(14), // E1110
 		             alpha * values.at(15)};// E1111
 		int indices[] = {i, j, k, l};
-		*C += make_clique_positive(4, E);
+		(*C) += make_clique_positive(4, E);
 		graph->AddHigherTerm(indices, E);
+
+		if (f_debug) {
+			std::vector<real> Ev(E, E+16);
+			f_debug->add_clique(indices[0], indices[1], indices[2], indices[3], Ev);
+		}
 	}
 
 	template<typename real>
@@ -864,7 +872,10 @@ namespace Petter
 		int extra1 = n;
 		int extra2 = n + 1;
 
-		//PseudoBoolean<real> f_debug;
+		std::unique_ptr<PseudoBoolean<real>> f_debug;
+		
+		// Uncomment this line to also minimize g exhaustively.
+		//f_debug.reset(new PseudoBoolean<real>);
 
 		//
 		// Degree-1 terms.
@@ -876,8 +887,10 @@ namespace Petter
 			graph.AddUnaryTerm(i,         0,     alpha);
 			graph.AddUnaryTerm(i + nVars, alpha,     0);
 
-			//f_debug.add_clique(i, 0, alpha);
-			//f_debug.add_clique(i + nVars, alpha, 0);
+			if (f_debug) {
+				f_debug->add_clique(i, 0, alpha);
+				f_debug->add_clique(i + nVars, alpha, 0);
+			}
 		}
 
 		//
@@ -923,8 +936,11 @@ namespace Petter
 						                  idx.at(generator.indices1.at(1))};
 						C += make_clique_positive(clique_size, E1);
 						graph.AddHigherTerm(indices1, E1);
-						//f_debug.add_clique(indices1[0], indices1[1], indices1[2],
-						//	E1[0], E1[1], E1[2], E1[3], E1[4], E1[5], E1[6], E1[7]);
+
+						if (f_debug) {
+							std::vector<real> Ev(E1, E1+16);
+							f_debug->add_clique(indices1[0], indices1[1], indices1[2], indices1[3], Ev);
+						}
 					}
 
 					{
@@ -950,8 +966,11 @@ namespace Petter
 						                  idx.at(generator.indices2.at(1))};
 						C += make_clique_positive(clique_size, E2);
 						graph.AddHigherTerm(indices2, E2);
-						//f_debug.add_clique(indices2[0], indices2[1], indices2[2],
-						//	E2[0], E2[1], E2[2], E2[3], E2[4], E2[5], E2[6], E2[7]);
+
+						if (f_debug) {
+							std::vector<real> Ev(E2, E2+16);
+							f_debug->add_clique(indices2[0], indices2[1], indices2[2], indices2[3], Ev);
+						}
 					}
 				}
 			}
@@ -1004,8 +1023,11 @@ namespace Petter
 										  idx.at(generator.indices1.at(2))};
 						C += make_clique_positive(clique_size, E1);
 						graph.AddHigherTerm(indices1, E1);
-						//f_debug.add_clique(indices1[0], indices1[1], indices1[2],
-						//	E1[0], E1[1], E1[2], E1[3], E1[4], E1[5], E1[6], E1[7]);
+
+						if (f_debug) {
+							std::vector<real> Ev(E1, E1+16);
+							f_debug->add_clique(indices1[0], indices1[1], indices1[2], indices1[3], Ev);
+						}
 					}
 
 					{
@@ -1031,8 +1053,11 @@ namespace Petter
 						                  idx.at(generator.indices2.at(2))};
 						C += make_clique_positive(clique_size, E2);
 						graph.AddHigherTerm(indices2, E2);
-						//f_debug.add_clique(indices2[0], indices2[1], indices2[2],
-						//	E2[0], E2[1], E2[2], E2[3], E2[4], E2[5], E2[6], E2[7]);
+
+						if (f_debug) {
+							std::vector<real> Ev(E2, E2+16);
+							f_debug->add_clique(indices2[0], indices2[1], indices2[2], indices2[3], Ev);
+						}
 					}
 				}
 			}
@@ -1086,13 +1111,13 @@ namespace Petter
 						jj = idx.at(generator.indices1.at(1));
 						kk = idx.at(generator.indices1.at(2));
 						ll = idx.at(generator.indices1.at(3));
-						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values1, alpha);
+						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values1, alpha, f_debug);
 
 						ii = idx.at(generator.indices2.at(0));
 						jj = idx.at(generator.indices2.at(1));
 						kk = idx.at(generator.indices2.at(2));
 						ll = idx.at(generator.indices2.at(3));
-						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values2, alpha);
+						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values2, alpha, f_debug);
 					}
 					else {
 						// Negative generator was used
@@ -1103,13 +1128,13 @@ namespace Petter
 						jj = idx.at(generator.indices1.at(1));
 						kk = idx.at(generator.indices1.at(2));
 						ll = idx.at(generator.indices1.at(3));
-						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values1, alpha);
+						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values1, alpha, f_debug);
 
 						ii = idx.at(generator.indices2.at(0));
 						jj = idx.at(generator.indices2.at(1));
 						kk = idx.at(generator.indices2.at(2));
 						ll = idx.at(generator.indices2.at(3));
-						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values2, alpha);
+						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values2, alpha, f_debug);
 					}
 				}
 			}
@@ -1117,22 +1142,24 @@ namespace Petter
 
 
 		double min_g = constant + C + graph.FindMaxFlow();
-		//std::cout << "Generic cuts\n";
-		//std::cout << "C=" << C << " min_g=" << min_g << "\n";
-
 		vector<label> xfull(n);
 		for (int i = 0; i < n; ++i) {
 			xfull[i] = graph.GetLabel(i);
 		}
 
-		//for (int i = 0; i < nVars; ++i) {
-		//	std::cout << xfull[i];
-		//}
-		//std::cout << ", ";
-		//for (int i = 0; i < nVars; ++i) {
-		//	std::cout << xfull[i + nVars];
-		//}
-		//std::cout << "\n";
+		if (f_debug) {
+			std::cout << "Generic cuts\n";
+			std::cout << "C=" << C << " min_g=" << min_g << "\n";
+
+			for (int i = 0; i < nVars; ++i) {
+				std::cout << xfull[i];
+			}
+			std::cout << ", ";
+			for (int i = 0; i < nVars; ++i) {
+				std::cout << xfull[i + nVars];
+			}
+			std::cout << "\n";
+		}
 
 		nlabelled = 0;
 		for (int i=0; i<nVars; ++i) {
@@ -1163,43 +1190,45 @@ namespace Petter
 		}
 
 
-		//
-		// Minimize f_debug with exhaustive search.
-		//
-		//vector<label> x_debug(n + 2, 0), x_debug_opt(n + 2, 0);
-		//real optimum = f_debug.eval(x_debug);
-		//while (true) {
-		//	x_debug[0]++;
-		//	int i=0;
-		//	while (x_debug[i]>1) {
-		//		x_debug[i]=0;
-		//		i++;
-		//		if (i == n + 2) {
-		//			break;
-		//		}
-		//		x_debug[i]+=1;
-		//	}
-		//	if (i == n + 2) {
-		//		break;
-		//	}
+		if (f_debug) {
+			//
+			// Minimize f_debug with exhaustive search.
+			//
+			vector<label> x_debug(n + 2, 0), x_debug_opt(n + 2, 0);
+			real optimum = f_debug->eval(x_debug);
+			while (true) {
+				x_debug[0]++;
+				int i=0;
+				while (x_debug[i]>1) {
+					x_debug[i]=0;
+					i++;
+					if (i == n + 2) {
+						break;
+					}
+					x_debug[i]+=1;
+				}
+				if (i == n + 2) {
+					break;
+				}
 
-		//	real energy = f_debug.eval(x_debug);
-		//	if (energy < optimum) {
-		//		optimum = energy;
-		//		x_debug_opt = x_debug;
-		//	}
-		//}
+				real energy = f_debug->eval(x_debug);
+				if (energy < optimum) {
+					optimum = energy;
+					x_debug_opt = x_debug;
+				}
+			}
 
-		//std::cout << "Exhaustive debug\n";
-		//std::cout << "C=" << C << " min_f_debug=" << C + optimum << "\n";
-		//for (int i = 0; i < nVars; ++i) {
-		//	std::cout << x_debug_opt[i];
-		//}
-		//std::cout << ", ";
-		//for (int i = 0; i < nVars; ++i) {
-		//	std::cout << x_debug_opt[i + nVars];
-		//}
-		//std::cout << "\n";
+			std::cout << "Exhaustive debug\n";
+			std::cout << "C=" << C << " min_f_debug=" << constant + C + optimum << "\n";
+			for (int i = 0; i < nVars; ++i) {
+				std::cout << x_debug_opt[i];
+			}
+			std::cout << ", ";
+			for (int i = 0; i < nVars; ++i) {
+				std::cout << x_debug_opt[i + nVars];
+			}
+			std::cout << "\n";
+		}
 
 		return min_g;
 	}

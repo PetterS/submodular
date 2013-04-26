@@ -846,6 +846,10 @@ int main_program(int num_args, char** args)
 
 			if (labeled == n) {
 				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
+
+				if (abs(bound) > 1e-5 && abs(pb.eval(x) - bound) / abs(bound) > 1e-5) {
+					throw runtime_error("For all variables assigned, min g should be equal to min f.");
+				}
 			}
 			cout << endl;
 
