@@ -85,7 +85,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../../thirdparty/ibfs;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Johan\Dropbox\computer vision\opencv\build\include;../../thirdparty/ibfs;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>..\..\bin\</OutDir>
     <TargetName>submodular32</TargetName>
     <LibraryPath>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
@@ -95,7 +95,7 @@
     <IncludePath>../../thirdparty/ibfs;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
     <OutDir>..\..\bin\</OutDir>
     <TargetName>submodular</TargetName>
-    <LibraryPath>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)..\..\lib\$(Platform)\$(Configuration)\;C:\Users\Johan\Dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\clp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

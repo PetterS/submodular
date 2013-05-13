@@ -1,0 +1,103 @@
+﻿Build started 4/26/2013 1:30:03 PM.
+     1>Project "C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\submodularproject\submodularproject.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\source\main_program.cpp ..\..\source\submodular_tests.cpp
+         submodular_tests.cpp
+     1>c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(2176): warning C4996: 'std::_Copy_impl': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(2157) : see declaration of 'std::_Copy_impl'
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr0.h(48) : see reference to function template instantiation '_OutIt std::copy<const VID*,VID[]>(_InIt,_InIt,_OutIt)' being compiled
+                 with
+                 [
+                     _OutIt=PBF<int,3>::VID [],
+                     VID=PBF<int,3>::VID,
+                     _InIt=const PBF<int,3>::VID *
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr0.h(48) : while compiling class template member function 'void Term<VID,D>::get(VID []) const'
+                 with
+                 [
+                     VID=PBF<int,3>::VID,
+                     D=3
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr0.h(136) : see reference to function template instantiation 'void Term<VID,D>::get(VID []) const' being compiled
+                 with
+                 [
+                     VID=PBF<int,3>::VID,
+                     D=3
+                 ]
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\utility(201) : see reference to class template instantiation 'Term<VID,D>' being compiled
+                 with
+                 [
+                     VID=PBF<int,3>::VID,
+                     D=3
+                 ]
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\vector(1541) : see reference to class template instantiation 'std::pair<_Ty1,_Ty2>' being compiled
+                 with
+                 [
+                     _Ty1=Term<PBF<int,3>::VID,3>,
+                     _Ty2=int
+                 ]
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\vector(1535) : while compiling class template member function 'void std::vector<_Ty>::_Tidy(void)'
+                 with
+                 [
+                     _Ty=std::pair<Term<PBF<int,3>::VID,3>,int>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\vector(900) : see reference to function template instantiation 'void std::vector<_Ty>::_Tidy(void)' being compiled
+                 with
+                 [
+                     _Ty=std::pair<Term<PBF<int,3>::VID,3>,int>
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr0.h(140) : see reference to class template instantiation 'std::vector<_Ty>' being compiled
+                 with
+                 [
+                     _Ty=std::pair<Term<PBF<int,3>::VID,3>,int>
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr0.h(190) : see reference to class template instantiation 'Terms<REAL,VID,D>' being compiled
+                 with
+                 [
+                     REAL=int,
+                     VID=PBF<int,3>::VID,
+                     D=3
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr0.h(195) : see reference to class template instantiation 'TermsUpTo_<REAL,VID,MAXD>' being compiled
+                 with
+                 [
+                     REAL=int,
+                     VID=PBF<int,3>::VID,
+                     MAXD=3
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr.h(294) : see reference to class template instantiation 'TermsUpTo<REAL,VID,MAXD>' being compiled
+                 with
+                 [
+                     REAL=int,
+                     VID=PBF<int,3>::VID,
+                     MAXD=3
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\submodular_tests.cpp(65) : see reference to class template instantiation 'PBF<REAL,MAXD>' being compiled
+                 with
+                 [
+                     REAL=int,
+                     MAXD=3
+                 ]
+         main_program.cpp
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\main_program.cpp(563): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdlib.h(449) : see declaration of 'getenv'
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\main_program.cpp(687): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdlib.h(449) : see declaration of 'getenv'
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\main_program.cpp(688): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdlib.h(449) : see declaration of 'getenv'
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\main_program.cpp(1348): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdlib.h(449) : see declaration of 'getenv'
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\main_program.cpp(1349): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdlib.h(449) : see declaration of 'getenv'
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\main_program.cpp(1365): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\time.inl(112) : see declaration of 'localtime'
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\submodular_debug32.exe" /INCREMENTAL /NOLOGO grd.lib thirdpartylib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\..\bin\submodular_debug32.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\..\bin\submodular_debug32.lib" /MACHINE:X86 Debug\main_program.obj
+         Debug\submodular_tests.obj
+     1>LINK : fatal error LNK1104: cannot open file 'grd.lib'
+     1>Done Building Project "C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\submodularproject\submodularproject.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:09.45

@@ -14,6 +14,8 @@
 #include "StdAfx.h"
 #include "apgc/APGC.h"
 #include "prgc/PRGC.h"
+#include "../../kod/insert_clique2.h"
+#include "Petter-Color.h"
 
 using namespace std;
 
@@ -127,7 +129,7 @@ namespace Petter
 			version = 1;
 		}
 
-		ASSERT_STR(version == 1 || version == 2, "Invalid version number.");
+		ASSERT_STR(version == 1 || version == 2 || version == 3, "Invalid version number.");
 
 		fin >> ngen2 >> ngen3 >> ngen4pos;
 		ASSERT_STR(fin, "Could not read file");
@@ -164,7 +166,7 @@ namespace Petter
 				read_reduced_polynomial<real>( gen4redneg.at(i), fin);
 			}
 		}
-		else if (version == 2) {
+	    if (version == 2) {
 			//
 			// Read actual generator.
 			//
@@ -188,6 +190,33 @@ namespace Petter
 				this->gen4neg.push_back(generator);
 			}
 		}
+		if (version == 3) {
+			//
+			// Read actual generator.
+			//
+			for (int i=0;i<ngen2;++i) {
+				SymmetricGenerator<real> generator(2, fin);
+				this->gen2.push_back(generator);
+			}
+
+			for (int i=0;i<ngen3;++i) {
+				SymmetricGenerator<real> generator(3, fin);
+				this->gen3.push_back(generator);
+			}
+
+			for (int i=0;i<ngen4pos;++i) {
+				SymmetricGenerator<real> generator(4, fin);
+				this->gen4pos.push_back(generator);
+			}
+
+			for (int i=0;i<ngen4neg;++i) {
+				SymmetricGenerator<real> generator(4, fin);
+				this->gen4neg.push_back(generator);
+			}
+		}
+
+
+
 
 		//
 		// Read aa,bb and cc
@@ -271,6 +300,10 @@ namespace Petter
 
 		var_used.clear();
 	}
+
+
+
+
 
 
 
@@ -757,13 +790,18 @@ namespace Petter
 	template<typename real>
 	real GeneratorPseudoBoolean<real>::minimize(vector<label>& x, int& nlabelled) const
 	{
-		ASSERT(this->gen.version == 1 || this->gen.version == 2);
+		ASSERT(this->gen.version == 1 || this->gen.version == 2  || this->gen.version == 3);
 		if (this->gen.version == 1) {
 			return minimize_version_1(x, nlabelled);
 		}
-		else if (this->gen.version == 2) {
+	    if (this->gen.version == 2) {
 			return minimize_version_2(x, nlabelled);
 		}
+		 if (this->gen.version == 3) {
+			return minimize_version_3(x, nlabelled);
+		}
+
+
 
 		return 0;  // Not used.
 	}
@@ -785,26 +823,26 @@ namespace Petter
 
 	template<typename GC, typename real>
 	void add_generator_to_graph(GC* graph, real* C, int i, int j, int k, int l,
-	                            const std::vector<real>& values,
-	                            real alpha, std::unique_ptr<PseudoBoolean<real>>& f_debug)
+		const std::vector<real>& values,
+		real alpha, std::unique_ptr<PseudoBoolean<real>>& f_debug)
 	{
 		ASSERT(values.size() == 16);
 		float E[] = {alpha * values.at(0), // E0000
-		             alpha * values.at(1), // E0001
-		             alpha * values.at(2), // E0010
-		             alpha * values.at(3), // E0011
-		             alpha * values.at(4), // E0100
-		             alpha * values.at(5), // E0101
-		             alpha * values.at(6), // E0110
-		             alpha * values.at(7), // E0111
-		             alpha * values.at(8), // E1000
-		             alpha * values.at(9), // E1001
-		             alpha * values.at(10), // E1010
-		             alpha * values.at(11), // E1011
-		             alpha * values.at(12), // E1100
-		             alpha * values.at(13), // E1101
-		             alpha * values.at(14), // E1110
-		             alpha * values.at(15)};// E1111
+			alpha * values.at(1), // E0001
+			alpha * values.at(2), // E0010
+			alpha * values.at(3), // E0011
+			alpha * values.at(4), // E0100
+			alpha * values.at(5), // E0101
+			alpha * values.at(6), // E0110
+			alpha * values.at(7), // E0111
+			alpha * values.at(8), // E1000
+			alpha * values.at(9), // E1001
+			alpha * values.at(10), // E1010
+			alpha * values.at(11), // E1011
+			alpha * values.at(12), // E1100
+			alpha * values.at(13), // E1101
+			alpha * values.at(14), // E1110
+			alpha * values.at(15)};// E1111
 		int indices[] = {i, j, k, l};
 		(*C) += make_clique_positive(4, E);
 		graph->AddHigherTerm(indices, E);
@@ -814,6 +852,56 @@ namespace Petter
 			f_debug->add_clique(indices[0], indices[1], indices[2], indices[3], Ev);
 		}
 	}
+
+
+	//instead of just one, add all combinations of cliques.
+	// valuesabc is clique of size 3 with already inserted alpha_abc
+	// valuesab is clique of size 2 with already inserted alpha_abc
+
+	template< typename real>
+	void add_generators_to_clique(real alpha, float* E,  const std::vector<real>& values1234)
+	{
+		if (values1234.size() == 16){
+			E[0] =  alpha * values1234.at(0); // E0000
+			E[1] =  alpha * values1234.at(1); // E0001
+			E[2] =  alpha * values1234.at(2); // E0010
+			E[3] =  alpha * values1234.at(3); // E0011
+			E[4] =  alpha * values1234.at(4); // E0100
+			E[5] =  alpha * values1234.at(5); // E0101
+			E[6] =  alpha * values1234.at(6); // E0110
+			E[7] = alpha * values1234.at(7); // E0111
+			E[8] =  alpha * values1234.at(8); // E0000
+			E[9] =  alpha * values1234.at(9); // E0001
+			E[10] =  alpha * values1234.at(10); // E0010
+			E[11] =  alpha * values1234.at(11); // E0011
+			E[12] =  alpha * values1234.at(12); // E0100
+			E[13] =  alpha * values1234.at(13); // E0101
+			E[14] =  alpha * values1234.at(14); // E0110
+			E[15] = alpha * values1234.at(15); // E0111
+		}
+		if (values1234.size() == 8){
+			E[0] =  alpha * values1234.at(0); // E0000
+			E[1] =  alpha * values1234.at(1); // E0001
+			E[2] =  alpha * values1234.at(2); // E0010
+			E[3] =  alpha * values1234.at(3); // E0011
+			E[4] =  alpha * values1234.at(4); // E0100
+			E[5] =  alpha * values1234.at(5); // E0101
+			E[6] =  alpha * values1234.at(6); // E0110
+			E[7] = alpha * values1234.at(7); // E0111
+
+		}
+		if (values1234.size() == 4){
+			E[0] =  alpha * values1234.at(0); // E0000
+			E[1] =  alpha * values1234.at(1); // E0001
+			E[2] =  alpha * values1234.at(2); // E0010
+			E[3] =  alpha * values1234.at(3); // E0011
+
+		}
+
+
+
+	}
+
 
 	template<typename real>
 	real GeneratorPseudoBoolean<real>::minimize_version_2(vector<label>& x, int& nlabelled) const
@@ -856,6 +944,8 @@ namespace Petter
 			}
 		}
 
+
+
 		real C = 0; // Constant in objective function.
 		int clique_size = 4;
 		int num_cliques_per_node = 2 * num_cliques; // TODO: Fix this. (Is this parameter used by GC?)
@@ -863,17 +953,18 @@ namespace Petter
 		// We add two extra variables in order to be able to add degree-2 cliques
 		// as degree-4 cliques.
 
-		//typedef PRGC GCType;
-		typedef APGC GCType;
+		typedef PRGC GCType;
+		//typedef APGC GCType;
+
 		GCType graph(n + 2,
-		             2 * num_cliques, // Each generator gives two cliques.
-		             clique_size,
-		             num_cliques_per_node);
+			2 * num_cliques, // Each generator gives two cliques.
+			clique_size,
+			num_cliques_per_node);
 		int extra1 = n;
 		int extra2 = n + 1;
 
 		std::unique_ptr<PseudoBoolean<real>> f_debug;
-		
+
 		// Uncomment this line to also minimize g exhaustively.
 		//f_debug.reset(new PseudoBoolean<real>);
 
@@ -915,25 +1006,25 @@ namespace Petter
 					// Add cliques for this generator to the graph
 					{
 						float E1[]= {alpha * generator.values1.at(0), // E0000
-						             alpha * generator.values1.at(1), // E0001
-						             alpha * generator.values1.at(2), // E0010
-						             alpha * generator.values1.at(3), // E0011
-						             alpha * generator.values1.at(0), // E0100
-						             alpha * generator.values1.at(1), // E0101
-						             alpha * generator.values1.at(2), // E0110
-						             alpha * generator.values1.at(3), // E0111
-						             alpha * generator.values1.at(0), // E1000
-						             alpha * generator.values1.at(1), // E1001
-						             alpha * generator.values1.at(2), // E1010
-						             alpha * generator.values1.at(3), // E1011
-						             alpha * generator.values1.at(0), // E1100
-						             alpha * generator.values1.at(1), // E1101
-						             alpha * generator.values1.at(2), // E1110
-						             alpha * generator.values1.at(3)};// E1111
+							alpha * generator.values1.at(1), // E0001
+							alpha * generator.values1.at(2), // E0010
+							alpha * generator.values1.at(3), // E0011
+							alpha * generator.values1.at(0), // E0100
+							alpha * generator.values1.at(1), // E0101
+							alpha * generator.values1.at(2), // E0110
+							alpha * generator.values1.at(3), // E0111
+							alpha * generator.values1.at(0), // E1000
+							alpha * generator.values1.at(1), // E1001
+							alpha * generator.values1.at(2), // E1010
+							alpha * generator.values1.at(3), // E1011
+							alpha * generator.values1.at(0), // E1100
+							alpha * generator.values1.at(1), // E1101
+							alpha * generator.values1.at(2), // E1110
+							alpha * generator.values1.at(3)};// E1111
 						int indices1[] = {extra1,
-						                  extra2,
-						                  idx.at(generator.indices1.at(0)),
-						                  idx.at(generator.indices1.at(1))};
+							extra2,
+							idx.at(generator.indices1.at(0)),
+							idx.at(generator.indices1.at(1))};
 						C += make_clique_positive(clique_size, E1);
 						graph.AddHigherTerm(indices1, E1);
 
@@ -945,25 +1036,25 @@ namespace Petter
 
 					{
 						float E2[]= {alpha * generator.values2.at(0), // E0000
-						             alpha * generator.values2.at(1), // E0001
-						             alpha * generator.values2.at(2), // E0010
-						             alpha * generator.values2.at(3), // E0011
-						             alpha * generator.values2.at(0), // E0100
-						             alpha * generator.values2.at(1), // E0101
-						             alpha * generator.values2.at(2), // E0110
-						             alpha * generator.values2.at(3), // E0111
-						             alpha * generator.values2.at(0), // E1000
-						             alpha * generator.values2.at(1), // E1001
-						             alpha * generator.values2.at(2), // E1010
-						             alpha * generator.values2.at(3), // E1011
-						             alpha * generator.values2.at(0), // E1100
-						             alpha * generator.values2.at(1), // E1101
-						             alpha * generator.values2.at(2), // E1110
-						             alpha * generator.values2.at(3)};// E1111
+							alpha * generator.values2.at(1), // E0001
+							alpha * generator.values2.at(2), // E0010
+							alpha * generator.values2.at(3), // E0011
+							alpha * generator.values2.at(0), // E0100
+							alpha * generator.values2.at(1), // E0101
+							alpha * generator.values2.at(2), // E0110
+							alpha * generator.values2.at(3), // E0111
+							alpha * generator.values2.at(0), // E1000
+							alpha * generator.values2.at(1), // E1001
+							alpha * generator.values2.at(2), // E1010
+							alpha * generator.values2.at(3), // E1011
+							alpha * generator.values2.at(0), // E1100
+							alpha * generator.values2.at(1), // E1101
+							alpha * generator.values2.at(2), // E1110
+							alpha * generator.values2.at(3)};// E1111
 						int indices2[] = {extra1,
-						                  extra2,
-						                  idx.at(generator.indices2.at(0)),
-						                  idx.at(generator.indices2.at(1))};
+							extra2,
+							idx.at(generator.indices2.at(0)),
+							idx.at(generator.indices2.at(1))};
 						C += make_clique_positive(clique_size, E2);
 						graph.AddHigherTerm(indices2, E2);
 
@@ -1002,25 +1093,25 @@ namespace Petter
 
 					{
 						float E1[]= {alpha * generator.values1.at(0), // E0000
-						             alpha * generator.values1.at(1), // E0001
-						             alpha * generator.values1.at(2), // E0010
-						             alpha * generator.values1.at(3), // E0011
-						             alpha * generator.values1.at(4), // E0100
-						             alpha * generator.values1.at(5), // E0101
-						             alpha * generator.values1.at(6), // E0110
-						             alpha * generator.values1.at(7), // E0111
-						             alpha * generator.values1.at(0), // E1000
-						             alpha * generator.values1.at(1), // E1001
-						             alpha * generator.values1.at(2), // E1010
-						             alpha * generator.values1.at(3), // E1011
-						             alpha * generator.values1.at(4), // E1100
-						             alpha * generator.values1.at(5), // E1101
-						             alpha * generator.values1.at(6), // E1110
-						             alpha * generator.values1.at(7)};// E1111
+							alpha * generator.values1.at(1), // E0001
+							alpha * generator.values1.at(2), // E0010
+							alpha * generator.values1.at(3), // E0011
+							alpha * generator.values1.at(4), // E0100
+							alpha * generator.values1.at(5), // E0101
+							alpha * generator.values1.at(6), // E0110
+							alpha * generator.values1.at(7), // E0111
+							alpha * generator.values1.at(0), // E1000
+							alpha * generator.values1.at(1), // E1001
+							alpha * generator.values1.at(2), // E1010
+							alpha * generator.values1.at(3), // E1011
+							alpha * generator.values1.at(4), // E1100
+							alpha * generator.values1.at(5), // E1101
+							alpha * generator.values1.at(6), // E1110
+							alpha * generator.values1.at(7)};// E1111
 						int indices1[] = {extra1,
-						                  idx.at(generator.indices1.at(0)),
-										  idx.at(generator.indices1.at(1)),
-										  idx.at(generator.indices1.at(2))};
+							idx.at(generator.indices1.at(0)),
+							idx.at(generator.indices1.at(1)),
+							idx.at(generator.indices1.at(2))};
 						C += make_clique_positive(clique_size, E1);
 						graph.AddHigherTerm(indices1, E1);
 
@@ -1032,25 +1123,25 @@ namespace Petter
 
 					{
 						float E2[]= {alpha * generator.values2.at(0), // E0000
-						             alpha * generator.values2.at(1), // E0001
-						             alpha * generator.values2.at(2), // E0010
-						             alpha * generator.values2.at(3), // E0011
-						             alpha * generator.values2.at(4), // E0100
-						             alpha * generator.values2.at(5), // E0101
-						             alpha * generator.values2.at(6), // E0110
-						             alpha * generator.values2.at(7), // E0111
-						             alpha * generator.values2.at(0), // E1000
-						             alpha * generator.values2.at(1), // E1001
-						             alpha * generator.values2.at(2), // E1010
-						             alpha * generator.values2.at(3), // E1011
-						             alpha * generator.values2.at(4), // E1100
-						             alpha * generator.values2.at(5), // E1101
-						             alpha * generator.values2.at(6), // E1110
-						             alpha * generator.values2.at(7)};// E1111
+							alpha * generator.values2.at(1), // E0001
+							alpha * generator.values2.at(2), // E0010
+							alpha * generator.values2.at(3), // E0011
+							alpha * generator.values2.at(4), // E0100
+							alpha * generator.values2.at(5), // E0101
+							alpha * generator.values2.at(6), // E0110
+							alpha * generator.values2.at(7), // E0111
+							alpha * generator.values2.at(0), // E1000
+							alpha * generator.values2.at(1), // E1001
+							alpha * generator.values2.at(2), // E1010
+							alpha * generator.values2.at(3), // E1011
+							alpha * generator.values2.at(4), // E1100
+							alpha * generator.values2.at(5), // E1101
+							alpha * generator.values2.at(6), // E1110
+							alpha * generator.values2.at(7)};// E1111
 						int indices2[] = {extra1,
-						                  idx.at(generator.indices2.at(0)),
-						                  idx.at(generator.indices2.at(1)),
-						                  idx.at(generator.indices2.at(2))};
+							idx.at(generator.indices2.at(0)),
+							idx.at(generator.indices2.at(1)),
+							idx.at(generator.indices2.at(2))};
 						C += make_clique_positive(clique_size, E2);
 						graph.AddHigherTerm(indices2, E2);
 
@@ -1170,7 +1261,7 @@ namespace Petter
 			}
 
 			if (used) {
-			    x[i]     = xfull[i];
+				x[i]     = xfull[i];
 				label yi = xfull[i+nVars];
 				if (x[i] == yi) {
 					x[i] = -1;
@@ -1232,6 +1323,465 @@ namespace Petter
 
 		return min_g;
 	}
+
+	 //adds a triple to the existing clique E, check if its already insearted.
+	//poss correspond the which variables out of four that is used.
+	template<typename real>
+	void GeneratorPseudoBoolean<real>::add_triplet(int poss, int ii, int jj, int kk, float* E,  map<triple, int>& inserted3, int nVars) const{
+		cout << "----add_triplet()-----" << endl;
+		auto itr = alphaijk.find(make_triple(ii, jj, kk));
+		auto itr2 = inserted3.find(make_triple(ii, jj, kk));
+		if (itr != alphaijk.end() && itr2 == inserted3.end())
+		{
+
+			//correspond to the symmetric monomial.
+			int ii2, jj2,kk2;
+			if (ii> nVars)
+				ii2 = ii-nVars;
+			else
+				ii2 = ii+nVars;
+
+			if (jj> nVars)
+				jj2 = jj-nVars;
+			else
+				jj2 = jj+nVars;
+
+			if (kk> nVars)
+				kk2 = kk-nVars;
+			else
+				kk2 = kk+nVars;
+
+
+			inserted3.insert(make_pair(make_triple(ii, jj, kk), 1));
+			inserted3.insert(make_pair(make_triple(ii2, jj2, kk2), 1));
+			cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk << endl;
+			const auto& vec = itr->second;
+			for (int j=0;j<gen.ngen3;++j) {
+				real alpha = vec.at(j);
+				if (alpha > 0){
+				cout << "j= " << j << " " << "alpha= " << alpha <<  endl;
+				}
+
+				auto& generator = gen.gen3.at(j);
+				if (alpha > 0) {
+					// Add cliques for this generator to the graph
+
+					float E1[8];
+					add_generators_to_clique(alpha, E1, generator.values1);					
+					float E2[8];
+					add_generators_to_clique(alpha, E2, generator.values2);		
+					insert_clique2(poss,E,E1);
+					insert_clique2(poss,E,E2);
+				}
+			}
+		}
+		cout << "----add_triplet()-----end" << endl;
+	}
+
+	template<typename real>
+	void GeneratorPseudoBoolean<real>::add_pair(int poss,int ii, int jj, float* E,  map<pair, int>& inserted2, int nVars) const{
+		cout << "----add_pair()-----" << endl;
+		auto itr = alphaij.find(make_pair(ii, jj));
+		auto itr2 = inserted2.find(make_pair(ii, jj));
+		if (itr != alphaij.end() && itr2 == inserted2.end())
+		{
+
+			int ii2, jj2;
+
+			if (ii> nVars)
+				ii2 = ii-nVars;
+			else
+				ii2 = ii+nVars;
+
+			if (jj> nVars)
+				jj2 = jj-nVars;
+			else
+				jj2 = jj+nVars;
+
+			inserted2.insert(make_pair(make_pair(ii, jj), 1));
+			inserted2.insert(make_pair(make_pair(ii2, jj2), 1));
+			cout << "ii: " << ii <<" " << "jj: " << jj << endl;
+			const auto& vec = itr->second;
+			for (int j=0;j<gen.ngen2;++j) {
+				real alpha = vec.at(j);
+				if (alpha > 0){
+				cout << "j= " << j << " " << "alpha= " << alpha <<  endl;
+				}
+
+				auto& generator = gen.gen2.at(j);
+				if (alpha > 0) {
+					// Add cliques for this generator to the graph
+
+					float E1[4];
+					add_generators_to_clique(alpha, E1, generator.values1);					
+					float E2[4];
+					add_generators_to_clique(alpha, E2, generator.values2);		
+					insert_clique2(poss,E,E1);
+					insert_clique2(poss,E,E2);
+				}
+			}
+		}
+		cout << "----add_pair()-----end" << endl;
+	}
+
+	
+	//Version where smaller cliques are inserted into bigger ones.
+	template<typename real>
+	real GeneratorPseudoBoolean<real>::minimize_version_3(vector<label>& x, int& nlabelled) const
+	{
+		cout << "#########################"<< endl;
+		cout <<"inside minimize_3" << endl;
+		cout << "#########################"<< endl;
+		//maps with elements if generator already added.
+		map<triple, int> inserted3;   
+		map<pair, int> inserted2;
+
+		//ASSERT_STR(this->gen.ngen4 == 0, "Degree-4 generators are not yet supported.");
+
+		index nVars = index( x.size() ); // Number of variables.
+		int n = 2 * nVars;  // Because we have x and y.
+		int num_cliques = 0;
+
+
+		for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
+			const auto& vec = itr->second;
+			for (int ii = 0; ii < std::max(gen.ngen4pos, gen.ngen4neg); ++ii) {
+				real alpha = vec.at(ii);
+				if (alpha > 0) {
+					// Add monomials for this generator to the graph
+					num_cliques++;
+				}
+			}
+		}
+
+		real C = 0; // Constant in objective function.
+		int clique_size = 4;
+		int num_cliques_per_node = 2 * num_cliques; // TODO: Fix this. (Is this parameter used by GC?)
+
+		// We add two extra variables in order to be able to add degree-2 cliques
+		// as degree-4 cliques.
+
+		typedef PRGC GCType;
+		//typedef APGC GCType;
+
+		GCType graph(n + 2,
+			2 * num_cliques, // Each generator gives two cliques.
+			clique_size,
+			num_cliques_per_node);
+		int extra1 = n;
+		int extra2 = n + 1;
+
+		std::unique_ptr<PseudoBoolean<real>> f_debug;
+
+		// Uncomment this line to also minimize g exhaustively.
+		//f_debug.reset(new PseudoBoolean<real>);
+
+		//
+		// Degree-1 terms.
+		//
+		for (auto itr = alphai.begin(); itr != alphai.end(); ++itr) {
+			int i = itr->first;
+			real alpha = itr->second;
+
+			graph.AddUnaryTerm(i,         0,     alpha);
+			graph.AddUnaryTerm(i + nVars, alpha,     0);
+
+			if (f_debug) {
+				f_debug->add_clique(i, 0, alpha);
+				f_debug->add_clique(i + nVars, alpha, 0);
+			}
+		}
+		
+		
+		
+		//
+		// Go through all alphas which correspond to quartic generators
+		//
+
+		for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
+
+			cout << "alphaijkl.size= " <<alphaijkl.size()  << endl;
+
+			float E[16];
+			const quad& ind = itr->first;
+			int i=get_i(ind);
+			int j=get_j(ind);
+			int k=get_k(ind);
+			int l=get_l(ind);
+			const auto& vec = itr->second;
+
+			vector<int> idx(8); // Translates from "local" indices to "global"
+			idx.at(0) = i; // x variables
+			idx.at(1) = j;
+			idx.at(2) = k;
+			idx.at(3) = l;
+			idx.at(4) = i + nVars; // y variables
+			idx.at(5) = j + nVars;
+			idx.at(6) = k + nVars;
+			idx.at(7) = l + nVars;
+
+			// Was a positive or negative generator used?
+			bool pos = false;
+			auto mitr = posgen4.find(ind);
+			if (mitr != posgen4.end()) {
+				pos = mitr->second;
+			}
+
+			ASSERT(gen.ngen4pos == gen.ngen4neg);
+			// The code below assumes a clique size of 4.
+			ASSERT(clique_size == 4);
+			
+			for (int i=0;i<gen.ngen4pos;++i) {
+				//cout << "gen.ngen4pos: " << gen.ngen4pos << endl;	
+				real alpha = vec.at(i);
+
+				if (alpha > 0) {
+					cout << "i: " << i << endl; 
+
+					if (pos) 
+					{
+						cout << GREEN<< "POSITIVE GENERATOR:" <<NORMAL  << endl;
+
+						// Positive generator was used
+
+						auto& generator = gen.gen4pos.at(i);
+						int ii, jj, kk, ll;
+
+						//first part och the symmetric generator.
+
+						ii = idx.at(generator.indices1.at(0));
+						jj = idx.at(generator.indices1.at(1));
+						kk = idx.at(generator.indices1.at(2));
+						ll = idx.at(generator.indices1.at(3));
+						
+						//creates the fourth-order klick E
+						add_generators_to_clique(alpha, E, generator.values1);
+						
+						cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+						cout << WHITE << "FIRST PART" << NORMAL << endl;
+						
+
+						
+						/////////Adding all positive-first triples!////////
+						add_triplet(123,ii, jj, kk, E, inserted3, nVars);
+						add_triplet(124,ii, jj, ll, E, inserted3, nVars);
+						add_triplet(134,ii, kk, ll, E, inserted3, nVars);
+						add_triplet(234,jj, kk, ll, E, inserted3, nVars);
+
+						/////////Adding all positive-first pairs!////////
+						add_pair(12,ii,jj,E,inserted2,nVars);
+						add_pair(13,ii,kk,E,inserted2,nVars);
+						add_pair(14,ii,ll,E,inserted2,nVars);
+						add_pair(23,jj,kk,E,inserted2,nVars);
+						add_pair(24,jj,ll,E,inserted2,nVars);
+						add_pair(34,kk,ll,E,inserted2,nVars);
+
+						//SYMMETRIC PART 2
+						ii = idx.at(generator.indices2.at(0));
+						jj = idx.at(generator.indices2.at(1));
+						kk = idx.at(generator.indices2.at(2));
+						ll = idx.at(generator.indices2.at(3));
+						
+						//creates the fourth-order klick E
+						add_generators_to_clique(alpha, E, generator.values2);
+						
+						cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+						cout << WHITE << "SECOND PART:" << NORMAL << endl;
+						
+						/////////Adding all positive-second triples!////////
+						add_triplet(123,ii, jj, kk, E, inserted3, nVars);
+						add_triplet(124,ii, jj, ll, E, inserted3, nVars);
+						add_triplet(134,ii, kk, ll, E, inserted3, nVars);
+						add_triplet(234,jj, kk, ll, E, inserted3, nVars);
+
+
+						/////////Adding all positive-second pairs!////////
+						add_pair(12,ii,jj,E,inserted2,nVars);
+						add_pair(13,ii,kk,E,inserted2,nVars);
+						add_pair(14,ii,ll,E,inserted2,nVars);
+						add_pair(23,jj,kk,E,inserted2,nVars);
+						add_pair(24,jj,ll,E,inserted2,nVars);
+						add_pair(34,kk,ll,E,inserted2,nVars);
+
+
+						int indices[] = {ii, jj, kk, ll};
+						C += make_clique_positive(4, E);
+						graph.AddHigherTerm(indices, E);
+						
+
+					}
+					else 
+					{
+						cout << GREEN<< "NEGATIVE GENERATOR" <<NORMAL  << endl;
+
+						// Negative generator was used
+						auto& generator = gen.gen4neg.at(i);
+						int ii, jj, kk, ll;
+
+						//first part och the symmetric generator.
+						ii = idx.at(generator.indices1.at(0));
+						jj = idx.at(generator.indices1.at(1));
+						kk = idx.at(generator.indices1.at(2));
+						ll = idx.at(generator.indices1.at(3));
+						
+						//creates the fourth-order klick E
+						add_generators_to_clique(alpha, E, generator.values1);
+						
+						cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+						cout << WHITE << "FIRST PART" << NORMAL << endl;
+						
+
+						/////////Adding all negative-first triples!////////
+						add_triplet(123,ii, jj, kk, E, inserted3, nVars);
+						add_triplet(124,ii, jj, ll, E, inserted3, nVars);
+						add_triplet(134,ii, kk, ll, E, inserted3, nVars);
+						add_triplet(234,jj, kk, ll, E, inserted3, nVars);
+
+						/////////Adding all negative-first pairs!////////
+						add_pair(12,ii,jj,E,inserted2,nVars);
+						add_pair(13,ii,kk,E,inserted2,nVars);
+						add_pair(14,ii,ll,E,inserted2,nVars);
+						add_pair(23,jj,kk,E,inserted2,nVars);
+						add_pair(24,jj,ll,E,inserted2,nVars);
+						add_pair(34,kk,ll,E,inserted2,nVars);
+
+
+						//SYMMETRIC PART 2
+						ii = idx.at(generator.indices2.at(0));
+						jj = idx.at(generator.indices2.at(1));
+						kk = idx.at(generator.indices2.at(2));
+						ll = idx.at(generator.indices2.at(3));
+						
+						//creates the fourth-order klick E
+						add_generators_to_clique(alpha, E, generator.values2);
+						
+						cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+						cout << WHITE << "SECOND PART:" << NORMAL << endl;
+						
+						/////////Adding all negative-second triples!////////
+						add_triplet(123,ii, jj, kk, E, inserted3, nVars);
+						add_triplet(124,ii, jj, ll, E, inserted3, nVars);
+						add_triplet(134,ii, kk, ll, E, inserted3, nVars);
+						add_triplet(234,jj, kk, ll, E, inserted3, nVars);
+
+
+						/////////Adding all negative-second pairs!////////
+						add_pair(12,ii,jj,E,inserted2,nVars);
+						add_pair(13,ii,kk,E,inserted2,nVars);
+						add_pair(14,ii,ll,E,inserted2,nVars);
+						add_pair(23,jj,kk,E,inserted2,nVars);
+						add_pair(24,jj,ll,E,inserted2,nVars);
+						add_pair(34,kk,ll,E,inserted2,nVars);
+
+
+						int indices[] = {ii, jj, kk, ll};
+						C += make_clique_positive(4, E);
+						graph.AddHigherTerm(indices, E);
+						
+
+					}
+				}
+			}
+		}
+
+
+		double min_g = constant + C + graph.FindMaxFlow();
+		vector<label> xfull(n);
+		for (int i = 0; i < n; ++i) {
+			xfull[i] = graph.GetLabel(i);
+		}
+
+		if (f_debug) {
+			std::cout << "Generic cuts\n";
+			std::cout << "C=" << C << " min_g=" << min_g << "\n";
+
+			for (int i = 0; i < nVars; ++i) {
+				std::cout << xfull[i];
+			}
+			std::cout << ", ";
+			for (int i = 0; i < nVars; ++i) {
+				std::cout << xfull[i + nVars];
+			}
+			std::cout << "\n";
+		}
+
+		nlabelled = 0;
+		for (int i=0; i<nVars; ++i) {
+			bool used = false;
+			auto itr = var_used.find(i);
+			if (itr != var_used.end()) {
+				used = itr->second;
+			}
+
+			if (used) {
+				x[i]     = xfull[i];
+				label yi = xfull[i+nVars];
+				if (x[i] == yi) {
+					x[i] = -1;
+				}
+				else {
+					nlabelled++;
+				}
+			}
+			else {
+				// This variable is not part of the polynomial,
+				// therefore labelled
+				if (x[i]<0) {
+					x[i]=0;
+				}
+				nlabelled++;
+			}
+		}
+
+
+		if (f_debug) {
+			//
+			// Minimize f_debug with exhaustive search.
+			//
+			vector<label> x_debug(n + 2, 0), x_debug_opt(n + 2, 0);
+			real optimum = f_debug->eval(x_debug);
+			while (true) {
+				x_debug[0]++;
+				int i=0;
+				while (x_debug[i]>1) {
+					x_debug[i]=0;
+					i++;
+					if (i == n + 2) {
+						break;
+					}
+					x_debug[i]+=1;
+				}
+				if (i == n + 2) {
+					break;
+				}
+
+				real energy = f_debug->eval(x_debug);
+				if (energy < optimum) {
+					optimum = energy;
+					x_debug_opt = x_debug;
+				}
+			}
+
+			std::cout << "Exhaustive debug\n";
+			std::cout << "C=" << C << " min_f_debug=" << constant + C + optimum << "\n";
+			for (int i = 0; i < nVars; ++i) {
+				std::cout << x_debug_opt[i];
+			}
+			std::cout << ", ";
+			for (int i = 0; i < nVars; ++i) {
+				std::cout << x_debug_opt[i + nVars];
+			}
+			std::cout << "\n";
+		}
+
+		return min_g;
+	}
+
+
+
+
+
+
 
 	template<typename real>
 	real GeneratorPseudoBoolean<real>::minimize_version_1(vector<label>& x, int& nlabelled) const
@@ -1339,11 +1889,11 @@ namespace Petter
 
 		//  try to obtain (0,1) and (1,0) solutions if possible
 		//  does not matter that much for random polynomials
-			vector<std::pair<int,int> > pairs;
-			for (int i=0;i<nVars;++i) {
-				pairs.push_back( std::make_pair(i, i+nVars) );
-			}
-			resolve_different(graph,xfull,pairs);
+		vector<std::pair<int,int> > pairs;
+		for (int i=0;i<nVars;++i) {
+			pairs.push_back( std::make_pair(i, i+nVars) );
+		}
+		resolve_different(graph,xfull,pairs);
 
 		// Extract labeling
 		nlabelled = 0;
@@ -1357,7 +1907,7 @@ namespace Petter
 			if (used) {
 				//x[i] = graph.what_segment(i);
 				//label yi = graph.what_segment(i+nVars);;
-			          x[i] = xfull[i];
+				x[i] = xfull[i];
 				label   yi = xfull[i+nVars];
 				if (x[i] == yi) {
 					x[i] = -1;

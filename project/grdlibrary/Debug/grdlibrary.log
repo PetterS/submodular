@@ -1,0 +1,155 @@
+﻿Build started 4/26/2013 1:29:36 PM.
+     1>Project "C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\grdlibrary\grdlibrary.vcxproj" on node 3 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\source\library\GeneratorPseudoBoolean.cpp ..\..\source\library\PseudoBoolean.cpp ..\..\source\library\PseudoBoolean_branchandbound.cpp ..\..\source\library\PseudoBoolean_complete.cpp ..\..\source\library\PseudoBoolean_create_g.cpp ..\..\source\library\PseudoBoolean_heuristic.cpp ..\..\source\library\PseudoBoolean_minimize.cpp ..\..\source\library\PseudoBoolean_minimize_lp.cpp ..\..\source\library\PseudoBoolean_minimize_reduction.cpp ..\..\source\library\PseudoBoolean_reduce.cpp ..\..\source\library\VertexPacking.cpp
+         VertexPacking.cpp
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\vertexpacking.cpp(11): fatal error C1083: Cannot open include file: 'coin/ClpSimplex.hpp': No such file or directory
+         PseudoBoolean_reduce.cpp
+         PseudoBoolean_minimize_reduction.cpp
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_minimize_reduction.cpp(492): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_minimize_reduction.cpp(421) : while compiling class template member function 'int Petter::PseudoBoolean<real>::minimize_reduction_M(std::vector<_Ty> &,int &) const'
+                 with
+                 [
+                     real=int,
+                     _Ty=Petter::label
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pb_instances.inc(12) : see reference to class template instantiation 'Petter::PseudoBoolean<real>' being compiled
+                 with
+                 [
+                     real=int
+                 ]
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_minimize_reduction.cpp(493): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_minimize_reduction.cpp(494): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_minimize_reduction.cpp(495): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(2176): warning C4996: 'std::_Copy_impl': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(2157) : see declaration of 'std::_Copy_impl'
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr0.h(48) : see reference to function template instantiation '_OutIt std::copy<const VID*,VID[]>(_InIt,_InIt,_OutIt)' being compiled
+                 with
+                 [
+                     _OutIt=PBF<double,4>::VID [],
+                     VID=PBF<double,4>::VID,
+                     _InIt=const PBF<double,4>::VID *
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr0.h(48) : while compiling class template member function 'void Term<VID,D>::get(VID []) const'
+                 with
+                 [
+                     VID=PBF<double,4>::VID,
+                     D=4
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr0.h(136) : see reference to function template instantiation 'void Term<VID,D>::get(VID []) const' being compiled
+                 with
+                 [
+                     VID=PBF<double,4>::VID,
+                     D=4
+                 ]
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\utility(201) : see reference to class template instantiation 'Term<VID,D>' being compiled
+                 with
+                 [
+                     VID=PBF<double,4>::VID,
+                     D=4
+                 ]
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\vector(1541) : see reference to class template instantiation 'std::pair<_Ty1,_Ty2>' being compiled
+                 with
+                 [
+                     _Ty1=Term<PBF<double,4>::VID,4>,
+                     _Ty2=double
+                 ]
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\vector(1535) : while compiling class template member function 'void std::vector<_Ty>::_Tidy(void)'
+                 with
+                 [
+                     _Ty=std::pair<Term<PBF<double,4>::VID,4>,double>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\vector(900) : see reference to function template instantiation 'void std::vector<_Ty>::_Tidy(void)' being compiled
+                 with
+                 [
+                     _Ty=std::pair<Term<PBF<double,4>::VID,4>,double>
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr0.h(140) : see reference to class template instantiation 'std::vector<_Ty>' being compiled
+                 with
+                 [
+                     _Ty=std::pair<Term<PBF<double,4>::VID,4>,double>
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr0.h(190) : see reference to class template instantiation 'Terms<REAL,VID,D>' being compiled
+                 with
+                 [
+                     REAL=double,
+                     VID=PBF<double,4>::VID,
+                     D=4
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr0.h(195) : see reference to class template instantiation 'TermsUpTo_<REAL,VID,MAXD>' being compiled
+                 with
+                 [
+                     REAL=double,
+                     VID=PBF<double,4>::VID,
+                     MAXD=4
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\hocr.h(294) : see reference to class template instantiation 'TermsUpTo<REAL,VID,MAXD>' being compiled
+                 with
+                 [
+                     REAL=double,
+                     VID=PBF<double,4>::VID,
+                     MAXD=4
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_minimize_reduction.cpp(39) : see reference to class template instantiation 'PBF<REAL,MAXD>' being compiled
+                 with
+                 [
+                     REAL=double,
+                     MAXD=4
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_minimize_reduction.cpp(33) : while compiling class template member function 'double Petter::PseudoBoolean<real>::minimize_reduction(std::vector<_Ty> &,int &) const'
+                 with
+                 [
+                     real=double,
+                     _Ty=Petter::label
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pb_instances.inc(11) : see reference to class template instantiation 'Petter::PseudoBoolean<real>' being compiled
+                 with
+                 [
+                     real=double
+                 ]
+         PseudoBoolean_minimize_lp.cpp
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_minimize_lp.cpp(18): fatal error C1083: Cannot open include file: 'coin/ClpSimplex.hpp': No such file or directory
+         PseudoBoolean_minimize.cpp
+         PseudoBoolean_heuristic.cpp
+         PseudoBoolean_create_g.cpp
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_create_g.cpp(12): fatal error C1083: Cannot open include file: 'coin/ClpSimplex.hpp': No such file or directory
+         PseudoBoolean_complete.cpp
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_complete.cpp(50): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdlib.h(449) : see declaration of 'getenv'
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_complete.cpp(25) : while compiling class template member function 'double Petter::PseudoBoolean<real>::minimize(std::vector<_Ty> &,int &,Petter::Method,const char *)'
+                 with
+                 [
+                     real=double,
+                     _Ty=Petter::label
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pb_instances.inc(11) : see reference to class template instantiation 'Petter::PseudoBoolean<real>' being compiled
+                 with
+                 [
+                     real=double
+                 ]
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_complete.cpp(51): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdlib.h(449) : see declaration of 'getenv'
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_complete.cpp(148): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pseudoboolean_complete.cpp(109) : while compiling class template member function 'int Petter::PseudoBoolean<real>::minimize(std::vector<_Ty> &,int &,bool)'
+                 with
+                 [
+                     real=int,
+                     _Ty=Petter::label
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pb_instances.inc(12) : see reference to class template instantiation 'Petter::PseudoBoolean<real>' being compiled
+                 with
+                 [
+                     real=int
+                 ]
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdlib.h(449) : see declaration of 'getenv'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdlib.h(449) : see declaration of 'getenv'
+         PseudoBoolean_branchandbound.cpp
+         PseudoBoolean.cpp
+         GeneratorPseudoBoolean.cpp
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\generatorpseudoboolean.cpp(8): fatal error C1083: Cannot open include file: 'coin/ClpSimplex.hpp': No such file or directory
+         Generating Code...
+     1>Done Building Project "C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\grdlibrary\grdlibrary.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:27.18

@@ -103,11 +103,21 @@ void check_persistency( const vector< vector<label> >& optimal_solutions,
 			break;
 		}
 	}
+	ofstream log("percistency.data", ios::app);
 	if (!any_ok) {
 		// Persistency did not hold for this solution
+
+		
+		log <<  0      << '\t'  << endl;// 0
+
+
+
+
 		throw runtime_error("Persistency error");
 	}
-
+	else{
+		log <<  1      << '\t'  << endl;// 0
+	}
 	if (reported_labelled >= 0) {
 		int labelled = 0;
 		for (size_t i=0;i<x.size();++i) {
@@ -348,6 +358,9 @@ int main_program(int num_args, char** args)
 	int heur_labeled = -1;
 	int packing_labeled = -1;
 
+	int generators_labeled_new = -1;
+	int generators_labeled_new_10 = -1;
+
 	real m_bound = 100;
 	real hocr_bound = 100;
 	real hocr_itr_bound = 100;
@@ -360,6 +373,9 @@ int main_program(int num_args, char** args)
 	real packing_bound = 100;
 	real packing_itr_bound = 100;
 
+	real generators_bound_new =100;
+	real generators_bound_new_10 = 100;
+
 	double m_time = -1;
 	double hocr_time = -1;
 	double hocr_itr_time = -1;
@@ -369,6 +385,11 @@ int main_program(int num_args, char** args)
 	double generators_time = -1;
 	double heur_time = -1;
 	double packing_time = -1;
+
+	double generators_time_new = 0;
+	double generators_time_new_10 = 0;
+	double time_gen10_solve = 0;
+	double time_gen_solve = 0;
 
 	if (do_exhaustive && n>30) {
 		cout << "Not using exhaustive search for n=" << n << endl;
@@ -784,8 +805,11 @@ int main_program(int num_args, char** args)
 				check_bound(optimum, optimal_bound);
 			}
 		}
-
+		cout << "111111" << endl;
 		if (do_generators) {
+
+			
+
 			int iters = 0;
 			double bound = 0;
 			int labeled = 0;
@@ -810,6 +834,101 @@ int main_program(int num_args, char** args)
 
 				//TODO: Reading the file every iteration is not optimal
 				GeneratorPseudoBoolean<real> gpb(generators);
+				start();
+				gpb.create_lp(f);
+
+				double t_create = stop();
+
+				int new_labeled = 0;
+				start();
+				bound = gpb.minimize(x, new_labeled);
+				double t_minimize = stop();
+				should_continue = new_labeled > labeled;
+				labeled = new_labeled;
+				if (labeled == n) {
+					//Nothing more to do
+					should_continue = false;
+				}
+
+				start();
+				f.reduce(x);
+				double t_reduce = stop();
+
+				if (verbose) {
+					//cout << "Relaxation g : " << gpb << endl;
+				}
+
+				print_info("Gener. solution",x,bound,labeled,DKGREEN);
+				if (verbose) {
+					cout << "time (create)   : " << DKGREEN << t_create <<  NORMAL << endl;
+					cout << "time (minimize) : " << DKGREEN << t_minimize <<  NORMAL << endl;
+					cout << "time (reduce)   : " << DKGREEN << t_reduce <<  NORMAL << endl;
+				}
+
+				generators_time += t_create + t_minimize + t_reduce;
+				time_gen_solve += t_minimize + t_reduce;
+			} while (should_continue);
+
+			if (labeled == n) {
+				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
+
+				if (abs(bound) > 1e-5 && abs(pb.eval(x) - bound) / abs(bound) > 1e-5) {
+					throw runtime_error("For all variables assigned, min g should be equal to min f.");
+				}
+			}
+			cout << endl;
+
+			generators_bound = bound;
+			generators_labeled = labeled;
+
+			// If we know the optimal solution, we can verify
+			// that the persistencies are correct
+			if (do_exhaustive) {
+
+			
+
+				check_persistency(optimal_solutions, x, generators_labeled);
+				check_bound(optimum, generators_bound);
+			}
+		}
+		cout << "111111" << endl;
+
+		//////////////////////////////////
+		//new generators!  allgen4.txt////
+		//////////////////////////////////
+
+		bool new_generators = true;
+		if (new_generators) {
+
+			cout << "-------Generators allgen4.txt---------" << endl;
+			int iters = 0;
+			double bound = 0;
+			int labeled = 0;
+			bool should_continue;
+			Petter::PseudoBoolean<real> f;
+			vector<label> x(n,0);
+
+			if (cmd_line.find("-usehocr") != cmd_line.end()) {
+				//Start at the HOCR solution (for speed)
+				f = f_hocrreduced;
+				cout << "USING HOCR REDUCED" << endl;
+			}
+			else {
+				//Default
+				f = pb;
+			}
+
+			Generators<real> generators("generators/allgen4.txt");
+			generators_time_new = 0;
+			do {
+				cout << "------------------" << endl;
+				cout << f << endl;
+				
+				iters++;
+
+				//TODO: Reading the file every iteration is not optimal
+				GeneratorPseudoBoolean<real> gpb(generators);
+			//	gpb.save_to_file("g-error.txt");
 				start();
 				gpb.create_lp(f);
 				double t_create = stop();
@@ -840,8 +959,8 @@ int main_program(int num_args, char** args)
 					cout << "time (reduce)   : " << DKGREEN << t_reduce <<  NORMAL << endl;
 				}
 
-				generators_time += t_create + t_minimize + t_reduce;
-
+				generators_time_new += t_create + t_minimize + t_reduce;
+				cout << "ITERS = " <<GREEN <<iters << NORMAL << endl;
 			} while (should_continue);
 
 			if (labeled == n) {
@@ -853,16 +972,210 @@ int main_program(int num_args, char** args)
 			}
 			cout << endl;
 
-			generators_bound = bound;
-			generators_labeled = labeled;
+			generators_bound_new = bound;
+			generators_labeled_new = labeled;
 
 			// If we know the optimal solution, we can verify
 			// that the persistencies are correct
 			if (do_exhaustive) {
-				check_persistency(optimal_solutions, x, generators_labeled);
+				check_persistency(optimal_solutions, x, generators_labeled_new);
+				check_bound(optimum, generators_bound);
+				
+			}
+		}
+		
+		/////////////////////////////////////////
+		//Minimize 3!///////////////////////////
+		///////////////////////////////////////
+
+		bool minimize_3 = true;
+		if (minimize_3) {
+
+			cout << "-------Minimize_3---------" << endl;
+			int iters = 0;
+			double bound = 0;
+			int labeled = 0;
+			bool should_continue;
+			Petter::PseudoBoolean<real> f;
+			vector<label> x(n,0);
+
+			if (cmd_line.find("-usehocr") != cmd_line.end()) {
+				//Start at the HOCR solution (for speed)
+				f = f_hocrreduced;
+				cout << "USING HOCR REDUCED" << endl;
+			}
+			else {
+				//Default
+				f = pb;
+			}
+
+			Generators<real> generators("generators/allgen4_3.txt");
+			generators_time_new = 0;
+			do {
+				cout << "------------------" << endl;
+				cout << f << endl;
+				
+				iters++;
+
+				//TODO: Reading the file every iteration is not optimal
+				GeneratorPseudoBoolean<real> gpb(generators);
+			//	gpb.save_to_file("g-error.txt");
+				start();
+				gpb.create_lp(f);
+				double t_create = stop();
+
+				int new_labeled = 0;
+				start();
+				bound = gpb.minimize(x, new_labeled);
+				double t_minimize = stop();
+				should_continue = new_labeled > labeled;
+				labeled = new_labeled;
+				if (labeled == n) {
+					//Nothing more to do
+					should_continue = false;
+				}
+
+				start();
+				f.reduce(x);
+				double t_reduce = stop();
+
+				if (verbose) {
+					//cout << "Relaxation g : " << gpb << endl;
+				}
+
+				print_info("Gener. solution",x,bound,labeled,DKGREEN);
+				if (verbose) {
+					cout << "time (create)   : " << DKGREEN << t_create <<  NORMAL << endl;
+					cout << "time (minimize) : " << DKGREEN << t_minimize <<  NORMAL << endl;
+					cout << "time (reduce)   : " << DKGREEN << t_reduce <<  NORMAL << endl;
+				}
+
+				generators_time_new += t_create + t_minimize + t_reduce;
+				cout << "ITERS = " <<GREEN <<iters << NORMAL << endl;
+			} while (should_continue);
+
+			if (labeled == n) {
+				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
+
+				if (abs(bound) > 1e-5 && abs(pb.eval(x) - bound) / abs(bound) > 1e-5) {
+					throw runtime_error("For all variables assigned, min g should be equal to min f.");
+				}
+			}
+			cout << endl;
+
+			generators_bound_new = bound;
+			generators_labeled_new = labeled;
+
+
+			// If we know the optimal solution, we can verify
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x, generators_labeled_new);
+				check_bound(optimum, generators_bound);
+				
+			}
+		}
+
+
+
+
+
+
+		
+
+		///////////////////////////////////////////////
+		//new generators!  generators_10classes.txt////
+		///////////////////////////////////////////////
+		//bool new_generators = true;
+
+
+
+		if (new_generators) {
+			cout << "-------Generators 10 classes---------" << endl;
+			int iters = 0;
+			double bound = 0;
+			int labeled = 0;
+			bool should_continue;
+			Petter::PseudoBoolean<real> f;
+			vector<label> x(n,0);
+
+			if (cmd_line.find("-usehocr") != cmd_line.end()) {
+				//Start at the HOCR solution (for speed)
+				f = f_hocrreduced;
+				cout << "USING HOCR REDUCED" << endl;
+			}
+			else {
+				//Default
+				f = pb;
+			}
+
+			Generators<real> generators("generators/generators_10classes.txt");
+			generators_time_new = 0;
+			do {
+				cout << "------------------" << endl;
+				cout << f << endl;
+				
+				iters++;
+
+				//TODO: Reading the file every iteration is not optimal
+				GeneratorPseudoBoolean<real> gpb(generators);
+			//	gpb.save_to_file("g-error.txt");
+				start();
+				gpb.create_lp(f);
+				double t_create = stop();
+
+				int new_labeled = 0;
+				start();
+				bound = gpb.minimize(x, new_labeled);
+				double t_minimize = stop();
+				should_continue = new_labeled > labeled;
+				labeled = new_labeled;
+				if (labeled == n) {
+					//Nothing more to do
+					should_continue = false;
+				}
+
+				start();
+				f.reduce(x);
+				double t_reduce = stop();
+
+				if (verbose) {
+					//cout << "Relaxation g : " << gpb << endl;
+				}
+
+				print_info("Gener. solution",x,bound,labeled,DKGREEN);
+				if (verbose) {
+					cout << "time (create)   : " << DKGREEN << t_create <<  NORMAL << endl;
+					cout << "time (minimize) : " << DKGREEN << t_minimize <<  NORMAL << endl;
+					cout << "time (reduce)   : " << DKGREEN << t_reduce <<  NORMAL << endl;
+				}
+
+				generators_time_new_10 += t_create + t_minimize + t_reduce;
+				time_gen10_solve +=t_minimize + t_reduce;
+				cout << "ITERS = " <<GREEN <<iters << NORMAL << endl;
+			} while (should_continue);
+
+			if (labeled == n) {
+				cout << "Global minimum : " << WHITE << pb.eval(x) << NORMAL << endl;
+
+				if (abs(bound) > 1e-5 && abs(pb.eval(x) - bound) / abs(bound) > 1e-5) {
+					throw runtime_error("For all variables assigned, min g should be equal to min f.");
+				}
+			}
+			cout << endl;
+
+			generators_bound_new_10 = bound;
+			generators_labeled_new_10 = labeled;
+
+			// If we know the optimal solution, we can verify
+			// that the persistencies are correct
+			if (do_exhaustive) {
+				check_persistency(optimal_solutions, x, generators_labeled_new_10);
 				check_bound(optimum, generators_bound);
 			}
 		}
+
+
 
 
 		if (do_heuristic) {
@@ -1057,8 +1370,49 @@ int main_program(int num_args, char** args)
 			<< m_labeled        << '\t' // 27
 			<< m_bound          << '\t' // 28
 			<< m_time           << '\t' // 29
+
+			<< generators_labeled_new<<'\t' // 30
+			<< generators_bound_new << '\t' // 31
+			<< generators_time_new  << '\t' // 32
+
+			<< generators_labeled_new_10<<'\t' // 33
+			<< generators_bound_new_10 << '\t' // 34
+			<< generators_time_new_10  << '\t' // 35
+
+
+			<< time_gen10_solve << '\t'  //36
+			<< time_gen_solve << '\t'    //37
+
             << endl;
 	}
+	if(((generators_bound_new_10 - generators_bound) < -0.5 )){    //  || ((-generators_bound_new_10 + generators_bound) < -0.0001)){
+		cout << "value1: " << (generators_bound_new_10 - generators_bound)<< endl;
+		cout << "value2: " << (-generators_bound_new_10 + generators_bound)<< endl;
+		cout << "old energy: " << generators_bound <<  "   10_gen energy: " << generators_bound_new_10 <<endl;
+		pb.save_to_file("diff_energy.txt");
+	}
+
+
+
+	if (generators_labeled_new > generators_labeled)  {
+		cout << "new: " <<  generators_labeled_new << " old: " << generators_labeled << endl;
+		pb.save_to_file("diff_new_better.txt");
+	}
+	if (generators_labeled_new < generators_labeled)  {
+		cout << "new: " <<  generators_labeled_new << " old: " << generators_labeled << endl;
+		pb.save_to_file("diff_old_better.txt");
+	}
+	if (generators_labeled_new_10 < generators_labeled_new)  {
+		cout << "new_10: " <<  generators_labeled_new_10 << " old: " << generators_labeled_new << endl;
+		pb.save_to_file("diff_10_worse.txt");
+	}
+
+	if (generators_labeled_new_10 > generators_labeled_new)  {
+		cout << "new_10: " <<  generators_labeled_new_10 << " old: " << generators_labeled_new << endl;
+		pb.save_to_file("diff_10_better.txt");
+	}
+
+
 	//cin.get();
 
 	return 0;

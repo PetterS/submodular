@@ -1,0 +1,514 @@
+﻿Build started 5/13/2013 3:36:20 PM.
+     1>Project "C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\grdlibrary\grdlibrary.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /D WIN32 /D NDEBUG /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc110.pdb" /Gd /TP /errorReport:prompt ..\..\source\library\GeneratorPseudoBoolean.cpp
+         GeneratorPseudoBoolean.cpp
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(978): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(908) : while compiling class template member function 'double Petter::GeneratorPseudoBoolean<real>::minimize_version_2(std::vector<_Ty> &,int &) const'
+                 with
+                 [
+                     real=double,
+                     _Ty=Petter::label
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(798) : see reference to function template instantiation 'double Petter::GeneratorPseudoBoolean<real>::minimize_version_2(std::vector<_Ty> &,int &) const' being compiled
+                 with
+                 [
+                     real=double,
+                     _Ty=Petter::label
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(337) : see reference to class template instantiation 'Petter::GeneratorPseudoBoolean<real>' being compiled
+                 with
+                 [
+                     real=double
+                 ]
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(979): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1008): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1009): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1010): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1011): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1012): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1013): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1014): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1015): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1016): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1017): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1018): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1019): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1020): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1021): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1022): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1023): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1038): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1039): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1040): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1041): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1042): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1043): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1044): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1045): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1046): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1047): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1048): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1049): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1050): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1051): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1052): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1053): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1095): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1096): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1097): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1098): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1099): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1100): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1101): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1102): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1103): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1104): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1105): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1106): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1107): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1108): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1109): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1110): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1125): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1126): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1127): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1128): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1129): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1130): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1131): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1132): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1133): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1134): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1135): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1136): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1137): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1138): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1139): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1140): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1486): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(1431) : while compiling class template member function 'double Petter::GeneratorPseudoBoolean<real>::minimize_version_3(std::vector<_Ty> &,int &) const'
+                 with
+                 [
+                     real=double,
+                     _Ty=Petter::label
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(801) : see reference to function template instantiation 'double Petter::GeneratorPseudoBoolean<real>::minimize_version_3(std::vector<_Ty> &,int &) const' being compiled
+                 with
+                 [
+                     real=double,
+                     _Ty=Petter::label
+                 ]
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1487): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(978): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(908) : while compiling class template member function 'int Petter::GeneratorPseudoBoolean<real>::minimize_version_2(std::vector<_Ty> &,int &) const'
+                 with
+                 [
+                     real=int,
+                     _Ty=Petter::label
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(798) : see reference to function template instantiation 'int Petter::GeneratorPseudoBoolean<real>::minimize_version_2(std::vector<_Ty> &,int &) const' being compiled
+                 with
+                 [
+                     real=int,
+                     _Ty=Petter::label
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\source\library\pb_instances.inc(12) : see reference to class template instantiation 'Petter::GeneratorPseudoBoolean<real>' being compiled
+                 with
+                 [
+                     real=int
+                 ]
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(979): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1008): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1009): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1010): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1011): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1012): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1013): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1014): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1015): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1016): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1017): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1018): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1019): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1020): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1021): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1022): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1023): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1028): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1038): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1039): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1040): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1041): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1042): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1043): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1044): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1045): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1046): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1047): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1048): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1049): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1050): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1051): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1052): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1053): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1058): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1095): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1096): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1097): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1098): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1099): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1100): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1101): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1102): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1103): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1104): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1105): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1106): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1107): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1108): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1109): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1110): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1115): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1125): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1126): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1127): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1128): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1129): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1130): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1131): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1132): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1133): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1134): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1135): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1136): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1137): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1138): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1139): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1140): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1145): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1324): warning C4244: 'return' : conversion from 'double' to 'int', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1486): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(1431) : while compiling class template member function 'int Petter::GeneratorPseudoBoolean<real>::minimize_version_3(std::vector<_Ty> &,int &) const'
+                 with
+                 [
+                     real=int,
+                     _Ty=Petter::label
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(801) : see reference to function template instantiation 'int Petter::GeneratorPseudoBoolean<real>::minimize_version_3(std::vector<_Ty> &,int &) const' being compiled
+                 with
+                 [
+                     real=int,
+                     _Ty=Petter::label
+                 ]
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1487): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1608): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1678): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(1777): warning C4244: 'return' : conversion from 'double' to 'int', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(830): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(1205) : see reference to function template instantiation 'void Petter::add_generator_to_graph<GCType,real>(GC *,real *,int,int,int,int,const std::vector<_Ty> &,real,std::unique_ptr<Petter::PseudoBoolean<real>> &)' being compiled
+                 with
+                 [
+                     real=double,
+                     GC=GCType,
+                     _Ty=double
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(908) : while compiling class template member function 'double Petter::GeneratorPseudoBoolean<real>::minimize_version_2(std::vector<_Ty> &,int &) const'
+                 with
+                 [
+                     real=double,
+                     _Ty=Petter::label
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(798) : see reference to function template instantiation 'double Petter::GeneratorPseudoBoolean<real>::minimize_version_2(std::vector<_Ty> &,int &) const' being compiled
+                 with
+                 [
+                     real=double,
+                     _Ty=Petter::label
+                 ]
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(831): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(832): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(833): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(834): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(835): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(836): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(837): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(838): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(839): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(840): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(841): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(842): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(843): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(844): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(845): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(865): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(1558) : see reference to function template instantiation 'void Petter::add_generators_to_clique<real>(real,float *,const std::vector<_Ty> &)' being compiled
+                 with
+                 [
+                     real=double,
+                     _Ty=double
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(1431) : while compiling class template member function 'double Petter::GeneratorPseudoBoolean<real>::minimize_version_3(std::vector<_Ty> &,int &) const'
+                 with
+                 [
+                     real=double,
+                     _Ty=Petter::label
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(801) : see reference to function template instantiation 'double Petter::GeneratorPseudoBoolean<real>::minimize_version_3(std::vector<_Ty> &,int &) const' being compiled
+                 with
+                 [
+                     real=double,
+                     _Ty=Petter::label
+                 ]
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(866): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(867): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(868): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(869): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(870): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(871): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(872): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(873): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(874): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(875): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(876): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(877): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(878): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(879): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(880): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(883): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(884): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(885): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(886): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(887): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(888): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(889): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(890): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(894): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(895): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(896): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(897): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(830): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(1205) : see reference to function template instantiation 'void Petter::add_generator_to_graph<GCType,real>(GC *,real *,int,int,int,int,const std::vector<_Ty> &,real,std::unique_ptr<Petter::PseudoBoolean<real>> &)' being compiled
+                 with
+                 [
+                     real=int,
+                     GC=GCType,
+                     _Ty=int
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(908) : while compiling class template member function 'int Petter::GeneratorPseudoBoolean<real>::minimize_version_2(std::vector<_Ty> &,int &) const'
+                 with
+                 [
+                     real=int,
+                     _Ty=Petter::label
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(798) : see reference to function template instantiation 'int Petter::GeneratorPseudoBoolean<real>::minimize_version_2(std::vector<_Ty> &,int &) const' being compiled
+                 with
+                 [
+                     real=int,
+                     _Ty=Petter::label
+                 ]
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(831): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(832): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(833): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(834): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(835): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(836): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(837): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(838): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(839): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(840): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(841): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(842): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(843): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(844): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(845): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(847): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(865): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(1558) : see reference to function template instantiation 'void Petter::add_generators_to_clique<real>(real,float *,const std::vector<_Ty> &)' being compiled
+                 with
+                 [
+                     real=int,
+                     _Ty=int
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(1431) : while compiling class template member function 'int Petter::GeneratorPseudoBoolean<real>::minimize_version_3(std::vector<_Ty> &,int &) const'
+                 with
+                 [
+                     real=int,
+                     _Ty=Petter::label
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(801) : see reference to function template instantiation 'int Petter::GeneratorPseudoBoolean<real>::minimize_version_3(std::vector<_Ty> &,int &) const' being compiled
+                 with
+                 [
+                     real=int,
+                     _Ty=Petter::label
+                 ]
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(866): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(867): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(868): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(869): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(870): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(871): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(872): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(873): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(874): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(875): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(876): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(877): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(878): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(879): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(880): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(883): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(884): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(885): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(886): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(887): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(888): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(889): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(890): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(894): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(895): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(896): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>..\..\source\library\GeneratorPseudoBoolean.cpp(897): warning C4244: '=' : conversion from 'const int' to 'float', possible loss of data
+     1>C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\xmemory0(617): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\xmemory0(751) : see reference to function template instantiation 'void std::allocator<_Ty>::construct<_Objty,float&>(_Objty *,_V0_t)' being compiled
+                 with
+                 [
+                     _Ty=int,
+                     _Objty=int,
+                     _V0_t=float &
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\xmemory0(751) : see reference to function template instantiation 'void std::allocator<_Ty>::construct<_Objty,float&>(_Objty *,_V0_t)' being compiled
+                 with
+                 [
+                     _Ty=int,
+                     _Objty=int,
+                     _V0_t=float &
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\xmemory0(903) : see reference to function template instantiation 'void std::allocator_traits<_Alloc>::construct<_Ty,float&>(std::allocator<_Ty> &,_Objty *,_V0_t)' being compiled
+                 with
+                 [
+                     _Alloc=std::allocator<int>,
+                     _Ty=int,
+                     _Objty=int,
+                     _V0_t=float &
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\xmemory0(903) : see reference to function template instantiation 'void std::allocator_traits<_Alloc>::construct<_Ty,float&>(std::allocator<_Ty> &,_Objty *,_V0_t)' being compiled
+                 with
+                 [
+                     _Alloc=std::allocator<int>,
+                     _Ty=int,
+                     _Objty=int,
+                     _V0_t=float &
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\xmemory(378) : see reference to function template instantiation 'void std::_Wrap_alloc<_Alloc>::construct<int,float&>(_Ty *,_V0_t)' being compiled
+                 with
+                 [
+                     _Alloc=std::allocator<int>,
+                     _Ty=int,
+                     _V0_t=float &
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\xmemory(378) : see reference to function template instantiation 'void std::_Wrap_alloc<_Alloc>::construct<int,float&>(_Ty *,_V0_t)' being compiled
+                 with
+                 [
+                     _Alloc=std::allocator<int>,
+                     _Ty=int,
+                     _V0_t=float &
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\xmemory(416) : see reference to function template instantiation '_FwdIt std::_Uninit_copy<_InIt,_FwdIt,std::allocator<_Ty>>(_InIt,_InIt,_FwdIt,std::_Wrap_alloc<_Alloc> &,std::_Nonscalar_ptr_iterator_tag)' being compiled
+                 with
+                 [
+                     _FwdIt=int *,
+                     _InIt=float *,
+                     _Ty=int,
+                     _Alloc=std::allocator<int>
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\vector(1553) : see reference to function template instantiation '_FwdIt std::_Uninitialized_copy<_Iter,int*,std::_Wrap_alloc<_Alloc>>(_InIt,_InIt,_FwdIt,std::_Wrap_alloc<_Alloc> &)' being compiled
+                 with
+                 [
+                     _FwdIt=int *,
+                     _Iter=float *,
+                     _Alloc=std::allocator<int>,
+                     _InIt=float *
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\vector(1322) : see reference to function template instantiation 'int *std::vector<_Ty>::_Ucopy<_Iter>(_Iter,_Iter,int *)' being compiled
+                 with
+                 [
+                     _Ty=int,
+                     _Iter=float *
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\vector(1322) : see reference to function template instantiation 'int *std::vector<_Ty>::_Ucopy<_Iter>(_Iter,_Iter,int *)' being compiled
+                 with
+                 [
+                     _Ty=int,
+                     _Iter=float *
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\vector(1261) : see reference to function template instantiation 'void std::vector<_Ty>::_Insert<_Iter>(std::_Vector_const_iterator<_Myvec>,_Iter,_Iter,std::forward_iterator_tag)' being compiled
+                 with
+                 [
+                     _Ty=int,
+                     _Iter=float *,
+                     _Myvec=std::_Vector_val<std::_Simple_types<int>>
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\vector(1261) : see reference to function template instantiation 'void std::vector<_Ty>::_Insert<_Iter>(std::_Vector_const_iterator<_Myvec>,_Iter,_Iter,std::forward_iterator_tag)' being compiled
+                 with
+                 [
+                     _Ty=int,
+                     _Iter=float *,
+                     _Myvec=std::_Vector_val<std::_Simple_types<int>>
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\vector(766) : see reference to function template instantiation 'std::_Vector_iterator<_Myvec> std::vector<_Ty>::insert<_Iter>(std::_Vector_const_iterator<_Myvec>,_Iter,_Iter)' being compiled
+                 with
+                 [
+                     _Myvec=std::_Vector_val<std::_Simple_types<int>>,
+                     _Ty=int,
+                     _Iter=float *
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\vector(766) : see reference to function template instantiation 'std::_Vector_iterator<_Myvec> std::vector<_Ty>::insert<_Iter>(std::_Vector_const_iterator<_Myvec>,_Iter,_Iter)' being compiled
+                 with
+                 [
+                     _Myvec=std::_Vector_val<std::_Simple_types<int>>,
+                     _Ty=int,
+                     _Iter=float *
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\vector(750) : see reference to function template instantiation 'void std::vector<_Ty>::_Construct<_Iter>(_Iter,_Iter)' being compiled
+                 with
+                 [
+                     _Ty=int,
+                     _Iter=float *
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\vector(750) : see reference to function template instantiation 'void std::vector<_Ty>::_Construct<_Iter>(_Iter,_Iter)' being compiled
+                 with
+                 [
+                     _Ty=int,
+                     _Iter=float *
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(1032) : see reference to function template instantiation 'std::vector<_Ty>::vector<float*>(_Iter,_Iter,void **)' being compiled
+                 with
+                 [
+                     _Ty=int,
+                     _Iter=float *
+                 ]
+                 ..\..\source\library\GeneratorPseudoBoolean.cpp(1032) : see reference to function template instantiation 'std::vector<_Ty>::vector<float*>(_Iter,_Iter,void **)' being compiled
+                 with
+                 [
+                     _Ty=int,
+                     _Iter=float *
+                 ]
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\Lib.exe /OUT:"C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\submodularproject\..\..\lib\x64\Release\grd.lib" /NOLOGO /MACHINE:X64 x64\Release\insert_clique2.obj
+         x64\Release\GeneratorPseudoBoolean.obj
+         x64\Release\PseudoBoolean.obj
+         x64\Release\PseudoBoolean_branchandbound.obj
+         x64\Release\PseudoBoolean_complete.obj
+         x64\Release\PseudoBoolean_create_g.obj
+         x64\Release\PseudoBoolean_heuristic.obj
+         x64\Release\PseudoBoolean_minimize.obj
+         x64\Release\PseudoBoolean_minimize_lp.obj
+         x64\Release\PseudoBoolean_minimize_reduction.obj
+         x64\Release\PseudoBoolean_reduce.obj
+         x64\Release\VertexPacking.obj
+         grdlibrary.vcxproj -> C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\submodularproject\..\..\lib\x64\Release\grd.lib
+     1>Done Building Project "C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\grdlibrary\grdlibrary.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:10.14

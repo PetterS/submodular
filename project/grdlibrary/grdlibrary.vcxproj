@@ -94,7 +94,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>grd</TargetName>
-    <IncludePath>../../thirdparty/gc-source;../../thirdparty/ibfs;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Johan\Dropbox\computer vision\opencv\build\include;C:\Users\Johan\Dropbox\computer vision\opencv\include;C:\Users\Johan\Dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\clp\include;../../thirdparty/gc-source;../../thirdparty/ibfs;../../source/library;../../thirdparty\maxflow-v3.01.src;../../thirdparty\Petter;../../thirdparty\QPBO;../../thirdparty\HOCR;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Johan\Dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\clp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -163,6 +164,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\kod\insert_clique2.cpp" />
     <ClCompile Include="..\..\source\library\GeneratorPseudoBoolean.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean.cpp" />
     <ClCompile Include="..\..\source\library\PseudoBoolean_branchandbound.cpp" />
@@ -176,6 +178,7 @@
     <ClCompile Include="..\..\source\library\VertexPacking.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\kod\insert_clique2.h" />
     <ClInclude Include="..\..\source\library\Minimizer.h" />
     <ClInclude Include="..\..\source\library\Posiform.h" />
     <ClInclude Include="..\..\source\library\PseudoBoolean.h" />

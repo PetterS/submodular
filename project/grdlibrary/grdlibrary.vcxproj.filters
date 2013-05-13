@@ -50,6 +50,9 @@
     <ClCompile Include="..\..\source\library\GeneratorPseudoBoolean.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\kod\insert_clique2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\library\PseudoBoolean.h">
@@ -62,6 +65,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\library\Minimizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\kod\insert_clique2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

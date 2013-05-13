@@ -1,0 +1,281 @@
+﻿Build started 4/26/2013 1:30:53 PM.
+     1>Project "C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\submodularproject\submodularproject.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /Od /D HAS_ARMADILLO /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt ..\..\source\main_program.cpp ..\..\source\submodular_tests.cpp
+         submodular_tests.cpp
+     1>c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\HOCR0.h(94): warning C4267: 'return' : conversion from 'size_t' to 'int', possible loss of data
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\HOCR0.h(94) : while compiling class template member function 'int Terms<REAL,VID,D>::size(void) const'
+                 with
+                 [
+                     REAL=int,
+                     VID=PBF<int,3>::VID,
+                     D=3
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\HOCR0.h(158) : see reference to function template instantiation 'int Terms<REAL,VID,D>::size(void) const' being compiled
+                 with
+                 [
+                     REAL=int,
+                     VID=PBF<int,3>::VID,
+                     D=3
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\HOCR0.h(190) : see reference to class template instantiation 'Terms<REAL,VID,D>' being compiled
+                 with
+                 [
+                     REAL=int,
+                     VID=PBF<int,3>::VID,
+                     D=3
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\HOCR0.h(195) : see reference to class template instantiation 'TermsUpTo_<REAL,VID,MAXD>' being compiled
+                 with
+                 [
+                     REAL=int,
+                     VID=PBF<int,3>::VID,
+                     MAXD=3
+                 ]
+                 C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\HOCR\HOCR.h(294) : see reference to class template instantiation 'TermsUpTo<REAL,VID,MAXD>' being compiled
+                 with
+                 [
+                     REAL=int,
+                     VID=PBF<int,3>::VID,
+                     MAXD=3
+                 ]
+                 ..\..\source\submodular_tests.cpp(65) : see reference to class template instantiation 'PBF<REAL,MAXD>' being compiled
+                 with
+                 [
+                     REAL=int,
+                     MAXD=3
+                 ]
+     1>C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\xutility(2176): warning C4996: 'std::_Copy_impl': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\xutility(2157) : see declaration of 'std::_Copy_impl'
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\HOCR0.h(48) : see reference to function template instantiation '_OutIt std::copy<const VID*,VID[]>(_InIt,_InIt,_OutIt)' being compiled
+                 with
+                 [
+                     _OutIt=PBF<int,3>::VID [],
+                     VID=PBF<int,3>::VID,
+                     _InIt=const PBF<int,3>::VID *
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\HOCR0.h(48) : while compiling class template member function 'void Term<VID,D>::get(VID []) const'
+                 with
+                 [
+                     VID=PBF<int,3>::VID,
+                     D=3
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\HOCR0.h(136) : see reference to function template instantiation 'void Term<VID,D>::get(VID []) const' being compiled
+                 with
+                 [
+                     VID=PBF<int,3>::VID,
+                     D=3
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\utility(201) : see reference to class template instantiation 'Term<VID,D>' being compiled
+                 with
+                 [
+                     VID=PBF<int,3>::VID,
+                     D=3
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\vector(1541) : see reference to class template instantiation 'std::pair<_Ty1,_Ty2>' being compiled
+                 with
+                 [
+                     _Ty1=Term<PBF<int,3>::VID,3>,
+                     _Ty2=int
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\vector(1535) : while compiling class template member function 'void std::vector<_Ty>::_Tidy(void)'
+                 with
+                 [
+                     _Ty=std::pair<Term<PBF<int,3>::VID,3>,int>
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\vector(900) : see reference to function template instantiation 'void std::vector<_Ty>::_Tidy(void)' being compiled
+                 with
+                 [
+                     _Ty=std::pair<Term<PBF<int,3>::VID,3>,int>
+                 ]
+                 c:\users\johanf\dropbox\johan\forskning\generatorcuts\submodular\submodular\thirdparty\hocr\HOCR0.h(140) : see reference to class template instantiation 'std::vector<_Ty>' being compiled
+                 with
+                 [
+                     _Ty=std::pair<Term<PBF<int,3>::VID,3>,int>
+                 ]
+         main_program.cpp
+     1>..\..\source\main_program.cpp(563): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdlib.h(449) : see declaration of 'getenv'
+     1>..\..\source\main_program.cpp(687): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdlib.h(449) : see declaration of 'getenv'
+     1>..\..\source\main_program.cpp(688): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdlib.h(449) : see declaration of 'getenv'
+     1>..\..\source\main_program.cpp(1348): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdlib.h(449) : see declaration of 'getenv'
+     1>..\..\source\main_program.cpp(1349): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdlib.h(449) : see declaration of 'getenv'
+     1>..\..\source\main_program.cpp(1365): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\time.inl(112) : see declaration of 'localtime'
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\submodular_debug.exe" /INCREMENTAL /NOLOGO grd.lib thirdpartylib.lib libClp.lib libCoinUtils.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\..\bin\submodular_debug.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\..\bin\submodular_debug.lib" /MACHINE:X64 x64\Debug\main_program.obj
+         x64\Debug\submodular_tests.obj
+     1>libClp.lib(ClpSimplex.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpSimplex.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpModel.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpModel.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpPackedMatrix.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpPackedMatrix.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpSolve.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpSolve.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpFactorization.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpFactorization.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpDualRowDantzig.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpDualRowDantzig.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpDualRowSteepest.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpDualRowSteepest.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpPrimalColumnDantzig.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpPrimalColumnDantzig.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpPrimalColumnSteepest.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpPrimalColumnSteepest.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpNonLinearCost.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpNonLinearCost.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpEventHandler.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpEventHandler.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpLinearObjective.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpLinearObjective.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpHelperFunctions.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpHelperFunctions.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpSimplexDual.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpSimplexDual.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpSimplexPrimal.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpSimplexPrimal.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpSimplexOther.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpSimplexOther.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpSimplexNonlinear.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpSimplexNonlinear.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpInterior.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpInterior.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpCholeskyBase.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpCholeskyBase.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpPresolve.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpPresolve.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpNode.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpNode.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpPlusMinusOneMatrix.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpPlusMinusOneMatrix.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpMessage.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpMessage.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpQuadraticObjective.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpQuadraticObjective.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpMatrixBase.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpMatrixBase.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpCholeskyDense.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpCholeskyDense.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(Idiot.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(Idiot.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpNetworkBasis.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpNetworkBasis.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpDualRowPivot.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpDualRowPivot.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpPrimalColumnPivot.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpPrimalColumnPivot.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpObjective.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpObjective.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpDynamicMatrix.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpDynamicMatrix.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpLsqr.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpLsqr.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpPdco.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpPdco.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(ClpPredictorCorrector.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(ClpPredictorCorrector.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libClp.lib(IdiSolve.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libClp.lib(IdiSolve.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPackedMatrix.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPackedMatrix.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinMessageHandler.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinMessageHandler.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinIndexedVector.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinIndexedVector.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinFactorization1.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinFactorization1.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinFactorization4.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinFactorization4.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinDenseFactorization.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinDenseFactorization.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinLpIO.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinLpIO.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinWarmStartBasis.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinWarmStartBasis.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinFileIO.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinFileIO.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinMpsIO.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinMpsIO.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinModelUseful.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinModelUseful.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinModel.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinModel.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinMessage.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinMessage.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinBuild.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinBuild.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinError.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinError.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinStructuredModel.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinStructuredModel.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinFactorization3.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinFactorization3.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinSimpFactorization.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinSimpFactorization.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinOslFactorization.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinOslFactorization.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveDupcol.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveDupcol.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPrePostsolveMatrix.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPrePostsolveMatrix.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveMatrix.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveMatrix.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPostsolveMatrix.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPostsolveMatrix.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveHelperFunctions.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveHelperFunctions.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveEmpty.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveEmpty.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveFixed.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveFixed.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveSingleton.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveSingleton.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveDoubleton.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveDoubleton.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveTripleton.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveTripleton.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveZeros.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveZeros.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveForcing.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveForcing.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveDual.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveDual.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveTighten.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveTighten.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveUseless.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveUseless.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveImpliedFree.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveImpliedFree.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPackedVector.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPackedVector.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinDenseVector.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinDenseVector.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPackedVectorBase.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPackedVectorBase.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinFinite.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinFinite.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinShallowPackedVector.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinShallowPackedVector.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinFactorization2.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinFactorization2.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinModelUseful2.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinModelUseful2.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinOslFactorization2.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinOslFactorization2.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinOslFactorization3.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinOslFactorization3.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveSubst.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in main_program.obj
+     1>libCoinUtils.lib(CoinPresolveSubst.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in main_program.obj
+     1>LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+     1>..\..\bin\submodular_debug.exe : fatal error LNK1319: 162 mismatches detected
+     1>Done Building Project "C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\submodularproject\submodularproject.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:23.53

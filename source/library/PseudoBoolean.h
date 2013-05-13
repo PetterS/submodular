@@ -37,6 +37,7 @@
 /// The namespace everything resides in
 namespace Petter
 {
+
 	using std::map;
 	using std::vector;
 
@@ -462,6 +463,11 @@ namespace Petter
 		real minimize_version_1(vector<label>& x, int& nlabelled) const;
 		real minimize_version_2(vector<label>& x, int& nlabelled) const;
 
+		real minimize_version_3(vector<label>& x, int& nlabelled) const;
+
+		void add_triplet(int poss, int ii, int jj, int kk, float* E,  map<triple, int>& inserted3, int nVars) const;
+		void add_pair(int poss,int ii, int jj, float* E,  map<pair, int>& inserted2, int nVars) const;
+		
 		template <typename Map>
 		int getindex(Map& m, const pair& key) 
 		{
