@@ -1405,8 +1405,6 @@ namespace Petter
 			cout <<"inside minimize_3" << endl;
 			cout << "#########################"<< endl;
 			//maps with elements if generator already added.
-			map<triple, int> inserted3;   
-			map<pair, int> inserted2;
 
 			//ASSERT_STR(this->gen.ngen4 == 0, "Degree-4 generators are not yet supported.");
 
@@ -1467,7 +1465,7 @@ namespace Petter
 
 
 
-			// new part, create a new map for all alphaijk where we can hold any index.
+			// new part, create a new map for all alphaijk.
 			// in this map we only hold values (i,j,k) and a vector with clique energies.
 			map<triple,vector<float>> alpha_ijk;
 			for(auto itr = alphaijk.begin(); itr != alphaijk.end(); ++itr){
@@ -1513,7 +1511,7 @@ namespace Petter
 			}
 
 
-			// new part, create a new map for all alphaij where we can hold any index.
+			// new part, create a new map for all alphaij.
 			// in this map we only hold values (i,j) and a vector with clique energies.
 			map<pair,vector<float>> alpha_ij;
 			for(auto itr = alphaij.begin(); itr != alphaij.end(); ++itr){
@@ -1644,9 +1642,8 @@ namespace Petter
 
 
 			//
-			// Go through all alphas which correspond to quartic generators
-			//
-
+			// Go through all alphas which correspond to quartic generators, 
+			// Add then and merge posible cubic and quartic terms.
 			for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
 
 				cout << "alphaijkl.size= " <<alphaijkl.size()  << endl;
@@ -1848,25 +1845,41 @@ namespace Petter
 				triple t = itr->first;
 				cout << "(i,j,k): " << get_i(t) << "," << get_j(t) << "," << get_k(t) << endl;		
 			}
-		
 
-			// add the last triplets old style!
+			// add triplets that has not been merged.
 			for(auto itr = alpha_ijk.begin(); itr != alpha_ijk.end(); ++itr){
 				vector<float> Ei = itr->second;
 				float E1[] = {Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3), Ei.at(4),Ei.at(5), Ei.at(6), Ei.at(7),
-					Ei.at(0), Ei.at(1),Ei.at(3), Ei.at(3), Ei.at(4),Ei.at(5), Ei.at(6), Ei.at(7)};
+					Ei.at(0), Ei.at(1),Ei.at(2), Ei.at(3), Ei.at(4),Ei.at(5), Ei.at(6), Ei.at(7)};
 				C+=make_clique_positive(clique_size, E1);
 				
 				triple t1 = map_back(get_i(itr->first) , get_j(itr->first), get_k(itr->first), nVars);
 				int indices1[] = {2*nVars, get_i(t1) , get_j(t1), get_k(t1)};
-				cout << "extra1 " << 2*nVars << " ii: " << get_i(itr->first) << " jj: " << get_j(itr->first)  << " kk: " << get_k(itr->first) << endl; 
+				cout << "extra1: " << indices1[0] << " ii: " << indices1[1] << " jj: " << indices1[2]  << " kk: " << indices1[3] << endl; 
 
 			//	for(int i = 0; i< 16; ++i) cout << "i: " << i << " : "<< E1[i] << endl;
-				graph.AddHigherTerm(indices1, E1);
+				graph.AddHigherTerm(indices1, E1);   //this is not working!
 			}
+
+			// add pairs that has not been merged.
+			for(auto itr = alpha_ij.begin(); itr != alpha_ij.end(); ++itr){
+				vector<float> Ei = itr->second;
+				float E1[] = {Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3), Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3),
+					Ei.at(0), Ei.at(1),Ei.at(2), Ei.at(3), Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3)};
+				C+=make_clique_positive(clique_size, E1);
+				
+				pair t1 = map_back(get_i(itr->first) , get_j(itr->first),nVars);
+				int indices1[] = {2*nVars, 2*nVars+1, get_i(t1) , get_j(t1)};
+				cout << "extra1: " << 2*nVars << " extra2 " << 2*nVars +1   << " ii: " << get_i(itr->first) << " jj: " << get_j(itr->first)  << endl; 
+
+			//	for(int i = 0; i< 16; ++i) cout << "i: " << i << " : "<< E1[i] << endl;
+				graph.AddHigherTerm(indices1, E1);   //this is not working!
+			}
+
+
 			
 		
-
+	
 
 			double min_g = constant + C + graph.FindMaxFlow();
 			vector<label> xfull(n);

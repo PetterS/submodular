@@ -454,6 +454,29 @@ namespace Petter
 	
 	}
 
+	pair map_back(int i, int j, int nVars){
+		int ii = i;
+		int jj = j;
+		
+
+		if (ii > nVars-1)
+			ii -= nVars;
+		if (jj > nVars-1)
+			jj -= nVars;
+
+
+		if (ii < jj)
+			return pair(i,j);
+
+		if (ii > jj)
+			return make_pair(j,i);
+		
+	
+	}
+
+
+
+
 
 
 	int get_i(const pair& p)

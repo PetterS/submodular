@@ -84,6 +84,7 @@ namespace Petter
 	/// Creates a quadruple from four indices
 	quad make_quad(int i, int j, int k, int l);
 	triple map_back(int i, int j, int k, int nVars);
+	pair map_back(int i, int j, int nVars);
 
 	/// Retrieves the first index
 	int get_i(const pair& p);
