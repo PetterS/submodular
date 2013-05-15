@@ -1,4 +1,4 @@
-﻿Build started 5/13/2013 1:52:53 PM.
+﻿Build started 5/15/2013 2:48:41 PM.
      1>Project "C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\texturerestoration\texturerestoration.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc110.pdb" /Gd /TP /errorReport:prompt ..\..\source\image_denoising.cpp
@@ -8,4 +8,4 @@
 
 Build FAILED.
 
-Time Elapsed 00:00:00.37
+Time Elapsed 00:00:00.26

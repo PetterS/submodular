@@ -1,9 +1,43 @@
-﻿Build started 5/13/2013 1:24:06 PM.
+﻿Build started 5/15/2013 3:45:37 PM.
      1>Project "C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\thirdpartylib\thirdpartylib.vcxproj" on node 2 (Build target(s)).
-     1>Lib:
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /D NDEBUG /D WIN32 /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc110.pdb" /Gd /TP /errorReport:prompt "..\..\thirdparty\gc-source\prgc\PRGC.cpp"
+         PRGC.cpp
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\Lib.exe /OUT:"C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\submodularproject\..\..\lib\x64\Release\thirdpartylib.lib" /NOLOGO /MACHINE:X64 x64\Release\APGC.obj
+         x64\Release\APGCConfig.obj
+         x64\Release\APGCDataStructures.obj
+         x64\Release\APGCDebug.obj
+         x64\Release\APGCDump.obj
+         x64\Release\APGC_AugmentFlow.obj
+         x64\Release\APGC_Expand.obj
+         x64\Release\APGC_ProcessAuxOrphans.obj
+         x64\Release\APGC_ProcessOrphans.obj
+         x64\Release\APGC_ProcessPixOrphans.obj
+         x64\Release\PRGC.obj
+         x64\Release\PRGCConfig.obj
+         x64\Release\PRGCDataStructures.obj
+         x64\Release\PRGCDebug.obj
+         x64\Release\PRGCDump.obj
+         x64\Release\PRGC_Expand.obj
+         x64\Release\stdafx.obj
+         x64\Release\DebugUtils.obj
+         x64\Release\GadgetGraph.obj
+         x64\Release\GadgetGraphConfig.obj
+         x64\Release\graph.obj
+         x64\Release\maxflow.obj
+         "x64\Release\Petter-Color.obj"
+         x64\Release\QPBO.obj
+         x64\Release\QPBO_extra.obj
+         x64\Release\QPBO_maxflow.obj
+         x64\Release\QPBO_postprocessing.obj
+     1>PRGCDump.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+     1>PRGCDebug.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+     1>APGCDump.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+     1>APGCDebug.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
          thirdpartylib.vcxproj -> C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\submodularproject\..\..\lib\x64\Release\thirdpartylib.lib
      1>Done Building Project "C:\Users\johanf\Dropbox\johan\forskning\generatorcuts\submodular\submodular\project\thirdpartylib\thirdpartylib.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.16
+Time Elapsed 00:00:04.21

@@ -83,6 +83,8 @@ namespace Petter
 	triple make_triple(int i, int j, int k);
 	/// Creates a quadruple from four indices
 	quad make_quad(int i, int j, int k, int l);
+	triple map_back(int i, int j, int k, int nVars);
+
 	/// Retrieves the first index
 	int get_i(const pair& p);
 	/// Retrieves the second index
@@ -465,8 +467,8 @@ namespace Petter
 
 		real minimize_version_3(vector<label>& x, int& nlabelled) const;
 
-		void add_triplet(int poss, int ii, int jj, int kk, float* E,  map<triple, int>& inserted3, int nVars) const;
-		void add_pair(int poss,int ii, int jj, float* E,  map<pair, int>& inserted2, int nVars) const;
+		void add_triplet(int poss, int ii, int jj, int kk, float* E,  map<triple, vector<float>>& inserted3, int nVars) const;
+		void add_pair(int poss,int ii, int jj, float* E,  map<pair, vector<float>  >& inserted2, int nVars) const;
 		
 		template <typename Map>
 		int getindex(Map& m, const pair& key) 

@@ -1,3 +1,16 @@
 2013-05-2 10:11:39  Solver error "For all variables assigned, min g should be equal to min f.," polynomial saved to C:\Users\johanf\AppData\Local\Temp/pb-error-201.txt
 2013-05-2 10:12:24  Solver error "For all variables assigned, min g should be equal to min f.," polynomial saved to C:\Users\johanf\AppData\Local\Temp/pb-error-351.txt
 2013-05-2 10:12:29  Solver error "For all variables assigned, min g should be equal to min f.," polynomial saved to C:\Users\johanf\AppData\Local\Temp/pb-error-927.txt
+2013-05-14 11:3:25  Solver error "Error (line 135 in ..\..\source\library\GeneratorPseudoBoolean.cpp): Could not read file," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-707.txt
+2013-05-14 11:4:2  Solver error "Error (line 135 in ..\..\source\library\GeneratorPseudoBoolean.cpp): Could not read file," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-890.txt
+2013-05-14 11:4:13  Solver error "Persistency error," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-184.txt
+2013-05-14 11:4:29  Solver error "Persistency error," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-268.txt
+2013-05-14 11:4:53  Solver error "Persistency error," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-853.txt
+2013-05-14 11:17:13  Solver error "Persistency error," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-178.txt
+2013-05-14 11:22:4  Solver error "Persistency error," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-37.txt
+2013-05-14 13:56:49  Solver error "Persistency error," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-567.txt
+2013-05-14 16:21:0  Solver error "Persistency error," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-604.txt
+2013-05-14 17:31:40  Solver error "Persistency error," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-318.txt
+2013-05-14 17:31:49  Solver error "Persistency error," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-777.txt
+2013-05-14 17:32:8  Solver error "Persistency error," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-343.txt
+2013-05-15 9:33:1  Solver error "Persistency error," polynomial saved to C:\Users\Johan\AppData\Local\Temp/pb-error-378.txt

@@ -166,7 +166,7 @@ namespace Petter
 				read_reduced_polynomial<real>( gen4redneg.at(i), fin);
 			}
 		}
-	    if (version == 2) {
+		if (version == 2) {
 			//
 			// Read actual generator.
 			//
@@ -397,6 +397,7 @@ namespace Petter
 		//////////////////////////
 		map<pair,int> indpair_to_con;
 		map<triple,int> indtriple_to_con;
+
 
 		for (auto itr = pbf.aij.begin(); itr != pbf.aij.end(); ++itr) {
 			int i=get_i(itr->first);
@@ -794,10 +795,10 @@ namespace Petter
 		if (this->gen.version == 1) {
 			return minimize_version_1(x, nlabelled);
 		}
-	    if (this->gen.version == 2) {
+		if (this->gen.version == 2) {
 			return minimize_version_2(x, nlabelled);
 		}
-		 if (this->gen.version == 3) {
+		if (this->gen.version == 3) {
 			return minimize_version_3(x, nlabelled);
 		}
 
@@ -1027,6 +1028,8 @@ namespace Petter
 							idx.at(generator.indices1.at(1))};
 						C += make_clique_positive(clique_size, E1);
 						graph.AddHigherTerm(indices1, E1);
+						cout <<"minimize_2 2g_1:         " << "ii2: " << generator.indices1.at(0) <<" " << "jj2: " << generator.indices1.at(1) << endl;
+
 
 						if (f_debug) {
 							std::vector<real> Ev(E1, E1+16);
@@ -1058,6 +1061,8 @@ namespace Petter
 						C += make_clique_positive(clique_size, E2);
 						graph.AddHigherTerm(indices2, E2);
 
+						cout <<"minimize_2 2g_2:         " << "ii2: " << generator.indices2.at(0) <<" " << "jj2: " << generator.indices2.at(1) << endl;
+
 						if (f_debug) {
 							std::vector<real> Ev(E2, E2+16);
 							f_debug->add_clique(indices2[0], indices2[1], indices2[2], indices2[3], Ev);
@@ -1071,10 +1076,15 @@ namespace Petter
 		// Go through all alphas which correspond to cubic generators
 		//
 		for (auto itr = alphaijk.begin(); itr != alphaijk.end(); ++itr) {
+
+
 			const triple& ind = itr->first;
 			int i=get_i(ind);
 			int j=get_j(ind);
 			int k=get_k(ind);
+
+			//	cout<<"#################################:       " << "i: " << i << " j: " << j << " k: " << k << endl;
+
 
 			vector<int> idx(6); // Translates from "local" indices to "global"
 			idx.at(0) = i; // x variables
@@ -1115,6 +1125,14 @@ namespace Petter
 						C += make_clique_positive(clique_size, E1);
 						graph.AddHigherTerm(indices1, E1);
 
+						cout <<"minimize_2 3g_1:         " << "extra: " << extra1 <<" ii: " << idx.at(generator.indices1.at(0)) <<" " << "jj: " << idx.at(generator.indices1.at(1)) <<" " << "kk: " << idx.at(generator.indices1.at(2)) << endl;
+						cout << "E1" << endl;
+						for(int i = 0; i< 16; i++){
+							cout << "i: "  << i <<" : " << E1[i] << endl;
+						}
+						cout << endl;
+
+
 						if (f_debug) {
 							std::vector<real> Ev(E1, E1+16);
 							f_debug->add_clique(indices1[0], indices1[1], indices1[2], indices1[3], Ev);
@@ -1144,6 +1162,13 @@ namespace Petter
 							idx.at(generator.indices2.at(2))};
 						C += make_clique_positive(clique_size, E2);
 						graph.AddHigherTerm(indices2, E2);
+
+						cout <<"minimize_2 3g_2:         " << "extra " << extra1 <<   " ii: " << idx.at(generator.indices2.at(0)) <<" " << "jj: " << idx.at(generator.indices2.at(1)) <<" " << "kk: " << idx.at(generator.indices2.at(2)) << endl;
+						cout << "E2" << endl;
+						for(int i = 0; i< 16; i++){
+							cout << "i: "  << i << " : " << E2[i] << endl;
+						}
+						cout << endl;
 
 						if (f_debug) {
 							std::vector<real> Ev(E2, E2+16);
@@ -1176,6 +1201,8 @@ namespace Petter
 			idx.at(6) = k + nVars;
 			idx.at(7) = l + nVars;
 
+
+
 			// Was a positive or negative generator used?
 			bool pos = false;
 			auto mitr = posgen4.find(ind);
@@ -1203,12 +1230,16 @@ namespace Petter
 						kk = idx.at(generator.indices1.at(2));
 						ll = idx.at(generator.indices1.at(3));
 						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values1, alpha, f_debug);
+						cout <<"minimize_2 4g_1:         " << "ii: " <<ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+
 
 						ii = idx.at(generator.indices2.at(0));
 						jj = idx.at(generator.indices2.at(1));
 						kk = idx.at(generator.indices2.at(2));
 						ll = idx.at(generator.indices2.at(3));
 						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values2, alpha, f_debug);
+						cout <<"minimize_2 4g_2:         " << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+
 					}
 					else {
 						// Negative generator was used
@@ -1324,616 +1355,768 @@ namespace Petter
 		return min_g;
 	}
 
-	 //adds a triple to the existing clique E, check if its already insearted.
+
+
+	//adds a triple to the existing clique E, check if its already insearted.
 	//poss correspond the which variables out of four that is used.
 	template<typename real>
-	void GeneratorPseudoBoolean<real>::add_triplet(int poss, int ii, int jj, int kk, float* E,  map<triple, int>& inserted3, int nVars) const{
-		cout << "----add_triplet()-----" << endl;
-		auto itr = alphaijk.find(make_triple(ii, jj, kk));
-		auto itr2 = inserted3.find(make_triple(ii, jj, kk));
-		if (itr != alphaijk.end() && itr2 == inserted3.end())
-		{
-
-			//correspond to the symmetric monomial.
-			int ii2, jj2,kk2;
-			if (ii> nVars)
-				ii2 = ii-nVars;
-			else
-				ii2 = ii+nVars;
-
-			if (jj> nVars)
-				jj2 = jj-nVars;
-			else
-				jj2 = jj+nVars;
-
-			if (kk> nVars)
-				kk2 = kk-nVars;
-			else
-				kk2 = kk+nVars;
-
-
-			inserted3.insert(make_pair(make_triple(ii, jj, kk), 1));
-			inserted3.insert(make_pair(make_triple(ii2, jj2, kk2), 1));
-			cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk << endl;
-			const auto& vec = itr->second;
-			for (int j=0;j<gen.ngen3;++j) {
-				real alpha = vec.at(j);
-				if (alpha > 0){
-				cout << "j= " << j << " " << "alpha= " << alpha <<  endl;
-				}
-
-				auto& generator = gen.gen3.at(j);
-				if (alpha > 0) {
-					// Add cliques for this generator to the graph
-
-					float E1[8];
-					add_generators_to_clique(alpha, E1, generator.values1);					
-					float E2[8];
-					add_generators_to_clique(alpha, E2, generator.values2);		
-					insert_clique2(poss,E,E1);
-					insert_clique2(poss,E,E2);
-				}
-			}
-		}
-		cout << "----add_triplet()-----end" << endl;
-	}
-
-	template<typename real>
-	void GeneratorPseudoBoolean<real>::add_pair(int poss,int ii, int jj, float* E,  map<pair, int>& inserted2, int nVars) const{
-		cout << "----add_pair()-----" << endl;
-		auto itr = alphaij.find(make_pair(ii, jj));
-		auto itr2 = inserted2.find(make_pair(ii, jj));
-		if (itr != alphaij.end() && itr2 == inserted2.end())
-		{
-
-			int ii2, jj2;
-
-			if (ii> nVars)
-				ii2 = ii-nVars;
-			else
-				ii2 = ii+nVars;
-
-			if (jj> nVars)
-				jj2 = jj-nVars;
-			else
-				jj2 = jj+nVars;
-
-			inserted2.insert(make_pair(make_pair(ii, jj), 1));
-			inserted2.insert(make_pair(make_pair(ii2, jj2), 1));
-			cout << "ii: " << ii <<" " << "jj: " << jj << endl;
-			const auto& vec = itr->second;
-			for (int j=0;j<gen.ngen2;++j) {
-				real alpha = vec.at(j);
-				if (alpha > 0){
-				cout << "j= " << j << " " << "alpha= " << alpha <<  endl;
-				}
-
-				auto& generator = gen.gen2.at(j);
-				if (alpha > 0) {
-					// Add cliques for this generator to the graph
-
-					float E1[4];
-					add_generators_to_clique(alpha, E1, generator.values1);					
-					float E2[4];
-					add_generators_to_clique(alpha, E2, generator.values2);		
-					insert_clique2(poss,E,E1);
-					insert_clique2(poss,E,E2);
-				}
-			}
-		}
-		cout << "----add_pair()-----end" << endl;
-	}
-
-	
-	//Version where smaller cliques are inserted into bigger ones.
-	template<typename real>
-	real GeneratorPseudoBoolean<real>::minimize_version_3(vector<label>& x, int& nlabelled) const
+	void GeneratorPseudoBoolean<real>::add_triplet(int poss, int ii, int jj, int kk, float* E,  map<triple, vector<float>>& alpha_ijk, int nVars) const
 	{
-		cout << "#########################"<< endl;
-		cout <<"inside minimize_3" << endl;
-		cout << "#########################"<< endl;
-		//maps with elements if generator already added.
-		map<triple, int> inserted3;   
-		map<pair, int> inserted2;
+		auto itr1 = alpha_ijk.find(make_triple(ii, jj, kk));
+		cout << "ADD_TRIPLET: " << endl;
+		cout << "ii:  " << ii <<" " << "jj    " << jj <<" " << "kk :  " << kk << endl;
 
-		//ASSERT_STR(this->gen.ngen4 == 0, "Degree-4 generators are not yet supported.");
+		//dosent exist!
+		if(itr1 != alpha_ijk.end()){
+			vector<float> vec = itr1->second;
+			float E1[8];  //meaningless cpy
+			for(int i = 0; i < 8; ++i) E1[i] = vec[i];
 
-		index nVars = index( x.size() ); // Number of variables.
-		int n = 2 * nVars;  // Because we have x and y.
-		int num_cliques = 0;
+			insert_clique2(poss,E,E1);
+			cout <<RED <<"ADDED TRIPLE: "  <<  "ii:  " << ii <<" " << "jj:  " << jj <<" " << "kk:  " << kk << NORMAL <<  endl;
+			itr1 = alpha_ijk.erase(itr1);
+		}
+	}
 
+	template<typename real>
+	void GeneratorPseudoBoolean<real>::add_pair(int poss,int ii, int jj, float* E,  map<pair, vector<float> >& alpha_ij, int nVars) const
+		{
+			auto itr1 = alpha_ij.find(make_pair(ii, jj));
+			cout << "ADD_PAIR: " << endl;
+			cout << "ii:  " << ii <<" " << "jj    " << jj << endl;
 
-		for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
-			const auto& vec = itr->second;
-			for (int ii = 0; ii < std::max(gen.ngen4pos, gen.ngen4neg); ++ii) {
-				real alpha = vec.at(ii);
-				if (alpha > 0) {
-					// Add monomials for this generator to the graph
-					num_cliques++;
-				}
+			if(itr1 != alpha_ij.end()){
+				vector<float> vec = itr1->second;
+				float E1[4];  //meaningless cpy
+				for(int i = 0; i < 4; ++i) E1[i] = vec[i];
+
+				insert_clique2(poss,E,E1);
+				cout <<RED <<"ADDED TRIPLE: "  <<  "ii:  " << ii <<" " << "jj:  " << jj << NORMAL <<  endl;
+				itr1 = alpha_ij.erase(itr1);
 			}
 		}
 
-		real C = 0; // Constant in objective function.
-		int clique_size = 4;
-		int num_cliques_per_node = 2 * num_cliques; // TODO: Fix this. (Is this parameter used by GC?)
 
-		// We add two extra variables in order to be able to add degree-2 cliques
-		// as degree-4 cliques.
+		//Version where smaller cliques are inserted into bigger ones.
+		template<typename real>
+		real GeneratorPseudoBoolean<real>::minimize_version_3(vector<label>& x, int& nlabelled) const
+		{
+			cout << "#########################"<< endl;
+			cout <<"inside minimize_3" << endl;
+			cout << "#########################"<< endl;
+			//maps with elements if generator already added.
+			map<triple, int> inserted3;   
+			map<pair, int> inserted2;
 
-		typedef PRGC GCType;
-		//typedef APGC GCType;
+			//ASSERT_STR(this->gen.ngen4 == 0, "Degree-4 generators are not yet supported.");
 
-		GCType graph(n + 2,
-			2 * num_cliques, // Each generator gives two cliques.
-			clique_size,
-			num_cliques_per_node);
-		int extra1 = n;
-		int extra2 = n + 1;
+			index nVars = index( x.size() ); // Number of variables.
+			int n = 2 * nVars;  // Because we have x and y.
+			int num_cliques = 0;
 
-		std::unique_ptr<PseudoBoolean<real>> f_debug;
 
-		// Uncomment this line to also minimize g exhaustively.
-		//f_debug.reset(new PseudoBoolean<real>);
+			for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
+				const auto& vec = itr->second;
+				for (int ii = 0; ii < std::max(gen.ngen4pos, gen.ngen4neg); ++ii) {
+					real alpha = vec.at(ii);
+					if (alpha > 0) {
+						// Add monomials for this generator to the graph
+						num_cliques++;
+					}
+				}
+			}
 
-		//
-		// Degree-1 terms.
-		//
-		for (auto itr = alphai.begin(); itr != alphai.end(); ++itr) {
-			int i = itr->first;
-			real alpha = itr->second;
+			real C = 0; // Constant in objective function.
+			int clique_size = 4;
+			int num_cliques_per_node = 2 * num_cliques; // TODO: Fix this. (Is this parameter used by GC?)
 
-			graph.AddUnaryTerm(i,         0,     alpha);
-			graph.AddUnaryTerm(i + nVars, alpha,     0);
+			// We add two extra variables in order to be able to add degree-2 cliques
+			// as degree-4 cliques.
+
+			typedef PRGC GCType;
+			//typedef APGC GCType;
+
+			GCType graph(n + 2,
+				2 * num_cliques, // Each generator gives two cliques.
+				clique_size,
+				num_cliques_per_node);
+			int extra1 = n;
+			int extra2 = n + 1;
+
+			std::unique_ptr<PseudoBoolean<real>> f_debug;
+
+			// Uncomment this line to also minimize g exhaustively.
+			//f_debug.reset(new PseudoBoolean<real>);
+
+			//
+			// Degree-1 terms.
+			//
+			for (auto itr = alphai.begin(); itr != alphai.end(); ++itr) {
+				int i = itr->first;
+				real alpha = itr->second;
+
+				graph.AddUnaryTerm(i,         0,     alpha);
+				graph.AddUnaryTerm(i + nVars, alpha,     0);
+
+				if (f_debug) {
+					f_debug->add_clique(i, 0, alpha);
+					f_debug->add_clique(i + nVars, alpha, 0);
+				}
+			}
+
+
+
+
+			// new part, create a new map for all alphaijk where we can hold any index.
+			// in this map we only hold values (i,j,k) and a vector with clique energies.
+			map<triple,vector<float>> alpha_ijk;
+			for(auto itr = alphaijk.begin(); itr != alphaijk.end(); ++itr){
+				const triple& ind = itr-> first;
+				int i = get_i(ind);
+				int j = get_j(ind);
+				int k = get_k(ind);
+				const auto& vec = itr->second;
+				vector<int> idx(6);
+				idx.at(0) = i;
+				idx.at(1) = j;
+				idx.at(2) = k;
+				idx.at(3) = i + nVars;
+				idx.at(4) = j + nVars;
+				idx.at(5) = k + nVars;
+
+				for (int a=0;a<gen.ngen3;++a) {
+					real alpha = vec.at(a);
+					if (alpha > 0) {
+						auto& generator = gen.gen3.at(a);
+						int ii, jj, kk;
+
+						//first part of the symmetric generator.
+						ii = idx.at(generator.indices1.at(0));
+						jj = idx.at(generator.indices1.at(1));
+						kk = idx.at(generator.indices1.at(2));
+
+						vector<float> E1;
+						for(int b = 0; b< 8; b++) E1.push_back(alpha * generator.values1.at(b));
+
+						alpha_ijk.insert(make_pair(make_triple(ii,jj,kk), E1));
+
+						//symmetric part!
+						ii = idx.at(generator.indices2.at(0));
+						jj = idx.at(generator.indices2.at(1));
+						kk = idx.at(generator.indices2.at(2));
+						vector<float> E2;
+						for(int b = 0; b< 8; b++) E2.push_back(alpha * generator.values2.at(b));
+
+						alpha_ijk.insert(make_pair(make_triple(ii,jj,kk), E2));
+					}
+				}
+			}
+
+
+			// new part, create a new map for all alphaij where we can hold any index.
+			// in this map we only hold values (i,j) and a vector with clique energies.
+			map<pair,vector<float>> alpha_ij;
+			for(auto itr = alphaij.begin(); itr != alphaij.end(); ++itr){
+				const pair& ind = itr-> first;
+				int i = get_i(ind);
+				int j = get_j(ind);
+
+				const auto& vec = itr->second;
+				vector<int> idx(4);
+				idx.at(0) = i;
+				idx.at(1) = j;
+				idx.at(2) = i + nVars;
+				idx.at(3) = j + nVars;
+
+				for (int a=0;a<gen.ngen2;++a) {
+					real alpha = vec.at(a);
+					if (alpha > 0) {
+						auto& generator = gen.gen2.at(a);
+						int ii, jj;
+
+						//first part of the symmetric generator.
+						ii = idx.at(generator.indices1.at(0));
+						jj = idx.at(generator.indices1.at(1));
+
+						vector<float> E1;
+						for(int b = 0; b< 4; b++) E1.push_back(alpha * generator.values1.at(b));
+
+						alpha_ij.insert(make_pair(make_pair(ii,jj), E1));
+
+						//symmetric part!
+						ii = idx.at(generator.indices2.at(0));
+						jj = idx.at(generator.indices2.at(1));
+
+						vector<float> E2;
+						for(int b = 0; b< 4; b++) E2.push_back(alpha * generator.values2.at(b));
+
+						alpha_ij.insert(make_pair(make_pair(ii,jj), E2));
+					}
+				}
+			}
+			cout << "---Quartic begin!----" << endl;
+			for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
+				
+				const quad& ind = itr->first;
+				int i=get_i(ind);
+				int j=get_j(ind);
+				int k=get_k(ind);
+				int l=get_l(ind);
+				const auto& vec = itr->second;
+
+				vector<int> idx(8); // Translates from "local" indices to "global"
+				idx.at(0) = i; // x variables
+				idx.at(1) = j;
+				idx.at(2) = k;
+				idx.at(3) = l;
+				idx.at(4) = i + nVars; // y variables
+				idx.at(5) = j + nVars;
+				idx.at(6) = k + nVars;
+				idx.at(7) = l + nVars;
+
+
+				// Was a positive or negative generator used?
+				bool pos = false;
+				auto mitr = posgen4.find(ind);
+				if (mitr != posgen4.end()) {
+					pos = mitr->second;
+				}
+				for (int i=0;i<gen.ngen4pos;++i) {
+					real alpha = vec.at(i);
+					if (alpha > 0) {
+						if (pos) 
+						{
+							// Positive generator was used
+							auto& generator = gen.gen4pos.at(i);
+							int ii, jj, kk, ll;
+
+							//first part och the symmetric generator.
+							ii = idx.at(generator.indices1.at(0));
+							jj = idx.at(generator.indices1.at(1));
+							kk = idx.at(generator.indices1.at(2));
+							ll = idx.at(generator.indices1.at(3));
+							cout << "(i,j,k,l): " << ii << "," << jj << "," << kk << "," << ll << "     POSITIVE"  <<endl;
+
+							ii = idx.at(generator.indices2.at(0));
+							jj = idx.at(generator.indices2.at(1));
+							kk = idx.at(generator.indices2.at(2));
+							ll = idx.at(generator.indices2.at(3));
+							cout << "(i,j,k,l): " << ii << "," << jj << "," << kk << "," << ll << "     POSITIVE"  <<endl;
+						}
+						else 
+						{
+							
+							// Positive generator was used
+							auto& generator = gen.gen4neg.at(i);
+							int ii, jj, kk, ll;
+
+							//first part och the symmetric generator.
+							ii = idx.at(generator.indices1.at(0));
+							jj = idx.at(generator.indices1.at(1));
+							kk = idx.at(generator.indices1.at(2));
+							ll = idx.at(generator.indices1.at(3));
+							cout << "(i,j,k,l): " << ii << "," << jj << "," << kk << "," << ll << "     NEGATIVE"  <<   endl;
+
+							ii = idx.at(generator.indices2.at(0));
+							jj = idx.at(generator.indices2.at(1));
+							kk = idx.at(generator.indices2.at(2));
+							ll = idx.at(generator.indices2.at(3));
+							cout << "(i,j,k,l): " << ii << "," << jj << "," << kk << "," << ll << "     NEGATIVE"  <<endl;
+						}
+					}
+				}
+			}
+
+
+
+			cout << "---triplets begin!----" << endl;
+			for(auto itr = alpha_ijk.begin(); itr != alpha_ijk.end(); ++itr){
+
+				triple t = itr->first;
+				cout << "(i,j,k): " << get_i(t) << "," << get_j(t) << "," << get_k(t) << endl;		
+			}
+
+			cout << "---Pair begin!----" << endl;
+			for(auto itr = alpha_ij.begin(); itr != alpha_ij.end(); ++itr){
+				pair t = itr->first;
+				cout << "(i,j): " << get_i(t) << "," << get_j(t) << endl;		
+			}
+
+
+			//
+			// Go through all alphas which correspond to quartic generators
+			//
+
+			for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
+
+				cout << "alphaijkl.size= " <<alphaijkl.size()  << endl;
+
+				float E[16];
+				const quad& ind = itr->first;
+				int i=get_i(ind);
+				int j=get_j(ind);
+				int k=get_k(ind);
+				int l=get_l(ind);
+				const auto& vec = itr->second;
+
+				vector<int> idx(8); // Translates from "local" indices to "global"
+				idx.at(0) = i; // x variables
+				idx.at(1) = j;
+				idx.at(2) = k;
+				idx.at(3) = l;
+				idx.at(4) = i + nVars; // y variables
+				idx.at(5) = j + nVars;
+				idx.at(6) = k + nVars;
+				idx.at(7) = l + nVars;
+
+				// Was a positive or negative generator used?
+				bool pos = false;
+				auto mitr = posgen4.find(ind);
+				if (mitr != posgen4.end()) {
+					pos = mitr->second;
+				}
+
+				ASSERT(gen.ngen4pos == gen.ngen4neg);
+				// The code below assumes a clique size of 4.
+				ASSERT(clique_size == 4);
+
+				for (int i=0;i<gen.ngen4pos;++i) {
+					//cout << "gen.ngen4pos: " << gen.ngen4pos << endl;	
+					real alpha = vec.at(i);
+
+					if (alpha > 0) {
+						cout << "i: " << i << endl; 
+
+						if (pos) 
+						{
+							cout << GREEN<< "POSITIVE GENERATOR:" <<NORMAL  << endl;
+
+							// Positive generator was used
+							auto& generator = gen.gen4pos.at(i);
+							int ii, jj, kk, ll;
+
+							//first part och the symmetric generator.
+							ii = idx.at(generator.indices1.at(0));
+							jj = idx.at(generator.indices1.at(1));
+							kk = idx.at(generator.indices1.at(2));
+							ll = idx.at(generator.indices1.at(3));
+
+							//creates the fourth-order klick E
+							add_generators_to_clique(alpha, E, generator.values1);
+
+							cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+							cout << WHITE << "FIRST PART" << NORMAL << endl;
+
+
+							/////////Adding all positive-first triples!////////
+							add_triplet(123,ii, jj, kk, E, alpha_ijk, nVars);
+							add_triplet(124,ii, jj, ll, E, alpha_ijk, nVars);
+							add_triplet(134,ii, kk, ll, E, alpha_ijk, nVars);
+							add_triplet(234,jj, kk, ll, E, alpha_ijk, nVars);
+
+							/////////Adding all positive-first pairs!////////
+							add_pair(12,ii,jj,E,alpha_ij,nVars);
+							add_pair(13,ii,kk,E,alpha_ij,nVars);
+							add_pair(14,ii,ll,E,alpha_ij,nVars);
+							add_pair(23,jj,kk,E,alpha_ij,nVars);
+							add_pair(24,jj,ll,E,alpha_ij,nVars);
+							add_pair(34,kk,ll,E,alpha_ij,nVars);
+
+							int indices1[] = {ii, jj, kk, ll};
+							C += make_clique_positive(4, E);
+							graph.AddHigherTerm(indices1, E);
+
+
+							//SYMMETRIC PART 2
+							cout << WHITE << "SECOND PART:" << NORMAL << endl;
+							ii = idx.at(generator.indices2.at(0));
+							jj = idx.at(generator.indices2.at(1));
+							kk = idx.at(generator.indices2.at(2));
+							ll = idx.at(generator.indices2.at(3));
+
+							//creates the fourth-order klick E
+							add_generators_to_clique(alpha, E, generator.values2);
+
+							cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+
+
+							/////////Adding all positive-second triples!////////
+							add_triplet(123,ii, jj, kk, E, alpha_ijk, nVars);
+							add_triplet(124,ii, jj, ll, E, alpha_ijk, nVars);
+							add_triplet(134,ii, kk, ll, E, alpha_ijk, nVars);
+							add_triplet(234,jj, kk, ll, E, alpha_ijk, nVars);
+
+
+							/////////Adding all positive-second pairs!////////
+							add_pair(12,ii,jj,E,alpha_ij,nVars);
+							add_pair(13,ii,kk,E,alpha_ij,nVars);
+							add_pair(14,ii,ll,E,alpha_ij,nVars);
+							add_pair(23,jj,kk,E,alpha_ij,nVars);
+							add_pair(24,jj,ll,E,alpha_ij,nVars);
+							add_pair(34,kk,ll,E,alpha_ij,nVars);
+
+
+							int indices2[] = {ii, jj, kk, ll};
+							C += make_clique_positive(4, E);
+							graph.AddHigherTerm(indices2, E);
+
+
+						}
+						else 
+						{
+							cout << GREEN<< "NEGATIVE GENERATOR" <<NORMAL  << endl;
+							cout << WHITE << "FIRST PART" << NORMAL << endl;
+							// Negative generator was used
+							auto& generator = gen.gen4neg.at(i);
+							int ii, jj, kk, ll;
+
+							//first part och the symmetric generator.
+							ii = idx.at(generator.indices1.at(0));
+							jj = idx.at(generator.indices1.at(1));
+							kk = idx.at(generator.indices1.at(2));
+							ll = idx.at(generator.indices1.at(3));
+
+							//creates the fourth-order klick E
+							add_generators_to_clique(alpha, E, generator.values1);
+
+							cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+
+
+
+							/////////Adding all negative-first triples!////////
+							add_triplet(123,ii, jj, kk, E, alpha_ijk, nVars);
+							add_triplet(124,ii, jj, ll, E, alpha_ijk, nVars);
+							add_triplet(134,ii, kk, ll, E, alpha_ijk, nVars);
+							add_triplet(234,jj, kk, ll, E, alpha_ijk, nVars);
+
+							/////////Adding all negative-first pairs!////////
+							add_pair(12,ii,jj,E,alpha_ij,nVars);
+							add_pair(13,ii,kk,E,alpha_ij,nVars);
+							add_pair(14,ii,ll,E,alpha_ij,nVars);
+							add_pair(23,jj,kk,E,alpha_ij,nVars);
+							add_pair(24,jj,ll,E,alpha_ij,nVars);
+							add_pair(34,kk,ll,E,alpha_ij,nVars);
+
+							int indices[] = {ii, jj, kk, ll};
+							C += make_clique_positive(4, E);
+							graph.AddHigherTerm(indices, E);
+
+
+
+							//SYMMETRIC PART 2
+							cout << WHITE << "SECOND PART:" << NORMAL << endl;
+							ii = idx.at(generator.indices2.at(0));
+							jj = idx.at(generator.indices2.at(1));
+							kk = idx.at(generator.indices2.at(2));
+							ll = idx.at(generator.indices2.at(3));
+
+							//creates the fourth-order klick E
+							add_generators_to_clique(alpha, E, generator.values2);
+
+							cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+
+
+							/////////Adding all negative-second triples!////////
+							add_triplet(123,ii, jj, kk, E, alpha_ijk, nVars);
+							add_triplet(124,ii, jj, ll, E, alpha_ijk, nVars);
+							add_triplet(134,ii, kk, ll, E, alpha_ijk, nVars);
+							add_triplet(234,jj, kk, ll, E, alpha_ijk, nVars);
+
+
+							/////////Adding all negative-second pairs!////////
+							add_pair(12,ii,jj,E,alpha_ij,nVars);
+							add_pair(13,ii,kk,E,alpha_ij,nVars);
+							add_pair(14,ii,ll,E,alpha_ij,nVars);
+							add_pair(23,jj,kk,E,alpha_ij,nVars);
+							add_pair(24,jj,ll,E,alpha_ij,nVars);
+							add_pair(34,kk,ll,E,alpha_ij,nVars);
+
+
+							int indices2[] = {ii, jj, kk, ll};
+							C += make_clique_positive(4, E);
+							graph.AddHigherTerm(indices2, E);
+
+
+						}
+					}
+				}
+			}
+
+			cout << "---triplets left!----" << endl;
+			for(auto itr = alpha_ijk.begin(); itr != alpha_ijk.end(); ++itr){
+
+				triple t = itr->first;
+				cout << "(i,j,k): " << get_i(t) << "," << get_j(t) << "," << get_k(t) << endl;		
+			}
+		
+
+			// add the last triplets old style!
+			for(auto itr = alpha_ijk.begin(); itr != alpha_ijk.end(); ++itr){
+				vector<float> Ei = itr->second;
+				float E1[] = {Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3), Ei.at(4),Ei.at(5), Ei.at(6), Ei.at(7),
+					Ei.at(0), Ei.at(1),Ei.at(3), Ei.at(3), Ei.at(4),Ei.at(5), Ei.at(6), Ei.at(7)};
+				C+=make_clique_positive(clique_size, E1);
+				
+				triple t1 = map_back(get_i(itr->first) , get_j(itr->first), get_k(itr->first), nVars);
+				int indices1[] = {2*nVars, get_i(t1) , get_j(t1), get_k(t1)};
+				cout << "extra1 " << 2*nVars << " ii: " << get_i(itr->first) << " jj: " << get_j(itr->first)  << " kk: " << get_k(itr->first) << endl; 
+
+			//	for(int i = 0; i< 16; ++i) cout << "i: " << i << " : "<< E1[i] << endl;
+				graph.AddHigherTerm(indices1, E1);
+			}
+			
+		
+
+
+			double min_g = constant + C + graph.FindMaxFlow();
+			vector<label> xfull(n);
+			for (int i = 0; i < n; ++i) {
+				xfull[i] = graph.GetLabel(i);
+			}
 
 			if (f_debug) {
-				f_debug->add_clique(i, 0, alpha);
-				f_debug->add_clique(i + nVars, alpha, 0);
-			}
-		}
-		
-		
-		
-		//
-		// Go through all alphas which correspond to quartic generators
-		//
+				std::cout << "Generic cuts\n";
+				std::cout << "C=" << C << " min_g=" << min_g << "\n";
 
-		for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
-
-			cout << "alphaijkl.size= " <<alphaijkl.size()  << endl;
-
-			float E[16];
-			const quad& ind = itr->first;
-			int i=get_i(ind);
-			int j=get_j(ind);
-			int k=get_k(ind);
-			int l=get_l(ind);
-			const auto& vec = itr->second;
-
-			vector<int> idx(8); // Translates from "local" indices to "global"
-			idx.at(0) = i; // x variables
-			idx.at(1) = j;
-			idx.at(2) = k;
-			idx.at(3) = l;
-			idx.at(4) = i + nVars; // y variables
-			idx.at(5) = j + nVars;
-			idx.at(6) = k + nVars;
-			idx.at(7) = l + nVars;
-
-			// Was a positive or negative generator used?
-			bool pos = false;
-			auto mitr = posgen4.find(ind);
-			if (mitr != posgen4.end()) {
-				pos = mitr->second;
-			}
-
-			ASSERT(gen.ngen4pos == gen.ngen4neg);
-			// The code below assumes a clique size of 4.
-			ASSERT(clique_size == 4);
-			
-			for (int i=0;i<gen.ngen4pos;++i) {
-				//cout << "gen.ngen4pos: " << gen.ngen4pos << endl;	
-				real alpha = vec.at(i);
-
-				if (alpha > 0) {
-					cout << "i: " << i << endl; 
-
-					if (pos) 
-					{
-						cout << GREEN<< "POSITIVE GENERATOR:" <<NORMAL  << endl;
-
-						// Positive generator was used
-
-						auto& generator = gen.gen4pos.at(i);
-						int ii, jj, kk, ll;
-
-						//first part och the symmetric generator.
-
-						ii = idx.at(generator.indices1.at(0));
-						jj = idx.at(generator.indices1.at(1));
-						kk = idx.at(generator.indices1.at(2));
-						ll = idx.at(generator.indices1.at(3));
-						
-						//creates the fourth-order klick E
-						add_generators_to_clique(alpha, E, generator.values1);
-						
-						cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
-						cout << WHITE << "FIRST PART" << NORMAL << endl;
-						
-
-						
-						/////////Adding all positive-first triples!////////
-						add_triplet(123,ii, jj, kk, E, inserted3, nVars);
-						add_triplet(124,ii, jj, ll, E, inserted3, nVars);
-						add_triplet(134,ii, kk, ll, E, inserted3, nVars);
-						add_triplet(234,jj, kk, ll, E, inserted3, nVars);
-
-						/////////Adding all positive-first pairs!////////
-						add_pair(12,ii,jj,E,inserted2,nVars);
-						add_pair(13,ii,kk,E,inserted2,nVars);
-						add_pair(14,ii,ll,E,inserted2,nVars);
-						add_pair(23,jj,kk,E,inserted2,nVars);
-						add_pair(24,jj,ll,E,inserted2,nVars);
-						add_pair(34,kk,ll,E,inserted2,nVars);
-
-						//SYMMETRIC PART 2
-						ii = idx.at(generator.indices2.at(0));
-						jj = idx.at(generator.indices2.at(1));
-						kk = idx.at(generator.indices2.at(2));
-						ll = idx.at(generator.indices2.at(3));
-						
-						//creates the fourth-order klick E
-						add_generators_to_clique(alpha, E, generator.values2);
-						
-						cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
-						cout << WHITE << "SECOND PART:" << NORMAL << endl;
-						
-						/////////Adding all positive-second triples!////////
-						add_triplet(123,ii, jj, kk, E, inserted3, nVars);
-						add_triplet(124,ii, jj, ll, E, inserted3, nVars);
-						add_triplet(134,ii, kk, ll, E, inserted3, nVars);
-						add_triplet(234,jj, kk, ll, E, inserted3, nVars);
-
-
-						/////////Adding all positive-second pairs!////////
-						add_pair(12,ii,jj,E,inserted2,nVars);
-						add_pair(13,ii,kk,E,inserted2,nVars);
-						add_pair(14,ii,ll,E,inserted2,nVars);
-						add_pair(23,jj,kk,E,inserted2,nVars);
-						add_pair(24,jj,ll,E,inserted2,nVars);
-						add_pair(34,kk,ll,E,inserted2,nVars);
-
-
-						int indices[] = {ii, jj, kk, ll};
-						C += make_clique_positive(4, E);
-						graph.AddHigherTerm(indices, E);
-						
-
-					}
-					else 
-					{
-						cout << GREEN<< "NEGATIVE GENERATOR" <<NORMAL  << endl;
-
-						// Negative generator was used
-						auto& generator = gen.gen4neg.at(i);
-						int ii, jj, kk, ll;
-
-						//first part och the symmetric generator.
-						ii = idx.at(generator.indices1.at(0));
-						jj = idx.at(generator.indices1.at(1));
-						kk = idx.at(generator.indices1.at(2));
-						ll = idx.at(generator.indices1.at(3));
-						
-						//creates the fourth-order klick E
-						add_generators_to_clique(alpha, E, generator.values1);
-						
-						cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
-						cout << WHITE << "FIRST PART" << NORMAL << endl;
-						
-
-						/////////Adding all negative-first triples!////////
-						add_triplet(123,ii, jj, kk, E, inserted3, nVars);
-						add_triplet(124,ii, jj, ll, E, inserted3, nVars);
-						add_triplet(134,ii, kk, ll, E, inserted3, nVars);
-						add_triplet(234,jj, kk, ll, E, inserted3, nVars);
-
-						/////////Adding all negative-first pairs!////////
-						add_pair(12,ii,jj,E,inserted2,nVars);
-						add_pair(13,ii,kk,E,inserted2,nVars);
-						add_pair(14,ii,ll,E,inserted2,nVars);
-						add_pair(23,jj,kk,E,inserted2,nVars);
-						add_pair(24,jj,ll,E,inserted2,nVars);
-						add_pair(34,kk,ll,E,inserted2,nVars);
-
-
-						//SYMMETRIC PART 2
-						ii = idx.at(generator.indices2.at(0));
-						jj = idx.at(generator.indices2.at(1));
-						kk = idx.at(generator.indices2.at(2));
-						ll = idx.at(generator.indices2.at(3));
-						
-						//creates the fourth-order klick E
-						add_generators_to_clique(alpha, E, generator.values2);
-						
-						cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
-						cout << WHITE << "SECOND PART:" << NORMAL << endl;
-						
-						/////////Adding all negative-second triples!////////
-						add_triplet(123,ii, jj, kk, E, inserted3, nVars);
-						add_triplet(124,ii, jj, ll, E, inserted3, nVars);
-						add_triplet(134,ii, kk, ll, E, inserted3, nVars);
-						add_triplet(234,jj, kk, ll, E, inserted3, nVars);
-
-
-						/////////Adding all negative-second pairs!////////
-						add_pair(12,ii,jj,E,inserted2,nVars);
-						add_pair(13,ii,kk,E,inserted2,nVars);
-						add_pair(14,ii,ll,E,inserted2,nVars);
-						add_pair(23,jj,kk,E,inserted2,nVars);
-						add_pair(24,jj,ll,E,inserted2,nVars);
-						add_pair(34,kk,ll,E,inserted2,nVars);
-
-
-						int indices[] = {ii, jj, kk, ll};
-						C += make_clique_positive(4, E);
-						graph.AddHigherTerm(indices, E);
-						
-
-					}
+				for (int i = 0; i < nVars; ++i) {
+					std::cout << xfull[i];
 				}
-			}
-		}
-
-
-		double min_g = constant + C + graph.FindMaxFlow();
-		vector<label> xfull(n);
-		for (int i = 0; i < n; ++i) {
-			xfull[i] = graph.GetLabel(i);
-		}
-
-		if (f_debug) {
-			std::cout << "Generic cuts\n";
-			std::cout << "C=" << C << " min_g=" << min_g << "\n";
-
-			for (int i = 0; i < nVars; ++i) {
-				std::cout << xfull[i];
-			}
-			std::cout << ", ";
-			for (int i = 0; i < nVars; ++i) {
-				std::cout << xfull[i + nVars];
-			}
-			std::cout << "\n";
-		}
-
-		nlabelled = 0;
-		for (int i=0; i<nVars; ++i) {
-			bool used = false;
-			auto itr = var_used.find(i);
-			if (itr != var_used.end()) {
-				used = itr->second;
+				std::cout << ", ";
+				for (int i = 0; i < nVars; ++i) {
+					std::cout << xfull[i + nVars];
+				}
+				std::cout << "\n";
 			}
 
-			if (used) {
-				x[i]     = xfull[i];
-				label yi = xfull[i+nVars];
-				if (x[i] == yi) {
-					x[i] = -1;
+			nlabelled = 0;
+			for (int i=0; i<nVars; ++i) {
+				bool used = false;
+				auto itr = var_used.find(i);
+				if (itr != var_used.end()) {
+					used = itr->second;
+				}
+
+				if (used) {
+					x[i]     = xfull[i];
+					label yi = xfull[i+nVars];
+					if (x[i] == yi) {
+						x[i] = -1;
+					}
+					else {
+						nlabelled++;
+					}
 				}
 				else {
+					// This variable is not part of the polynomial,
+					// therefore labelled
+					if (x[i]<0) {
+						x[i]=0;
+					}
 					nlabelled++;
 				}
 			}
-			else {
-				// This variable is not part of the polynomial,
-				// therefore labelled
-				if (x[i]<0) {
-					x[i]=0;
-				}
-				nlabelled++;
-			}
-		}
 
 
-		if (f_debug) {
-			//
-			// Minimize f_debug with exhaustive search.
-			//
-			vector<label> x_debug(n + 2, 0), x_debug_opt(n + 2, 0);
-			real optimum = f_debug->eval(x_debug);
-			while (true) {
-				x_debug[0]++;
-				int i=0;
-				while (x_debug[i]>1) {
-					x_debug[i]=0;
-					i++;
+			if (f_debug) {
+				//
+				// Minimize f_debug with exhaustive search.
+				//
+				vector<label> x_debug(n + 2, 0), x_debug_opt(n + 2, 0);
+				real optimum = f_debug->eval(x_debug);
+				while (true) {
+					x_debug[0]++;
+					int i=0;
+					while (x_debug[i]>1) {
+						x_debug[i]=0;
+						i++;
+						if (i == n + 2) {
+							break;
+						}
+						x_debug[i]+=1;
+					}
 					if (i == n + 2) {
 						break;
 					}
-					x_debug[i]+=1;
-				}
-				if (i == n + 2) {
-					break;
+
+					real energy = f_debug->eval(x_debug);
+					if (energy < optimum) {
+						optimum = energy;
+						x_debug_opt = x_debug;
+					}
 				}
 
-				real energy = f_debug->eval(x_debug);
-				if (energy < optimum) {
-					optimum = energy;
-					x_debug_opt = x_debug;
+				std::cout << "Exhaustive debug\n";
+				std::cout << "C=" << C << " min_f_debug=" << constant + C + optimum << "\n";
+				for (int i = 0; i < nVars; ++i) {
+					std::cout << x_debug_opt[i];
 				}
+				std::cout << ", ";
+				for (int i = 0; i < nVars; ++i) {
+					std::cout << x_debug_opt[i + nVars];
+				}
+				std::cout << "\n";
 			}
 
-			std::cout << "Exhaustive debug\n";
-			std::cout << "C=" << C << " min_f_debug=" << constant + C + optimum << "\n";
-			for (int i = 0; i < nVars; ++i) {
-				std::cout << x_debug_opt[i];
-			}
-			std::cout << ", ";
-			for (int i = 0; i < nVars; ++i) {
-				std::cout << x_debug_opt[i + nVars];
-			}
-			std::cout << "\n";
+			return min_g;
 		}
 
-		return min_g;
-	}
 
 
 
 
 
 
+		template<typename real>
+		real GeneratorPseudoBoolean<real>::minimize_version_1(vector<label>& x, int& nlabelled) const
+		{
+			index nVars = index( x.size() ); // Number of variables
+			index var = 2*nVars; // Current variable
 
-	template<typename real>
-	real GeneratorPseudoBoolean<real>::minimize_version_1(vector<label>& x, int& nlabelled) const
-	{
-		index nVars = index( x.size() ); // Number of variables
-		index var = 2*nVars; // Current variable
+			real C = 0; // Constant in energy function
+			Graph<real,real,real> graph(var, 50*var); //TODO: calculate the number of nodes and edges
+			graph.add_node(var);
 
-		real C = 0; // Constant in energy function
-		Graph<real,real,real> graph(var, 50*var); //TODO: calculate the number of nodes and edges
-		graph.add_node(var);
+			//
+			// Linear generator
+			//
+			for (auto itr = alphai.begin(); itr != alphai.end(); ++itr) {
+				int i = itr->first;
+				real alpha = itr->second;
 
-		//
-		// Linear generator
-		//
-		for (auto itr = alphai.begin(); itr != alphai.end(); ++itr) {
-			int i = itr->first;
-			real alpha = itr->second;
+				add_monomial_1_to_graph(C,graph,i,alpha);
+				add_monomial_1_to_graph(C,graph,i+nVars,-alpha);
+				C+=alpha;
+			}
 
-			add_monomial_1_to_graph(C,graph,i,alpha);
-			add_monomial_1_to_graph(C,graph,i+nVars,-alpha);
-			C+=alpha;
-		}
-
-		//
-		// Go through all alphas which correspond to quadratic generators
-		//
-		for (auto itr = alphaij.begin(); itr != alphaij.end(); ++itr) {
-			const pair& ind = itr->first;
-			int i=get_i(ind);
-			int j=get_j(ind);
-			const auto& vec = itr->second;
-			for (int ii=0;ii<gen.ngen2;++ii) {
-				real alpha = vec.at(ii);
-				if (alpha > 0) {
-					// Add monomials for this generator to the graph
-					add_generator_to_graph(nVars, C, graph, alpha, gen.gen2red.at(ii), i,j );
+			//
+			// Go through all alphas which correspond to quadratic generators
+			//
+			for (auto itr = alphaij.begin(); itr != alphaij.end(); ++itr) {
+				const pair& ind = itr->first;
+				int i=get_i(ind);
+				int j=get_j(ind);
+				const auto& vec = itr->second;
+				for (int ii=0;ii<gen.ngen2;++ii) {
+					real alpha = vec.at(ii);
+					if (alpha > 0) {
+						// Add monomials for this generator to the graph
+						add_generator_to_graph(nVars, C, graph, alpha, gen.gen2red.at(ii), i,j );
+					}
 				}
 			}
-		}
 
-		//
-		// Go through all alphas which correspond to cubic generators
-		//
-		for (auto itr = alphaijk.begin(); itr != alphaijk.end(); ++itr) {
-			const triple& ind = itr->first;
-			int i=get_i(ind);
-			int j=get_j(ind);
-			int k=get_k(ind);
-			const auto& vec = itr->second;
-			for (int ii=0;ii<gen.ngen3;++ii) {
-				real alpha = vec.at(ii);
-				if (alpha > 0) {
-					// Add monomials for this generator to the graph
-					add_generator_to_graph(nVars, C, graph, alpha, gen.gen3red.at(ii), i,j,k );
+			//
+			// Go through all alphas which correspond to cubic generators
+			//
+			for (auto itr = alphaijk.begin(); itr != alphaijk.end(); ++itr) {
+				const triple& ind = itr->first;
+				int i=get_i(ind);
+				int j=get_j(ind);
+				int k=get_k(ind);
+				const auto& vec = itr->second;
+				for (int ii=0;ii<gen.ngen3;++ii) {
+					real alpha = vec.at(ii);
+					if (alpha > 0) {
+						// Add monomials for this generator to the graph
+						add_generator_to_graph(nVars, C, graph, alpha, gen.gen3red.at(ii), i,j,k );
+					}
 				}
 			}
-		}
 
-		//
-		// Go through all alphas which correspond to quartic generators
-		//
-		for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
-			const quad& ind = itr->first;
-			int i=get_i(ind);
-			int j=get_j(ind);
-			int k=get_k(ind);
-			int l=get_l(ind);
-			const auto& vec = itr->second;
+			//
+			// Go through all alphas which correspond to quartic generators
+			//
+			for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
+				const quad& ind = itr->first;
+				int i=get_i(ind);
+				int j=get_j(ind);
+				int k=get_k(ind);
+				int l=get_l(ind);
+				const auto& vec = itr->second;
 
-			// Was a positive or negative generator used?
-			bool pos = false;
-			auto mitr = posgen4.find(ind);
-			if (mitr != posgen4.end()) {
-				pos = mitr->second;
+				// Was a positive or negative generator used?
+				bool pos = false;
+				auto mitr = posgen4.find(ind);
+				if (mitr != posgen4.end()) {
+					pos = mitr->second;
+				}
+
+				ASSERT(gen.ngen4pos == gen.ngen4neg);
+
+				for (int ii=0;ii<gen.ngen4pos;++ii) {
+					real alpha = vec.at(ii);
+					if (alpha > 0) {
+						// Add monomials for this generator to the graph
+						if (pos) {
+							// Positive generator was used
+							add_generator_to_graph(nVars, C, graph, alpha, gen.gen4redpos.at(ii), i,j,k,l );
+						}
+						else {
+							// Negative generator was used
+							add_generator_to_graph(nVars, C, graph, alpha, gen.gen4redneg.at(ii), i,j,k,l );
+						}
+					}
+				}
 			}
 
-			ASSERT(gen.ngen4pos == gen.ngen4neg);
+			// Compute the maximum flow and labeling
+			real ming = constant + C + graph.maxflow();
 
-			for (int ii=0;ii<gen.ngen4pos;++ii) {
-				real alpha = vec.at(ii);
-				if (alpha > 0) {
-					// Add monomials for this generator to the graph
-					if (pos) {
-						// Positive generator was used
-						add_generator_to_graph(nVars, C, graph, alpha, gen.gen4redpos.at(ii), i,j,k,l );
+			// Save solution from graph
+			//
+			int total_num_vars = graph.get_node_num();
+			vector<char> xfull(total_num_vars);
+			for (int i=0;i<total_num_vars; ++i) {
+				xfull[i] = graph.what_segment(i);
+			}
+
+			//  try to obtain (0,1) and (1,0) solutions if possible
+			//  does not matter that much for random polynomials
+			vector<std::pair<int,int> > pairs;
+			for (int i=0;i<nVars;++i) {
+				pairs.push_back( std::make_pair(i, i+nVars) );
+			}
+			resolve_different(graph,xfull,pairs);
+
+			// Extract labeling
+			nlabelled = 0;
+			for (int i=0; i<nVars; ++i) {
+				bool used = false;
+				auto itr = var_used.find(i);
+				if (itr != var_used.end()) {
+					used = itr->second;
+				}
+
+				if (used) {
+					//x[i] = graph.what_segment(i);
+					//label yi = graph.what_segment(i+nVars);;
+					x[i] = xfull[i];
+					label   yi = xfull[i+nVars];
+					if (x[i] == yi) {
+						x[i] = -1;
 					}
 					else {
-						// Negative generator was used
-						add_generator_to_graph(nVars, C, graph, alpha, gen.gen4redneg.at(ii), i,j,k,l );
+						nlabelled++;
 					}
 				}
-			}
-		}
-
-		// Compute the maximum flow and labeling
-		real ming = constant + C + graph.maxflow();
-
-		// Save solution from graph
-		//
-		int total_num_vars = graph.get_node_num();
-		vector<char> xfull(total_num_vars);
-		for (int i=0;i<total_num_vars; ++i) {
-			xfull[i] = graph.what_segment(i);
-		}
-
-		//  try to obtain (0,1) and (1,0) solutions if possible
-		//  does not matter that much for random polynomials
-		vector<std::pair<int,int> > pairs;
-		for (int i=0;i<nVars;++i) {
-			pairs.push_back( std::make_pair(i, i+nVars) );
-		}
-		resolve_different(graph,xfull,pairs);
-
-		// Extract labeling
-		nlabelled = 0;
-		for (int i=0; i<nVars; ++i) {
-			bool used = false;
-			auto itr = var_used.find(i);
-			if (itr != var_used.end()) {
-				used = itr->second;
-			}
-
-			if (used) {
-				//x[i] = graph.what_segment(i);
-				//label yi = graph.what_segment(i+nVars);;
-				x[i] = xfull[i];
-				label   yi = xfull[i+nVars];
-				if (x[i] == yi) {
-					x[i] = -1;
-				}
 				else {
+					// This variable is not part of the polynomial,
+					// therefore labelled
+					if (x[i]<0) {
+						x[i]=0;
+					}
 					nlabelled++;
 				}
 			}
-			else {
-				// This variable is not part of the polynomial,
-				// therefore labelled
-				if (x[i]<0) {
-					x[i]=0;
-				}
-				nlabelled++;
-			}
+
+			return ming;
 		}
 
-		return ming;
+
+
+
+
+
 	}
-
-
-
-
-
-
-}
 
 #include "pb_instances.inc"

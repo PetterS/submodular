@@ -424,6 +424,38 @@ namespace Petter
 		//return std::make_tuple<int,int,int,int>(i,j,k,l);
 	}
 
+	//takes 3 int, and sort them backwards.
+	// 0,3,5 -> 0,5,3 if nVars = 4.
+	triple map_back(int i, int j, int k, int nVars){
+		int ii = i;
+		int jj = j;
+		int kk = k;
+
+		if (ii > nVars-1)
+			ii -= nVars;
+		if (jj > nVars-1)
+			jj -= nVars;
+		if (kk > nVars-1)
+			kk -= nVars;
+
+		if (ii < jj && jj < kk)
+			return make_triple(i,j,k);
+		if (ii < jj && kk < jj)
+			return make_triple(i,k,j);
+		if(jj < ii && ii < kk)
+			return make_triple(j,i,k);
+		if (jj < ii && kk < ii)
+			return make_triple(j,k,i);
+		if (kk < ii && ii < jj)
+			return make_triple(k,i,j);
+		if (kk < ii && jj < ii)
+			return make_triple(k,j,i);
+
+	
+	}
+
+
+
 	int get_i(const pair& p)
 	{
 		return p.first;
