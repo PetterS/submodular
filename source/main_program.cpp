@@ -148,7 +148,7 @@ void check_bound<double>(double optimum, double lower_bound)
 	// We have to have a loose check, because doubles have
 	// rounding errors
 	if ( (optimum - lower_bound) / abs(optimum) < -1e-7 ) {
-		throw runtime_error("Lower bound error (double)");
+	//	throw runtime_error("Lower bound error (double)");
 	}
 }
 
@@ -805,11 +805,8 @@ int main_program(int num_args, char** args)
 				check_bound(optimum, optimal_bound);
 			}
 		}
-		cout << "111111" << endl;
 		if (do_generators) {
-
-			
-
+		
 			int iters = 0;
 			double bound = 0;
 			int labeled = 0;

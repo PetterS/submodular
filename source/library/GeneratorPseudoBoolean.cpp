@@ -998,7 +998,7 @@ namespace Petter
 			idx[1] = j;
 			idx[2] = i + nVars; // y variables
 			idx[3] = j + nVars;
-
+			
 			const auto& vec = itr->second;
 			for (int ii=0;ii<gen.ngen2;++ii) {
 				real alpha = vec.at(ii);
@@ -1006,6 +1006,7 @@ namespace Petter
 				if (alpha > 0) {
 					// Add cliques for this generator to the graph
 					{
+						
 						float E1[]= {alpha * generator.values1.at(0), // E0000
 							alpha * generator.values1.at(1), // E0001
 							alpha * generator.values1.at(2), // E0010
@@ -1028,7 +1029,12 @@ namespace Petter
 							idx.at(generator.indices1.at(1))};
 						C += make_clique_positive(clique_size, E1);
 						graph.AddHigherTerm(indices1, E1);
-						cout <<"minimize_2 2g_1:         " << "ii2: " << generator.indices1.at(0) <<" " << "jj2: " << generator.indices1.at(1) << endl;
+
+						cout <<RED<< "----CLIQUE ADDED----" << NORMAL << endl;
+						cout << WHITE << "(i,j): " << indices1[0] << "," << indices1[1] <<GREEN  << "," << indices1[2] << "," << indices1[3] <<  NORMAL<< endl;
+						for(int i =0; i<16; i++) cout << "i: " << i << "  " << E1[i] << endl;
+						cout << "C: " << C << endl;
+						cout<< "-----------------------" << endl;
 
 
 						if (f_debug) {
@@ -1061,7 +1067,12 @@ namespace Petter
 						C += make_clique_positive(clique_size, E2);
 						graph.AddHigherTerm(indices2, E2);
 
-						cout <<"minimize_2 2g_2:         " << "ii2: " << generator.indices2.at(0) <<" " << "jj2: " << generator.indices2.at(1) << endl;
+						cout <<RED<< "----CLIQUE ADDED----" << NORMAL << endl;
+						cout << WHITE << "(i,j): " << indices2[0] << "," << indices2[1] <<GREEN  << "," << indices2[2] << "," << indices2[3] <<  NORMAL<< endl;
+						for(int i =0; i<16; i++) cout << "i: " << i << "  " << E2[i] << endl;
+						cout << "C: " << C << endl;
+						cout<< "-----------------------" << endl;
+
 
 						if (f_debug) {
 							std::vector<real> Ev(E2, E2+16);
@@ -1125,12 +1136,11 @@ namespace Petter
 						C += make_clique_positive(clique_size, E1);
 						graph.AddHigherTerm(indices1, E1);
 
-						cout <<"minimize_2 3g_1:         " << "extra: " << extra1 <<" ii: " << idx.at(generator.indices1.at(0)) <<" " << "jj: " << idx.at(generator.indices1.at(1)) <<" " << "kk: " << idx.at(generator.indices1.at(2)) << endl;
-						cout << "E1" << endl;
-						for(int i = 0; i< 16; i++){
-							cout << "i: "  << i <<" : " << E1[i] << endl;
-						}
-						cout << endl;
+						cout <<RED<< "----CLIQUE ADDED----" << NORMAL << endl;
+						cout << WHITE << "(i,j): " << indices1[0] << ","<<GREEN << indices1[1] <<GREEN  << "," << indices1[2] << "," << indices1[3] <<  NORMAL<< endl;
+						for(int i =0; i<16; i++) cout << "i: " << i << "  " << E1[i] << endl;
+						cout << "C: " << C << endl;
+						cout<< "-----------------------" << endl;
 
 
 						if (f_debug) {
@@ -1163,12 +1173,12 @@ namespace Petter
 						C += make_clique_positive(clique_size, E2);
 						graph.AddHigherTerm(indices2, E2);
 
-						cout <<"minimize_2 3g_2:         " << "extra " << extra1 <<   " ii: " << idx.at(generator.indices2.at(0)) <<" " << "jj: " << idx.at(generator.indices2.at(1)) <<" " << "kk: " << idx.at(generator.indices2.at(2)) << endl;
-						cout << "E2" << endl;
-						for(int i = 0; i< 16; i++){
-							cout << "i: "  << i << " : " << E2[i] << endl;
-						}
-						cout << endl;
+						cout <<RED<< "----CLIQUE ADDED----" << NORMAL << endl;
+						cout << WHITE << "(i,j): " << indices2[0] << ","<<GREEN << indices2[1] <<GREEN  << "," << indices2[2] << "," << indices2[3] <<  NORMAL<< endl;
+						for(int i =0; i<16; i++) cout << "i: " << i << "  " << E2[i] << endl;
+						cout << "C: " << C << endl;
+						cout<< "-----------------------" << endl;
+
 
 						if (f_debug) {
 							std::vector<real> Ev(E2, E2+16);
@@ -1230,7 +1240,7 @@ namespace Petter
 						kk = idx.at(generator.indices1.at(2));
 						ll = idx.at(generator.indices1.at(3));
 						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values1, alpha, f_debug);
-						cout <<"minimize_2 4g_1:         " << "ii: " <<ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+
 
 
 						ii = idx.at(generator.indices2.at(0));
@@ -1238,7 +1248,6 @@ namespace Petter
 						kk = idx.at(generator.indices2.at(2));
 						ll = idx.at(generator.indices2.at(3));
 						add_generator_to_graph(&graph, &C, ii, jj ,kk ,ll, generator.values2, alpha, f_debug);
-						cout <<"minimize_2 4g_2:         " << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
 
 					}
 					else {
@@ -1363,8 +1372,6 @@ namespace Petter
 	void GeneratorPseudoBoolean<real>::add_triplet(int poss, int ii, int jj, int kk, float* E,  map<triple, vector<float>>& alpha_ijk, int nVars) const
 	{
 		auto itr1 = alpha_ijk.find(make_triple(ii, jj, kk));
-		cout << "ADD_TRIPLET: " << endl;
-		cout << "ii:  " << ii <<" " << "jj    " << jj <<" " << "kk :  " << kk << endl;
 
 		//dosent exist!
 		if(itr1 != alpha_ijk.end()){
@@ -1382,8 +1389,6 @@ namespace Petter
 	void GeneratorPseudoBoolean<real>::add_pair(int poss,int ii, int jj, float* E,  map<pair, vector<float> >& alpha_ij, int nVars) const
 		{
 			auto itr1 = alpha_ij.find(make_pair(ii, jj));
-			cout << "ADD_PAIR: " << endl;
-			cout << "ii:  " << ii <<" " << "jj    " << jj << endl;
 
 			if(itr1 != alpha_ij.end()){
 				vector<float> vec = itr1->second;
@@ -1391,7 +1396,7 @@ namespace Petter
 				for(int i = 0; i < 4; ++i) E1[i] = vec[i];
 
 				insert_clique2(poss,E,E1);
-				cout <<RED <<"ADDED TRIPLE: "  <<  "ii:  " << ii <<" " << "jj:  " << jj << NORMAL <<  endl;
+				cout <<RED <<"ADDED PAIR: "  <<  "ii:  " << ii <<" " << "jj:  " << jj << NORMAL <<  endl;
 				itr1 = alpha_ij.erase(itr1);
 			}
 		}
@@ -1423,7 +1428,8 @@ namespace Petter
 					}
 				}
 			}
-
+			num_cliques = 100;
+			
 			real C = 0; // Constant in objective function.
 			int clique_size = 4;
 			int num_cliques_per_node = 2 * num_cliques; // TODO: Fix this. (Is this parameter used by GC?)
@@ -1459,6 +1465,45 @@ namespace Petter
 				if (f_debug) {
 					f_debug->add_clique(i, 0, alpha);
 					f_debug->add_clique(i + nVars, alpha, 0);
+				}
+			}
+			
+			cout << "inside add2 minimize_3" << endl; 
+			// new part, create a new map for all alphaij.
+			// in this map we only hold values (i,j) and a vector with clique energies.
+			map<pair,vector<float>> alpha_ij;
+			for (auto itr = alphaij.begin(); itr != alphaij.end(); ++itr) {
+				const pair& ind = itr->first;
+				int i=get_i(ind);
+				int j=get_j(ind);
+
+				vector<int> idx(4); // Translates from "local" indices to "global"
+				idx[0] = i; // x variables
+				idx[1] = j;
+				idx[2] = i + nVars; // y variables
+				idx[3] = j + nVars;
+				const auto& vec = itr->second;
+
+				for (int ii=0;ii<gen.ngen2;++ii) {
+					real alpha = vec.at(ii);;
+					auto& generator = gen.gen2.at(ii);
+					if (alpha > 0) {
+						vector<float> E1(4);
+						E1.at(0) = alpha * generator.values1.at(0);
+						E1.at(1) = alpha * generator.values1.at(1);
+						E1.at(2) = alpha * generator.values1.at(2);
+						E1.at(3) = alpha * generator.values1.at(3);
+						alpha_ij.insert(make_pair(make_pair(idx.at(generator.indices1.at(0)),idx.at(generator.indices1.at(1))), E1));
+						//symmetric part!
+
+						
+						vector<float> E2(4);
+						E2.at(0) = alpha * generator.values2.at(0);
+						E2.at(1) = alpha * generator.values2.at(1);
+						E2.at(2) = alpha * generator.values2.at(2);
+						E2.at(3) = alpha * generator.values2.at(3);
+						alpha_ij.insert(make_pair(make_pair(idx.at(generator.indices2.at(0)),idx.at(generator.indices2.at(1))), E2));
+					}
 				}
 			}
 
@@ -1511,47 +1556,7 @@ namespace Petter
 			}
 
 
-			// new part, create a new map for all alphaij.
-			// in this map we only hold values (i,j) and a vector with clique energies.
-			map<pair,vector<float>> alpha_ij;
-			for(auto itr = alphaij.begin(); itr != alphaij.end(); ++itr){
-				const pair& ind = itr-> first;
-				int i = get_i(ind);
-				int j = get_j(ind);
-
-				const auto& vec = itr->second;
-				vector<int> idx(4);
-				idx.at(0) = i;
-				idx.at(1) = j;
-				idx.at(2) = i + nVars;
-				idx.at(3) = j + nVars;
-
-				for (int a=0;a<gen.ngen2;++a) {
-					real alpha = vec.at(a);
-					if (alpha > 0) {
-						auto& generator = gen.gen2.at(a);
-						int ii, jj;
-
-						//first part of the symmetric generator.
-						ii = idx.at(generator.indices1.at(0));
-						jj = idx.at(generator.indices1.at(1));
-
-						vector<float> E1;
-						for(int b = 0; b< 4; b++) E1.push_back(alpha * generator.values1.at(b));
-
-						alpha_ij.insert(make_pair(make_pair(ii,jj), E1));
-
-						//symmetric part!
-						ii = idx.at(generator.indices2.at(0));
-						jj = idx.at(generator.indices2.at(1));
-
-						vector<float> E2;
-						for(int b = 0; b< 4; b++) E2.push_back(alpha * generator.values2.at(b));
-
-						alpha_ij.insert(make_pair(make_pair(ii,jj), E2));
-					}
-				}
-			}
+			
 			cout << "---Quartic begin!----" << endl;
 			for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
 				
@@ -1645,8 +1650,6 @@ namespace Petter
 			// Go through all alphas which correspond to quartic generators, 
 			// Add then and merge posible cubic and quartic terms.
 			for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
-
-				cout << "alphaijkl.size= " <<alphaijkl.size()  << endl;
 
 				float E[16];
 				const quad& ind = itr->first;
@@ -1832,56 +1835,53 @@ namespace Petter
 							int indices2[] = {ii, jj, kk, ll};
 							C += make_clique_positive(4, E);
 							graph.AddHigherTerm(indices2, E);
-
-
 						}
 					}
 				}
 			}
-
-			cout << "---triplets left!----" << endl;
-			for(auto itr = alpha_ijk.begin(); itr != alpha_ijk.end(); ++itr){
-
-				triple t = itr->first;
-				cout << "(i,j,k): " << get_i(t) << "," << get_j(t) << "," << get_k(t) << endl;		
-			}
-
-			// add triplets that has not been merged.
-			for(auto itr = alpha_ijk.begin(); itr != alpha_ijk.end(); ++itr){
-				vector<float> Ei = itr->second;
-				float E1[] = {Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3), Ei.at(4),Ei.at(5), Ei.at(6), Ei.at(7),
-					Ei.at(0), Ei.at(1),Ei.at(2), Ei.at(3), Ei.at(4),Ei.at(5), Ei.at(6), Ei.at(7)};
-				C+=make_clique_positive(clique_size, E1);
-				
-				triple t1 = map_back(get_i(itr->first) , get_j(itr->first), get_k(itr->first), nVars);
-				int indices1[] = {2*nVars, get_i(t1) , get_j(t1), get_k(t1)};
-				cout << "extra1: " << indices1[0] << " ii: " << indices1[1] << " jj: " << indices1[2]  << " kk: " << indices1[3] << endl; 
-
-			//	for(int i = 0; i< 16; ++i) cout << "i: " << i << " : "<< E1[i] << endl;
-				graph.AddHigherTerm(indices1, E1);   //this is not working!
-			}
-
+		
+		
 			// add pairs that has not been merged.
 			for(auto itr = alpha_ij.begin(); itr != alpha_ij.end(); ++itr){
 				vector<float> Ei = itr->second;
 				float E1[] = {Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3), Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3),
-					Ei.at(0), Ei.at(1),Ei.at(2), Ei.at(3), Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3)};
-				C+=make_clique_positive(clique_size, E1);
-				
-				pair t1 = map_back(get_i(itr->first) , get_j(itr->first),nVars);
-				int indices1[] = {2*nVars, 2*nVars+1, get_i(t1) , get_j(t1)};
-				cout << "extra1: " << 2*nVars << " extra2 " << 2*nVars +1   << " ii: " << get_i(itr->first) << " jj: " << get_j(itr->first)  << endl; 
+					          Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3), Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3)};
 
-			//	for(int i = 0; i< 16; ++i) cout << "i: " << i << " : "<< E1[i] << endl;
-				graph.AddHigherTerm(indices1, E1);   //this is not working!
+				C+=make_clique_positive(clique_size,  E1);
+				int indices1[] = {2*nVars, 2*nVars+1, get_i(itr->first) , get_j(itr->first)};
+				graph.AddHigherTerm(indices1, E1);
+	
+				cout <<RED<< "----CLIQUE ADDED----" << NORMAL << endl;
+				cout << WHITE << "(i,j): " << indices1[0] << "," << indices1[1] <<GREEN  << "," << indices1[2] << "," << indices1[3] <<  NORMAL<< endl;
+				for(int i =0; i<16; i++) cout << "i: " << i << "  " << E1[i] << endl;
+				cout << "C: " << C << endl;
+				cout<< "-----------------------" << endl;
+				
+				
+				
+			}
+			cout << "---triplets left!----" << endl;
+			// add triplets that has not been merged.
+		    
+			for(auto itr = alpha_ijk.begin(); itr != alpha_ijk.end(); ++itr){
+				vector<float> Ei = itr->second;
+				float E1[] = {Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3), Ei.at(4),Ei.at(5), Ei.at(6), Ei.at(7),
+				              Ei.at(0), Ei.at(1), Ei.at(2), Ei.at(3), Ei.at(4),Ei.at(5), Ei.at(6), Ei.at(7)};
+		
+				C+=make_clique_positive(clique_size, E1);
+				int indices1[] = {2*nVars, get_i(itr->first) , get_j(itr->first), get_k(itr->first)};
+				graph.AddHigherTerm(indices1, E1); 
+
+				cout <<RED<< "----CLIQUE ADDED----" << NORMAL << endl;
+				cout << WHITE << "(i,j): " << indices1[0] << ","<<GREEN  << indices1[1]  << "," << indices1[2] << "," << indices1[3] <<  NORMAL<< endl;
+				for(int i =0; i<16; i++) cout << "i: " << i << "  " << E1[i] << endl;
+				cout << "C: " << C << endl;
+				cout<< "-----------------------" << endl;	
 			}
 
-
-			
-		
-	
-
-			double min_g = constant + C + graph.FindMaxFlow();
+			double flow = graph.FindMaxFlow();
+			cout << "flow: " << flow << endl;
+			double min_g = constant + C + flow ;
 			vector<label> xfull(n);
 			for (int i = 0; i < n; ++i) {
 				xfull[i] = graph.GetLabel(i);

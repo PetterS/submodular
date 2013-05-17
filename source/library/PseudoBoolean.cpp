@@ -438,6 +438,8 @@ namespace Petter
 		if (kk > nVars-1)
 			kk -= nVars;
 
+		//fungerar ej!
+
 		if (ii < jj && jj < kk)
 			return make_triple(i,j,k);
 		if (ii < jj && kk < jj)
