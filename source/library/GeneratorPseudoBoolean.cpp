@@ -16,6 +16,7 @@
 #include "prgc/PRGC.h"
 #include "../../kod/insert_clique2.h"
 #include "Petter-Color.h"
+#include "../../kod/Binary.h"
 
 using namespace std;
 
@@ -1777,6 +1778,7 @@ namespace Petter
 							E1 = itr1->second;
 							for(int b = 0; b< 4; b++) E1[b]  +=  alpha * generator.values1.at(b);
 							for(int c = 0; c< 4; c++) cout << "c: " << c << " " << E1[c] <<endl;
+
 							itr1->second = E1;
 						}else{
 
@@ -1788,7 +1790,6 @@ namespace Petter
 							cout << "xxxxxxxxxxxxxxxxxxxxxxxx" << endl;
 						alpha_ij.insert(make_pair(make_pair2(ii,jj), E1));
 						}
-
 						//symmetric part!
 
 						
@@ -1913,6 +1914,47 @@ namespace Petter
 					}
 				}
 			}
+			//loop over all 2and grade and permute them.
+
+			//for(auto itr = alpha_ij.begin(); itr != alpha_ij.end(); ++itr){
+			//	//Here we could permute value-table
+			//	vector<int> sort_order;
+			//	vector<int> index(2);
+			//	index[0] = get_i(itr->first);
+			//	index[1] = get_j(itr->first);
+			//	sortingPermutation(index, sort_order);
+
+			//	//probably unecessary cpy
+			//	vector<float> Ec(4);
+			//	for(int i = 0; i< 4; i++) Ec[i] = (itr->second)[i];
+
+			//	permute_table(sort_order, Ec);
+			//	alpha_ij.erase(itr);
+			//    alpha_ij.insert(make_pair(make_pair2(index[0],index[1]), Ec));
+			//}
+
+			//loop over all 3:d grade and permute them.
+			//for(auto itr = alpha_ijk.begin(); itr != alpha_ijk.end(); ++itr){
+			//	//Here we could permute value-table
+			//	vector<int> sort_order;
+			//	vector<int> index(3);
+			//	index[0] = get_i(itr->first);
+			//	index[1] = get_j(itr->first);
+			//	index[2] = get_k(itr->first);
+			//	sortingPermutation(index, sort_order);
+
+			//	//probably unecessary cpy
+			//	vector<float> Ec(8);
+			//	for(int i = 0; i< 8; i++) Ec[i] = (itr->second)[i];
+
+			//	permute_table(sort_order, Ec);
+			//	alpha_ijk.erase(itr);
+			//    alpha_ijk.insert(make_pair(make_triple2(index[0],index[1],index[2]), Ec));
+			//}
+
+
+
+
 
 
 			
@@ -2062,17 +2104,42 @@ namespace Petter
 
 							//creates the fourth-order klick E
 							add_generators_to_clique(alpha, E, generator.values1);
-
+							cout << "Before sorting: " << endl;
 							cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+							for(int i = 0; i< 16; i++) cout << "i: " << i << " "<< E[i] << endl;
+							
+							//Here we could permute value-table
+						/*	vector<int> sort_order;
+							vector<int> ind2(4);
+							ind2[0] = ii;
+							ind2[1] = jj;
+							ind2[2] = kk;
+							ind2[3] = ll;
+							sortingPermutation(ind2, sort_order);
+							permute_table(sort_order, E);
+							cout << "Before sorting: " << endl;
+							cout << "ii: " << ind2[0] <<" " << "jj: " << ind2[1] <<" " << "kk: " << ind2[2] <<" " << "ll: " << ind2[3] << endl;
+
+							ind2[0] = ii;
+							ind2[1] = jj;
+							ind2[2] = kk;
+							ind2[3] = ll;*/
+							//----------------------------
+
+
+							for(int i = 0; i< 16; i++) cout << "i: " << i << " "<< E[i] << endl;
+							
+							
+							
 							cout << WHITE << "FIRST PART" << NORMAL << endl;
 
 
 							/////////Adding all positive-first triples!////////
-						/*	add_triplet(123,ii, jj, kk, E, alpha_ijk, nVars);
+							add_triplet(123,ii, jj, kk, E, alpha_ijk, nVars);
 							add_triplet(124,ii, jj, ll, E, alpha_ijk, nVars);
 							add_triplet(134,ii, kk, ll, E, alpha_ijk, nVars);
 							add_triplet(234,jj, kk, ll, E, alpha_ijk, nVars);
-*/
+
 							/////////Adding all positive-first pairs!////////
 							add_pair(12,ii,jj,E,alpha_ij,nVars);
 							add_pair(13,ii,kk,E,alpha_ij,nVars);
@@ -2082,6 +2149,8 @@ namespace Petter
 							add_pair(34,kk,ll,E,alpha_ij,nVars);
 
 							int indices1[] = {ii, jj, kk, ll};
+						//	int indices1[] = {ind2[0], ind2[1], ind2[2], ind2[3]};
+							
 							C += make_clique_positive(4, E);
 							graph.AddHigherTerm(indices1, E);
 
@@ -2098,12 +2167,25 @@ namespace Petter
 
 							cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
 
+							//Here we could permute value-table
+							/*sort_order.clear();
+							ind2[0] = ii;
+							ind2[1] = jj;
+							ind2[2] = kk;
+							ind2[3] = ll;
+							sortingPermutation(ind2, sort_order);
+							permute_table(sort_order, E);
+
+							ii = ind2[0];
+							jj = ind2[1];
+							kk = ind2[2];
+							ll = ind2[3];*/
 
 							/////////Adding all positive-second triples!////////
-						/*	add_triplet(123,ii, jj, kk, E, alpha_ijk, nVars);
+							add_triplet(123,ii, jj, kk, E, alpha_ijk, nVars);
 							add_triplet(124,ii, jj, ll, E, alpha_ijk, nVars);
 							add_triplet(134,ii, kk, ll, E, alpha_ijk, nVars);
-							add_triplet(234,jj, kk, ll, E, alpha_ijk, nVars);*/
+							add_triplet(234,jj, kk, ll, E, alpha_ijk, nVars);
 
 
 							/////////Adding all positive-second pairs!////////
@@ -2116,6 +2198,8 @@ namespace Petter
 
 
 							int indices2[] = {ii, jj, kk, ll};
+						//	int indices2[] = {ind2[0], ind2[1], ind2[2], ind2[3]};
+
 							C += make_clique_positive(4, E);
 							graph.AddHigherTerm(indices2, E);
 
@@ -2139,6 +2223,30 @@ namespace Petter
 							add_generators_to_clique(alpha, E, generator.values1);
 
 							cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+
+							cout << "E before perm" << endl;
+							for(int i = 0; i < 16; i++) cout << i << " " << E[i] << endl;
+
+
+							vector<int> sort_order;
+							vector<int> ind2(4);
+							ind2[0] = ii;
+							ind2[1] = jj;
+							ind2[2] = kk;
+							ind2[3] = ll;
+							sortingPermutation(ind2, sort_order);
+							permute_table(sort_order, E);
+
+							cout << "E after perm" << endl;
+							for(int i = 0; i < 16; i++) cout << i << " " << E[i] << endl;
+
+							ii = ind2[0];
+							jj = ind2[1];
+							kk = ind2[2];
+							ll = ind2[3];
+
+							cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
+
 
 
 
@@ -2174,6 +2282,19 @@ namespace Petter
 
 							cout << "ii: " << ii <<" " << "jj: " << jj <<" " << "kk: " << kk <<" " << "ll: " << ll << endl;
 
+						/*	sort_order.clear();
+							ind2[0] = ii;
+							ind2[1] = jj;
+							ind2[2] = kk;
+							ind2[3] = ll;
+							sortingPermutation(ind2, sort_order);
+							permute_table(sort_order, E);
+
+							ii = ind2[0];
+							jj = ind2[1];
+							kk = ind2[2];
+							ll = ind2[3];
+							*/
 
 							/////////Adding all negative-second triples!////////
 							add_triplet(123,ii, jj, kk, E, alpha_ijk, nVars);
