@@ -79,12 +79,23 @@ namespace Petter
 
 	/// Creates a pair from two indices
 	pair make_pair(int i, int j);
+	/// Creates a pair from two indices without the rule i < j;
+	pair make_pair2(int i, int j);
+
+
 	/// Creates a triple from three indices
 	triple make_triple(int i, int j, int k);
 	/// Creates a quadruple from four indices
 	quad make_quad(int i, int j, int k, int l);
-	triple map_back(int i, int j, int k, int nVars);
-	pair map_back(int i, int j, int nVars);
+	
+	/// Creates a triple from three indices
+	triple make_triple2(int i, int j, int k);
+	/// Creates a quadruple from four indices
+	quad make_quad2(int i, int j, int k, int l);
+
+
+	vector<int> map_back(int i, int j, int k, int nVars);
+	vector<int> map_back(int i, int j, int nVars);
 
 	/// Retrieves the first index
 	int get_i(const pair& p);
@@ -470,6 +481,7 @@ namespace Petter
 
 		void add_triplet(int poss, int ii, int jj, int kk, float* E,  map<triple, vector<float>>& inserted3, int nVars) const;
 		void add_pair(int poss,int ii, int jj, float* E,  map<pair, vector<float>  >& inserted2, int nVars) const;
+		void add_pair2(int poss,int ii, int jj, vector<float>& E,  map<pair, vector<float>  >& inserted2, int nVars) const;
 		
 		template <typename Map>
 		int getindex(Map& m, const pair& key) 

@@ -373,6 +373,13 @@ namespace Petter
 		ASSERT(i<j);
 		return std::make_pair(i,j);
 	}
+	pair make_pair2(int i, int j)
+	{
+		ASSERT(i!=j);
+		return std::make_pair(i,j);
+	}
+
+
 
 	triple make_triple(int i, int j, int k)
 	{
@@ -392,6 +399,11 @@ namespace Petter
 		ASSERT(i<j && j<k);
 
 
+		return std::make_pair(i, std::make_pair(j,k));
+	}
+		triple make_triple2(int i, int j, int k)
+	{
+		ASSERT(i!=j && j!=k && j!=k);
 		return std::make_pair(i, std::make_pair(j,k));
 	}
 
@@ -423,10 +435,23 @@ namespace Petter
 		return std::make_pair(std::make_pair(i,j), std::make_pair(k,l));
 		//return std::make_tuple<int,int,int,int>(i,j,k,l);
 	}
+	quad make_quad2(int i, int j, int k, int l)
+	{
+		ASSERT(i!=j && i!=k && i!=l && j != k && j != l && k != l);
+		return std::make_pair(std::make_pair(i,j), std::make_pair(k,l));
+		//return std::make_tuple<int,int,int,int>(i,j,k,l);
+	}
+
+
+
+
+
+
+
 
 	//takes 3 int, and sort them backwards.
 	// 0,3,5 -> 0,5,3 if nVars = 4.
-	triple map_back(int i, int j, int k, int nVars){
+	vector<int> map_back(int i, int j, int k, int nVars){
 		int ii = i;
 		int jj = j;
 		int kk = k;
@@ -439,24 +464,48 @@ namespace Petter
 			kk -= nVars;
 
 		//fungerar ej!
-
-		if (ii < jj && jj < kk)
-			return make_triple(i,j,k);
-		if (ii < jj && kk < jj)
-			return make_triple(i,k,j);
-		if(jj < ii && ii < kk)
-			return make_triple(j,i,k);
-		if (jj < ii && kk < ii)
-			return make_triple(j,k,i);
-		if (kk < ii && ii < jj)
-			return make_triple(k,i,j);
-		if (kk < ii && jj < ii)
-			return make_triple(k,j,i);
+		vector<int> ret(3);
+		if (ii < jj && jj < kk){
+			ret[0] = i;
+			ret[1] = j;
+			ret[2] = k;
+			return ret;
+		}
+		if (ii < jj && kk < jj){
+			ret[0] = i;
+			ret[1] = k;
+			ret[2] = j;
+			return ret;
+		}
+		if(jj < ii && ii < kk){
+			ret[0] = j;
+			ret[1] = i;
+			ret[2] = k;
+			return ret;
+		}
+		if (jj < ii && kk < ii){
+			ret[0] = j;
+			ret[1] = k;
+			ret[2] = i;
+			return ret;
+		}
+		if (kk < ii && ii < jj){
+			ret[0] = k;
+			ret[1] = i;
+			ret[2] = j;
+			return ret;
+		}
+		if (kk < ii && jj < ii){
+			ret[0] = k;
+			ret[1] = j;
+			ret[2] = i;
+			return ret;
+		}
 
 	
 	}
 
-	pair map_back(int i, int j, int nVars){
+	vector<int> map_back(int i, int j, int nVars){
 		int ii = i;
 		int jj = j;
 		
@@ -465,13 +514,18 @@ namespace Petter
 			ii -= nVars;
 		if (jj > nVars-1)
 			jj -= nVars;
+		vector<int> ret(2);
 
-
-		if (ii < jj)
-			return pair(i,j);
-
-		if (ii > jj)
-			return make_pair(j,i);
+		if (ii < jj){
+		ret[0] = i;
+		ret[1] = j;
+		return ret;
+		}
+		if (ii > jj){
+		ret[0] = j;
+		ret[1] = i;
+		return ret;
+		}
 		
 	
 	}
