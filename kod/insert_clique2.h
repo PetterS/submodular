@@ -9,5 +9,6 @@
 using namespace std;
 
 void insert_clique2(int, float[], float[]);
+void insert_clique3(int, vector<float>&, float[]);
 int get_digits2(int );
 #endif // !INSERT_CLIQUE_H

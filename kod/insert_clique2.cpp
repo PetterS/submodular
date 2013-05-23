@@ -19,7 +19,16 @@ void add_values(int i, int j, float* val4, float value){
 	val4[j] += value;
 }
 
-void insert_clique2(int poss, float* val4, float* val2){
+void add_values2(int i, int j, vector<float>& val4, float value){
+	val4[i] += value;
+	val4[j] += value;
+}
+
+void insert_clique2(int poss, float* val4, float* val2)
+{
+
+
+
 
 	//two variables
 	if (get_digits2(poss) == 2){
@@ -119,6 +128,36 @@ void insert_clique2(int poss, float* val4, float* val2){
 			add_values(7,15,val4, val2[7]);
 			break;
 		}
+	}
+
+}
+
+//takes a 2 clique and insert into an 3 clique
+void insert_clique3(int poss, vector<float>& val4, float* val2)
+{
+
+	
+	switch (poss)
+	{
+	case 12:
+		add_values2(0,1,val4, val2[0]);
+		add_values2(2,3,val4, val2[1]);
+		add_values2(4,5,val4, val2[2]);
+		add_values2(6,7,val4, val2[3]);
+		break;
+
+	case 13:
+		add_values2(0,2,val4, val2[0]);
+		add_values2(1,3,val4, val2[1]);
+		add_values2(4,6,val4, val2[2]);
+		add_values2(5,7,val4, val2[3]);
+
+		break;
+	case 23:
+		add_values2(0,4,val4, val2[0]);
+		add_values2(1,5,val4, val2[1]);
+		add_values2(2,6,val4, val2[2]);
+		add_values2(3,7,val4, val2[3]);
 	}
 
 }
