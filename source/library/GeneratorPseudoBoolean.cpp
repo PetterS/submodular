@@ -17,6 +17,7 @@
 #include "../../kod/insert_clique2.h"
 #include "Petter-Color.h"
 #include "../../kod/Binary.h"
+#include "Petter-Timer.h"
 
 using namespace std;
 
@@ -908,6 +909,7 @@ namespace Petter
 	template<typename real>
 	real GeneratorPseudoBoolean<real>::minimize_version_2(vector<label>& x, int& nlabelled) const
 	{
+		start();
 		//ASSERT_STR(this->gen.ngen4 == 0, "Degree-4 generators are not yet supported.");
 
 		index nVars = index( x.size() ); // Number of variables.
@@ -1285,7 +1287,6 @@ namespace Petter
 			}
 		}
 
-
 		double min_g = constant + C + graph.FindMaxFlow();
 		vector<label> xfull(n);
 		for (int i = 0; i < n; ++i) {
@@ -1374,6 +1375,7 @@ namespace Petter
 			}
 			std::cout << "\n";
 		}
+		cout << "Minimize 2 time: " << stop() << endl;
 
 		return min_g;
 	}
@@ -1451,31 +1453,53 @@ namespace Petter
 		template<typename real>
 		real GeneratorPseudoBoolean<real>::minimize_version_3(vector<label>& x, int& nlabelled) const
 		{
+			start();
 			/*cout << "#########################"<< endl;
 			cout <<"inside minimize_3" << endl;
 			cout << "#########################"<< endl;*/
 			//maps with elements if generator already added.
 			
 			//ASSERT_STR(this->gen.ngen4 == 0, "Degree-4 generators are not yet supported.");
-
+			
 			index nVars = index( x.size() ); // Number of variables.
 			int n = 2 * nVars;  // Because we have x and y.
 			int num_cliques = 0;
 
 
-			for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
-				const auto& vec = itr->second;
-				for (int ii = 0; ii < std::max(gen.ngen4pos, gen.ngen4neg); ++ii) {
-					real alpha = vec.at(ii);
-					if (alpha > 0) {
-						// Add monomials for this generator to the graph
-						num_cliques++;
-					}
+			for (auto itr = alphaij.begin(); itr != alphaij.end(); ++itr) {
+			const auto& vec = itr->second;
+			for (int ii=0;ii<gen.ngen2;++ii) {
+				real alpha = vec.at(ii);
+				if (alpha > 0) {
+					num_cliques++;
 				}
 			}
-			//just to be sure.
-			num_cliques = 100;
+		}
+
+		for (auto itr = alphaijk.begin(); itr != alphaijk.end(); ++itr) {
+			const auto& vec = itr->second;
+			for (int ii=0;ii<gen.ngen3;++ii) {
+				real alpha = vec.at(ii);
+				if (alpha > 0) {
+					// Add monomials for this generator to the graph
+					num_cliques++;
+				}
+			}
+		}
+
+		for (auto itr = alphaijkl.begin(); itr != alphaijkl.end(); ++itr) {
+			const auto& vec = itr->second;
+			for (int ii = 0; ii < std::max(gen.ngen4pos, gen.ngen4neg); ++ii) {
+				real alpha = vec.at(ii);
+				if (alpha > 0) {
+					// Add monomials for this generator to the graph
+					num_cliques++;
+				}
+			}
+		}
 			
+			cout << "Just iterating over alpha: " << stop() << endl;
+			start();
 			real C = 0; // Constant in objective function.
 			int clique_size = 4;
 			int num_cliques_per_node = 2 * num_cliques; // TODO: Fix this. (Is this parameter used by GC?)
@@ -1493,14 +1517,14 @@ namespace Petter
 			int extra1 = n;
 			int extra2 = n + 1;
 
-			std::unique_ptr<PseudoBoolean<real>> f_debug;
-
 			// Uncomment this line to also minimize g exhaustively.
 			//f_debug.reset(new PseudoBoolean<real>);
 
 			//
 			// Degree-1 terms.
 			//
+			cout << "Setting up graph: " << stop() << endl;
+			start();
 			for (auto itr = alphai.begin(); itr != alphai.end(); ++itr) {
 				int i = itr->first;
 				real alpha = itr->second;
@@ -1508,16 +1532,16 @@ namespace Petter
 				graph.AddUnaryTerm(i,         0,     alpha);
 				graph.AddUnaryTerm(i + nVars, alpha,     0);
 
-				if (f_debug) {
-					f_debug->add_clique(i, 0, alpha);
-					f_debug->add_clique(i + nVars, alpha, 0);
-				}
+
 			}
-			
+			cout << "Adding unary terms: " << stop() << endl;
+			start();
 			// new part, create a new map for all alphaij.
 			// in this map we only hold values (i,j) and a vector with clique energies.
 			map<pair,vector<float>> alpha_ij;
+			int nbr3 = 0;
 			for (auto itr = alphaij.begin(); itr != alphaij.end(); ++itr) {
+				nbr3++;
 				const pair& ind = itr->first;
 				int i=get_i(ind);
 				int j=get_j(ind);
@@ -1566,6 +1590,9 @@ namespace Petter
 					}
 				}
 			}
+			cout << "number of 3 cliques: " << nbr3 << endl;
+			cout << "Copying the 3-qliques: " << stop() << endl;
+			start();
 
 
 			// new part, create a new map for all alphaijk.
@@ -1633,7 +1660,9 @@ namespace Petter
 					}
 				}
 			}
-			//loop over all 3:d grade and permute them.
+			cout << "5: " << stop() << endl;
+
+			//loop over all 2:nd grade and permute them.
 			for(auto itr = alpha_ij.begin(); itr != alpha_ij.end(); ++itr){
 				//Here we could permute value-table
 				vector<int> sort_order;
@@ -1663,20 +1692,29 @@ namespace Petter
 				alpha_ij.erase(itr);
 			    alpha_ij.insert(make_pair(make_pair2(index[0],index[1]), Ec));
 			}
+			cout << "6: " << stop() << endl;
+			
+			double time_1 = 0;
+			double time_2 = 0;
+			double time_3 = 0;
+			double time_4 = 0;
 
-		
 			//loop over all 3:d grade and permute them.
 			for(auto itr = alpha_ijk.begin(); itr != alpha_ijk.end(); ++itr){
+				start();
 				//Here we could permute value-table
-				vector<int> sort_order;
-				vector<int> index(3);
-				index[0] = get_i(itr->first);
-				index[1] = get_j(itr->first);
-				index[2] = get_k(itr->first);
+				vector<int> sort_order3;  //this doesnt seem to take time
+				vector<int> index3(3);
+				
+				index3[0] = get_i(itr->first);
+				index3[1] = get_j(itr->first);
+				index3[2] = get_k(itr->first);
 				
 				//cout << "##############################" << endl;
 				//cout <<RED<< index[0] <<"," << index[1] <<"," << index[2] << NORMAL<< endl;
-				sortingPermutation(index, sort_order);
+				sortingPermutation(index3, sort_order3);
+				time_1 += stop();  
+				start();
 				//probably unecessary cpy
 				vector<float> Ec(8);
 				for(int i = 0; i< 8; i++){
@@ -1684,18 +1722,26 @@ namespace Petter
 					//cout << "i: " << i << " " << Ec[i] << endl;
 				}
 				//cout << "--------------------" << endl;
-
+				time_2 += stop();
+				start();
 				//cout <<RED<< index[0] <<"," << index[1] <<"," << index[2] << NORMAL<< endl;
-				permute_table(sort_order, Ec);
-				for(int i = 0; i< 8; i++){
-					//cout << "i: " << i << " " << Ec[i] << endl;
-				}
-				
-				
+				permute_table(sort_order3, Ec);
+				/*for(int i = 0; i< 8; i++){
+					cout << "i: " << i << " " << Ec[i] << endl;
+				}*/
+				time_3 += stop();
+				start();				
 				alpha_ijk.erase(itr);
-			    alpha_ijk.insert(make_pair(make_triple2(index[0],index[1],index[2]), Ec));
+				alpha_ijk.insert(make_pair(make_triple2(index3[0],index3[1],index3[2]), Ec));
+				time_4 += stop();
 			}
+			cout << "time_1: " << time_1 << endl;
+			cout << "time_2: " << time_2 << endl;
+			cout << "time_3: " << time_3 << endl;
+			cout << "time_4: " << time_4 << endl;
 
+
+cout << "7: " << stop() << endl;
 
 			
 			//cout << "---Quartic begin!----" << endl;
@@ -1730,6 +1776,7 @@ namespace Petter
 					if (alpha > 0) {
 						if (pos) 
 						{
+
 							// Positive generator was used
 							auto& generator = gen.gen4pos.at(i);
 							int ii, jj, kk, ll;
@@ -1770,7 +1817,7 @@ namespace Petter
 					}
 				}
 			}
-
+			cout << "8: " << stop() << endl;
 			/*cout << "---triplets begin!----" << endl;
 			for(auto itr = alpha_ijk.begin(); itr != alpha_ijk.end(); ++itr){
 
@@ -2064,6 +2111,8 @@ namespace Petter
 					}
 				}
 			}
+			cout << "9: " << stop() << endl;
+
 			//insert left over pairs into 3 cliques if posible.
 			for(auto itr = alpha_ijk.begin(); itr != alpha_ijk.end(); ++itr)
 			{
@@ -2075,7 +2124,7 @@ namespace Petter
 				add_pair2(23,jj,kk, (*itr).second,alpha_ij,nVars);
 		
 			}
-
+			cout << "10: " << stop() << endl;
 			 //add pairs that has not been merged.
 			//cout << "---pairs left!----" << endl;
 			//for(auto itr = alpha_ij.begin(); itr != alpha_ij.end(); ++itr){
@@ -2109,7 +2158,7 @@ namespace Petter
 				*/
 				
 			}
-			
+			cout << "11: " << stop() << endl;
 
 			for(auto itr = alpha_ijk.begin(); itr != alpha_ijk.end(); ++itr){
 				vector<float> Ei = itr->second;
@@ -2126,8 +2175,9 @@ namespace Petter
 				cout << "C: " << C << endl;
 				cout<< "-----------------------" << endl;	*/
 			}
-
+			start();
 			double flow = graph.FindMaxFlow();
+			cout << "Minimize 3 time: " << stop() << endl;
 		//	cout << "flow: " << flow << endl;
 			double min_g = constant + C + flow ;
 			vector<label> xfull(n);
@@ -2135,20 +2185,6 @@ namespace Petter
 				xfull[i] = graph.GetLabel(i);
 			}
 		
-
-			if (f_debug) {
-				std::cout << "Generic cuts\n";
-				std::cout << "C=" << C << " min_g=" << min_g << "\n";
-
-				for (int i = 0; i < nVars; ++i) {
-					std::cout << xfull[i];
-				}
-				std::cout << ", ";
-				for (int i = 0; i < nVars; ++i) {
-					std::cout << xfull[i + nVars];
-				}
-				std::cout << "\n";
-			}
 
 			nlabelled = 0;
 			for (int i=0; i<nVars; ++i) {
@@ -2176,47 +2212,6 @@ namespace Petter
 					}
 					nlabelled++;
 				}
-			}
-
-
-			if (f_debug) {
-				//
-				// Minimize f_debug with exhaustive search.
-				//
-				vector<label> x_debug(n + 2, 0), x_debug_opt(n + 2, 0);
-				real optimum = f_debug->eval(x_debug);
-				while (true) {
-					x_debug[0]++;
-					int i=0;
-					while (x_debug[i]>1) {
-						x_debug[i]=0;
-						i++;
-						if (i == n + 2) {
-							break;
-						}
-						x_debug[i]+=1;
-					}
-					if (i == n + 2) {
-						break;
-					}
-
-					real energy = f_debug->eval(x_debug);
-					if (energy < optimum) {
-						optimum = energy;
-						x_debug_opt = x_debug;
-					}
-				}
-
-				std::cout << "Exhaustive debug\n";
-				std::cout << "C=" << C << " min_f_debug=" << constant + C + optimum << "\n";
-				for (int i = 0; i < nVars; ++i) {
-					std::cout << x_debug_opt[i];
-				}
-				std::cout << ", ";
-				for (int i = 0; i < nVars; ++i) {
-					std::cout << x_debug_opt[i + nVars];
-				}
-				std::cout << "\n";
 			}
 
 			return min_g;
