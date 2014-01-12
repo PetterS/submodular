@@ -237,7 +237,7 @@ int main_program(int num_args, char** args)
 		statusOK();
 		cerr << "Number of generators : (" << generators.ngen2 << ", " << generators.ngen3 << ", " << generators.ngen4 << ")" << endl;
 		statusTry("Testing create lp...");
-		PseudoBoolean<double> f("../tests/quartic_paper.txt");
+		PseudoBoolean<double> f("tests/quartic_paper.txt");
 		genpb.create_lp(f);
 		statusOK();
 
