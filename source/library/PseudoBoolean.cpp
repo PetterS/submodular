@@ -3,6 +3,7 @@
 // the polynomials.
 //
 
+#include <algorithm>
 #include <iomanip>
 #include <fstream>
 #include <cmath>
