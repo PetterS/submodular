@@ -8,12 +8,12 @@ before_install:
 language: cpp
 compiler:
   - gcc
+before_script:
+  - mkdir build
+  - cd build
+  - cmake .. 
 script:
- - mkdir ~/obj
- - mkdir ~/obj/submodular
- - make
- - cd bin
- - ./submodular
+  - make
 
 # whitelist
 branches:
