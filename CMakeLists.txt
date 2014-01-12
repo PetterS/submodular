@@ -46,6 +46,9 @@ ENDIF (${OPENMP})
 FILE(GLOB SUBMODULAR_HEADERS ${CMAKE_SOURCE_DIR}/source/library/*.h)
 INSTALL(FILES ${SUBMODULAR_HEADERS} DESTINATION include)
 
+# C++11 support.
+include(cmake/EnableCPP11.cmake)
+
 #
 # Libraries
 #
