@@ -20,14 +20,16 @@ if the software is downloaded. If you use the methods/software from (3-5), you s
 
 Building
 --------
-Readme.pdf contains build instructions. Users of Ubuntu can look at the .travis.yml file, which contains all commands neccessary for downloading all requirements and building the library.
+The library is built using CMake. Users of Ubuntu can look at the .travis.yml file, which contains all commands neccessary for downloading all requirements and building the library.
+
+On Windows, the library builds with later versions of Visual Studio.
 
 The current build status on Ubuntu is:
 [![Build Status](https://travis-ci.org/PetterS/submodular.png)](https://travis-ci.org/PetterS/submodular)
 
 Reproducing figures 1 and 2 in the paper
 ----------------------------------------
- * Compile the demo program (see PDF)
+ * Compile the demo program
  * Run:
    * batchrun3
    * batchrun4
