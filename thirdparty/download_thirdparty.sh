@@ -6,7 +6,7 @@ tar -xzf maxflow-v3.01.src.tar.gz
 wget http://pub.ist.ac.at/~vnk/software/QPBO-v1.3.src.tar.gz 
 tar -xzf QPBO-v1.3.src.tar.gz 
 mv QPBO-v1.3.src/* QPBO  
-mv QPBO/instance.inc.new QPBO/instances.inc
+mv QPBO/instances.inc.new QPBO/instances.inc
 
 wget http://www.f.waseda.jp/hfs/HOCR1.02.zip  
 unzip HOCR1.02.zip -d tmp 
