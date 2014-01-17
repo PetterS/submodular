@@ -4,8 +4,8 @@ Please refer to Readme.pdf for documentation. Automatically generated documentat
 
 This library implements the optimization method decribed in (1). The code may be freely used as long as this publication is cited.
 
-* (1) Fredrik Kahl and Petter Strandmark, "Generalized Roof Duality for Pesudo-Boolean Optimization", International Conference on Computer Vision, 2011.
-* (2) Fredrik Kahl and Petter Strandmark, "Generalized Roof Duality", Discrete Applied Mathematics, 2012.
+* (1) Fredrik Kahl and Petter Strandmark, ["Generalized Roof Duality for Pesudo-Boolean Optimization"](http://www2.maths.lth.se/vision/publications/publications/view_paper.php?paper_id=482), International Conference on Computer Vision, 2011.
+* (2) Fredrik Kahl and Petter Strandmark, ["Generalized Roof Duality"](http://www2.maths.lth.se/vision/publications/publications/view_paper.php?paper_id=520), Discrete Applied Mathematics, 2012.
 
 It also contains an implementation of 
 
