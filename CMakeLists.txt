@@ -85,11 +85,34 @@ LIST(APPEND SUBMODULAR_LIBRARY_DEPENDENCIES petter)
 INCLUDE_DIRECTORIES(
   source/library
   thirdparty/Petter
-  thirdparty/HOCR
-  thirdparty/QPBO
-  thirdparty/maxflow-v3.01.src
-  thirdparty/ibfs
   )
+
+FIND_PATH(HOCR_INCLUDE_DIR NAMES HOCR.h PATHS thirdparty/HOCR)
+IF (NOT EXISTS ${HOCR_INCLUDE_DIR})
+	MESSAGE(FATAL_ERROR
+	        "Can't find HOCR library. See thirdparty directory on how to download and install.")
+ELSE (NOT EXISTS ${HOCR_INCLUDE_DIR})
+	MESSAGE("-- Found HOCR include directory.")
+	INCLUDE_DIRECTORIES(${HOCR_INCLUDE_DIR})
+ENDIF (NOT EXISTS ${HOCR_INCLUDE_DIR})
+
+FIND_PATH(QPBO_INCLUDE_DIR NAMES QPBO.h PATHS thirdparty/QPBO)
+IF (NOT EXISTS ${QPBO_INCLUDE_DIR})
+	MESSAGE(FATAL_ERROR
+	        "Can't find QPBO library. See thirdparty directory on how to download and install.")
+ELSE (NOT EXISTS ${QPBO_INCLUDE_DIR})
+	MESSAGE("-- Found QPBO include directory.")
+	INCLUDE_DIRECTORIES(${QPBO_INCLUDE_DIR})
+ENDIF (NOT EXISTS ${QPBO_INCLUDE_DIR})
+
+FIND_PATH(MAXFLOW_INCLUDE_DIR NAMES maxflow.cpp PATHS thirdparty/maxflow-v3.01.src)
+IF (NOT EXISTS ${MAXFLOW_INCLUDE_DIR})
+	MESSAGE(FATAL_ERROR
+	        "Can't find maxflow-v3.01.src library. See thirdparty directory on how to download and install.")
+ELSE (NOT EXISTS ${MAXFLOW_INCLUDE_DIR})
+	MESSAGE("-- Found maxflow-v3.01.src include directory.")
+	INCLUDE_DIRECTORIES(${MAXFLOW_INCLUDE_DIR})
+ENDIF (NOT EXISTS ${MAXFLOW_INCLUDE_DIR})
 
 SET(COIN_INCLUDE_DIR "" CACHE PATH "Coin (Clp, ...) include directory (where coin/ is)")
 
