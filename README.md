@@ -17,7 +17,7 @@ and it is able to use
 * (5) Hiroshi Ishikawa, "Transformation of General Binary MRF Minimization to the First Order Case", PAMI 2011.
 * (6) C. Rother, V. Kolmogorov, V. Lempitsky, and M. Szummer, "Optimizing binary MRFs via extended roof duality", CVPR 2007.
 
-if the software is downloaded. If you use the methods/software from (3-5), you should cite them.
+if the software is downloaded. If you use the methods/software from (4–6), you should cite them.
 
 Building
 --------
