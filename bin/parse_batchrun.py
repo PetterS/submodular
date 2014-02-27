@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import glob
 import numpy as np
 
@@ -6,9 +8,9 @@ import numpy as np
 
 files = glob.glob('run_*.data')
 
-for filename in files :
+for filename in files:
 	data = np.genfromtxt(filename)
-	print filename
+	print(filename)
 	
 	try :
 		hocr    = data[:,7]
@@ -26,42 +28,43 @@ for filename in files :
 		time_heur    = data[:,14]*1000
 		
 		def printinfo(data) :
-			print  '%.2f %.2f %.2f' % (np.min(data), np.median(data), np.max(data)),
+			print('%.2f %.2f %.2f' % (np.min(data), np.median(data), np.max(data)), end="")
 		
-		print '    HOCR      : labeled ',
+		print('    HOCR      : labeled ', end="")
 		printinfo(lab_hocr)
-		print '   rel.bound  ', 
+		print('   rel.bound  ', end="") 
 		printinfo((optimal - hocr)/np.abs(optimal))
-		print '   time  ', 
+		print('   time  ', end="")
+ 
 		printinfo(time_hocr)
-		print ''
+		print('')
 		
-		print '    Fix et al.: labeled ',
+		print('    Fix et al.: labeled ', end="")
 		printinfo(lab_fixetal)
-		print '   rel.bound  ', 
+		print('   rel.bound  ', end="")
 		printinfo((optimal - fixetal)/np.abs(optimal))
-		print '   time  ', 
+		print('   time  ', end="") 
 		printinfo(time_hocr)
-		print ''
+		print('')
 		
-		print '    Optimal   : labeled ',
+		print('    Optimal   : labeled ', end="")
 		printinfo(lab_optimal)
-		print '   rel.bound  ', 
+		print('   rel.bound  ', end="") 
 		printinfo((optimal - optimal)/np.abs(optimal))
-		print '   time  ', 
+		print('   time  ', end="") 
 		printinfo(time_optimal)
-		print ''
+		print('')
 		
-		print '    Heur      : labeled ',
+		print('    Heur      : labeled ', end="")
 		printinfo(lab_heur)
-		print '   rel.bound  ', 
+		print('   rel.bound  ', end="") 
 		printinfo((optimal - heur)/np.abs(optimal))
-		print '   time  ', 
+		print('   time  ', end="") 
 		printinfo(time_heur)
-		print ''
+		print('')
 		
 	except :
 		pass
 	
-	print ' '
+	print(' ')
 	
