@@ -6,15 +6,16 @@ This library implements the optimization method decribed in (1). The code may be
 
 * (1) Fredrik Kahl and Petter Strandmark, ["Generalized Roof Duality for Pesudo-Boolean Optimization"](http://www2.maths.lth.se/vision/publications/publications/view_paper.php?paper_id=482), International Conference on Computer Vision, 2011.
 * (2) Fredrik Kahl and Petter Strandmark, ["Generalized Roof Duality"](http://www2.maths.lth.se/vision/publications/publications/view_paper.php?paper_id=520), Discrete Applied Mathematics, 2012.
+* (3) Petter Strandmark, ["Discrete Optimization in Early Vision"](http://www2.maths.lth.se/vision/publications/publications/view_paper.php?paper_id=537), Phd thesis.
 
 It also contains an implementation of 
 
-* (3) Alexander Fix, Aritanan Gruber, Endre Boros, Ramin Zabih, "A Graph Cut Algorithm for Higher-order Markov Random Fields", International Conference on Computer Vision, 2011.
+* (4) Alexander Fix, Aritanan Gruber, Endre Boros, Ramin Zabih, "A Graph Cut Algorithm for Higher-order Markov Random Fields", International Conference on Computer Vision, 2011.
 
 and it is able to use
 
-* (4) Hiroshi Ishikawa, "Transformation of General Binary MRF Minimization to the First Order Case", PAMI 2011.
-* (5) C. Rother, V. Kolmogorov, V. Lempitsky, and M. Szummer, "Optimizing binary MRFs via extended roof duality", CVPR 2007.
+* (5) Hiroshi Ishikawa, "Transformation of General Binary MRF Minimization to the First Order Case", PAMI 2011.
+* (6) C. Rother, V. Kolmogorov, V. Lempitsky, and M. Szummer, "Optimizing binary MRFs via extended roof duality", CVPR 2007.
 
 if the software is downloaded. If you use the methods/software from (3-5), you should cite them.
 
@@ -49,3 +50,5 @@ Running the examples from the papers
 ------------------------------------
  The file "examples from paper.cmd" will run the two examples
  which appear in the papers.
+ 
+![Screenshot](http://www.strandmark.net/submodular.png)
