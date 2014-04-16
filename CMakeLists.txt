@@ -126,6 +126,19 @@ ENDIF (NOT EXISTS ${COIN_INCLUDE})
 
 INCLUDE_DIRECTORIES(${COIN_INCLUDE})
 
+# Coin requires compression libraries if available.
+find_package(ZLIB)
+if (ZLIB_FOUND)
+    include_directories(${ZLIB_INCLUDE_DIRS})
+    list(APPEND SUBMODULAR_LIBRARY_DEPENDENCIES ${ZLIB_LIBRARIES})
+endif()
+
+find_package(BZip2)
+if (BZIP2_FOUND)
+    include_directories(${BZIP2_INCLUDE_DIRS})
+    list(APPEND SUBMODULAR_LIBRARY_DEPENDENCIES ${BZIP2_LIBRARIES})
+endif()
+
 # Change the default build type from Debug to Release, while still
 # supporting overriding the build type.
 IF (NOT CMAKE_BUILD_TYPE)
@@ -134,10 +147,6 @@ IF (NOT CMAKE_BUILD_TYPE)
     "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
     FORCE)
 ENDIF (NOT CMAKE_BUILD_TYPE)
-
-# C++11 support.
-#include(cmake/EnableCPP11.cmake)
-#include(cmake/CheckGenericLambdas.cmake)
 
 #
 # Clang and GCC settings
