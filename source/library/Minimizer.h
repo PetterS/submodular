@@ -161,102 +161,6 @@ namespace Petter {
 
 	}
 
-
-	
-	template<typename real>
-	void test_graph_functions() 
-	{
-		{
-			//
-			// First test
-			//
-			real C = 0;
-			Graph<real,real,real> graph1(100,100);
-			graph1.add_node(2);
-		
-			// -10*x0*x1
-			add_monomial_2_to_graph(C, graph1, 0,1, -10);
-			// Force both variables to 1
-			graph1.add_tweights(0,0,1000000);
-			graph1.add_tweights(1,0,1000000);
-
-			ASSERT( C+graph1.maxflow() == -10 );
-			ASSERT( graph1.what_segment(0) == 1);
-			ASSERT( graph1.what_segment(1) == 1);
-		}
-
-		{
-			//
-			// Second test
-			//
-			real C = 0;
-			Graph<real,real,real> graph2(100,100);
-			graph2.add_node(2);
-		
-			// -2*x0*x1 - 5*x0 + 7*x1 + 1;
-			add_monomial_2_to_graph(C,graph2, 0,1, -2);
-			add_monomial_1_to_graph(C,graph2, 0, -5);
-			add_monomial_1_to_graph(C,graph2, 1,  7);
-			C += 1;
-
-			// Force both variables to 1
-			graph2.add_tweights(0,0,1000000);
-			graph2.add_tweights(1,0,1000000);
-		
-			ASSERT( C+graph2.maxflow() == -2 - 5 + 7 + 1);
-			ASSERT( graph2.what_segment(0) == 1);
-			ASSERT( graph2.what_segment(1) == 1);
-		}
-
-		{
-			real C = 0;
-			Graph<real,real,real> graph2(100,100);
-			graph2.add_node(1);
-			add_monomial_1_to_graph(C,graph2, 0, -5);
-			graph2.add_tweights(0,0,1000000);		
-			ASSERT( C+graph2.maxflow() == -5);
-			ASSERT( graph2.what_segment(0) == 1);
-		}
-
-		{
-			real C = 0;
-			Graph<real,real,real> graph2(100,100);
-			graph2.add_node(1);
-			add_monomial_1_to_graph(C,graph2, 0, -5);
-			graph2.add_tweights(0,1000000,0);		
-			ASSERT( C+graph2.maxflow() == 0);
-			ASSERT( graph2.what_segment(0) == 0);
-		}
-
-		{
-			real C = 0;
-			Graph<real,real,real> graph2(100,100);
-			graph2.add_node(1);
-			add_monomial_1_to_graph(C,graph2, 0, 5);
-			graph2.add_tweights(0,0,1000000);		
-			ASSERT( C+graph2.maxflow() == 5);
-			ASSERT( graph2.what_segment(0) == 1);
-		}
-
-		{
-			real C = 0;
-			Graph<real,real,real> graph2(100,100);
-			graph2.add_node(1);
-			add_monomial_1_to_graph(C,graph2, 0, 5);
-			graph2.add_tweights(0,1000000,0);		
-			ASSERT( C+graph2.maxflow() == 0);
-			ASSERT( graph2.what_segment(0) == 0);
-		}
-	}
-
-
-
-
-
-
-
-
-
 	template<typename real>
 	class Minimizer 
 	{
@@ -479,7 +383,6 @@ namespace Petter {
 		Graph<real,real,real>* graph;
 	};
 
-	
 	template<typename real>
 	inline real Minimizer<real>::submodular_coef(real coef)
 	{
@@ -492,7 +395,7 @@ namespace Petter {
 	inline double Minimizer<double>::submodular_coef(double coef)
 	{
 		// Check submodularity
-		ASSERT_STR(coef <= 1e-9, "Encountered non-submodular term when minimizing. This is probably due to floating-point arithmetic errors");
+		ASSERT(coef <= 1e-9 && "Encountered non-submodular term when minimizing. This is probably due to floating-point arithmetic errors");
 		return std::min(double(0),coef);
 	}
 }

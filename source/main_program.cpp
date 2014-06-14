@@ -43,9 +43,6 @@ namespace {
 }
 
 // Functions running some quick tests
-// In: submodular_tests.cpp
-template<typename real> void test_pseudoboolean();
-void test_minimize();
 template<typename real> void test_posiform();
 
 //Simple routine for conversion of strings
@@ -216,20 +213,11 @@ int main_program(int num_args, char** args)
 
 	if (num_args == 1) {
 		// Run some tests
-		statusTry("Testing minimization...");
-		test_minimize();
-		statusTry("Testing pseudo-Boolean functions...");
-		test_pseudoboolean<double>();
-		//test_pseudoboolean<int>(); // Does not have LP and therefore fails
-		statusTry("Testing posiform (double)...");
+		//statusTry("Testing posiform (double)...");
 		//test_posiform<double>();
-		statusTry("Testing posiform (int)...");
+		//statusTry("Testing posiform (int)...");
 		//test_posiform<int>();
-		statusOK();
-		statusTry("Testing graph functions...");
-		test_graph_functions<int>();
-		statusOK();
-
+		//statusOK();
 
 		statusTry("Testing generators...");
 		Generators<real> generators("generators/generators.txt");
