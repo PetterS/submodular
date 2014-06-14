@@ -61,24 +61,23 @@ TEST_CASE("PseudoBoolean-3")
 
 TEST_CASE("PseudoBoolean-4")
 {
-	typedef double real;
-
 	Petter::PseudoBoolean<real> pb;
 
-	real E00 = 1000-rand()%2001;
-	real E01 = 1000-rand()%2001;
-	real E10 = 1000-rand()%2001;
-	real E11 = 1000-rand()%2001;
+	vector<real> E(16,0);
+	for (int i=0;i<16;++i) {
+		E[i] = 1000-rand()%2001;
+	}
 
-	pb.add_clique(0,1, E00, E01, E10, E11);
-	vector<label> x(2);
+	pb.add_clique(0,1,2,3, E);
+	pb.add_clique(0,1,2,3, E);
 
-	x[0]=0; x[1]=0;
-	CHECK( abs( pb.eval(x) - E00 ) < 1e-10 );
-	x[0]=0; x[1]=1;
-	CHECK( abs( pb.eval(x) - E01 ) < 1e-10 );
-	x[0]=1; x[1]=0;
-	CHECK( abs( pb.eval(x) - E10 ) < 1e-10 );
-	x[0]=1; x[1]=1;
-	CHECK( abs( pb.eval(x) - E11 ) < 1e-10 );
+	vector<label> x(4);
+	for (x[0]=0; x[0]<=1; ++x[0]) {
+	for (x[1]=0; x[1]<=1; ++x[1]) {
+	for (x[2]=0; x[2]<=1; ++x[2]) {
+	for (x[3]=0; x[3]<=1; ++x[3]) {
+		real f = pb.eval(x);
+		real e = 2*E[8*x[0] + 4*x[1] + 2*x[2] + x[3]];
+		CHECK( absolute(f-e) <= 1e-10 );
+	}}}}
 }
