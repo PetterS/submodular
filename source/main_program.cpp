@@ -219,22 +219,6 @@ int main_program(int num_args, char** args)
 		//test_posiform<int>();
 		//statusOK();
 
-		statusTry("Testing generators...");
-		Generators<real> generators("generators/generators.txt");
-		Petter::GeneratorPseudoBoolean<real> genpb(generators);
-		statusOK();
-		cerr << "Number of generators : (" << generators.ngen2 << ", " << generators.ngen3 << ", " << generators.ngen4 << ")" << endl;
-		statusTry("Testing create lp...");
-		PseudoBoolean<double> f("tests/quartic_paper.txt");
-		genpb.create_lp(f);
-		statusOK();
-
-		statusTry("Minimizing g...");
-		vector<label> x(f.nvars(), -1);
-		int nlabelled=-1;
-		genpb.minimize(x, nlabelled);
-		statusOK();
-
 		cerr << "Possible choices : " << endl;
 		cerr << "  " << args[0] << " -m <int> -n <int> -nterms <int>  : runs random examples" << endl;
 		cerr << "  " << args[0] << " -m <int> -example                : examples from paper" << endl;
