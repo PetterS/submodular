@@ -1,5 +1,5 @@
 //
-// Petter Strandmark 2011
+// Petter Strandmark 2011, 2014
 // petter@maths.lth.se
 //
 // Some tests to verify the functionality of PseudoBoolean and 
@@ -21,18 +21,11 @@
 #include <functional>
 using namespace std;
 
+#define CATCH_CONFIG_MAIN
+#include <catch.hpp>
 
-#include "Petter-Color.h"
 #include "Posiform.h"
 using namespace Petter;
-
-
-
-
-// Random number generator
-namespace {
-	mt19937 engine(unsigned(time(0)));
-}
 
 template <typename T>
 T absolute(const T t) 
@@ -40,16 +33,12 @@ T absolute(const T t)
 	return t < 0 ? -t : t;
 }
 
-
 template<typename real>
-void test_posiform()
+void test_posiform_small()
 {
-	////////////////
-	// Small test //
-	////////////////
-	{
+		mt19937_64 engine(42ul);
 		PseudoBoolean<real> pb;
-		auto random_coef = bind(uniform_int_distribution<int>(-1000,1000), engine);
+		auto random_coef = bind(uniform_int_distribution<int>(-1000,1000), ref(engine));
 
 		vector<real> E(16,0);
 		for (int i=0;i<16;++i) {
@@ -77,30 +66,33 @@ void test_posiform()
 		for (x[5]=0;x[5]<=1;++x[5]) {
 			real f = pb.eval(x);
 			real p = -phi.eval(x);
-			if ( absolute(f-p) > 1e-10 ) {
-				cout << endl;
-				for (int i=0;i<6;++i) {
-					cout << int(x[i]);
-				}
-				cout << endl;
-				cout << "f   = " << f << endl;
-				cout << "phi = " << p << endl;
-				throw runtime_error("f(x) =/= phi(x)");
-			}
-		}}}}}}
-	}
 
-	////////////
-	// Larger //
-	////////////
-	{
+			CAPTURE(f);
+			CAPTURE(p);
+			for (int i = 0; i<6; ++i) {
+				CAPTURE(x[i]);
+			}
+			CHECK(absolute(f-p) < 1e-10);
+		}}}}}}
+}
+
+TEST_CASE("Small")
+{
+	test_posiform_small<int>();
+	test_posiform_small<double>();
+}
+
+template<typename real>
+void test_posiform_large()
+{
+		mt19937_64 engine(42ul);
 		Petter::PseudoBoolean<real> pb;
 
 		int nTerms = 100;
 		int nVars = 100;
 
 		uniform_int_distribution<int> distribution(-100, 100);
-		auto random_value = bind(distribution, engine);
+		auto random_value = bind(distribution, ref(engine));
 
 		map< quad, bool> exists;
 		for (int t=0; t < nTerms; ++t) {
@@ -114,12 +106,7 @@ void test_posiform()
 
 			exists[ make_pair(make_pair(i,j) , make_pair(k,l)) ] = true;
 
-
-			if (i<0 || i>=j || j>=k || k>=nVars) {
-				cout << "(" << i << "," << j << "," << k << ")" << endl;
-				throw runtime_error("ijk failed");
-			}
-
+			CHECK( ! (i<0 || i>=j || j>=k || k>=nVars));
 
 			pb.add_clique(i,j,k,l, random_value(),random_value(),random_value(),random_value(),
 				random_value(),random_value(),random_value(),random_value(),
@@ -129,25 +116,24 @@ void test_posiform()
 
 		Posiform<real,4> phi(pb);
 
+		uniform_int_distribution<label> distribution01(0, 1);
+		auto rand01 = bind(distribution01, ref(engine));
+
 		vector<label> x(nVars,0), y(nVars,0);
 		for (int iter=0; iter<=100; ++iter) {
 			for (int i=0;i<nVars;++i) {
-				x[i] = rand()%2;
+				x[i] = rand01();
 			}
 			real f = pb.eval(x);
 			real p = -phi.eval(x);
-			if ( absolute(f-p) > 1e-6 ) {
-				cout << "f   = " << f << endl;
-				cout << "phi = " << p << endl;
-				throw runtime_error("f(x) =/= phi(x) for order 4");
-			}
+			CAPTURE(f);
+			CAPTURE(p);
+			CHECK(absolute(f-p) <= 1e-6);
 		}
-
-	}
-
 }
 
-// Instantiate
-template void test_posiform<double>();
-template void test_posiform<int>();
-
+TEST_CASE("Large")
+{
+	test_posiform_large<int>();
+	test_posiform_large<double>();
+}

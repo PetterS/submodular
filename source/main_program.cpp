@@ -212,13 +212,6 @@ int main_program(int num_args, char** args)
 	typedef double real;
 
 	if (num_args == 1) {
-		// Run some tests
-		//statusTry("Testing posiform (double)...");
-		//test_posiform<double>();
-		//statusTry("Testing posiform (int)...");
-		//test_posiform<int>();
-		//statusOK();
-
 		cerr << "Possible choices : " << endl;
 		cerr << "  " << args[0] << " -m <int> -n <int> -nterms <int>  : runs random examples" << endl;
 		cerr << "  " << args[0] << " -m <int> -example                : examples from paper" << endl;
