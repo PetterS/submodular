@@ -1,5 +1,7 @@
 // Petter Strandmark 2014.
 
+#include <functional>
+#include <random>
 using namespace std;
 
 #define CATCH_CONFIG_MAIN
@@ -17,13 +19,15 @@ T absolute(const T t)
 
 TEST_CASE("PseudoBoolean-2")
 {
+	mt19937_64 engine(1ul);
+	auto rand_value = bind(uniform_int_distribution<int>(-1000, 1000), ref(engine));
+
+	real E00 = rand_value();
+	real E01 = rand_value();
+	real E10 = rand_value();
+	real E11 = rand_value();
+
 	Petter::PseudoBoolean<real> pb;
-
-	real E00 = 1000-rand()%2001;
-	real E01 = 1000-rand()%2001;
-	real E10 = 1000-rand()%2001;
-	real E11 = 1000-rand()%2001;
-
 	pb.add_clique(0,1, E00, E01, E10, E11);
 	vector<label> x(2);
 
@@ -39,13 +43,15 @@ TEST_CASE("PseudoBoolean-2")
 
 TEST_CASE("PseudoBoolean-3")
 {
-	Petter::PseudoBoolean<real> pb;
+	mt19937_64 engine(1ul);
+	auto rand_value = bind(uniform_int_distribution<int>(-1000, 1000), ref(engine));
 
 	vector<real> E(8,0);
 	for (int i=0;i<8;++i) {
-		E[i] = 1000-rand()%2001;
+		E[i] = rand_value();
 	}
 
+	Petter::PseudoBoolean<real> pb;
 	pb.add_clique(0,1,2, E);
 	pb.add_clique(0,1,2, E);
 
@@ -61,13 +67,15 @@ TEST_CASE("PseudoBoolean-3")
 
 TEST_CASE("PseudoBoolean-4")
 {
-	Petter::PseudoBoolean<real> pb;
+	mt19937_64 engine(1ul);
+	auto rand_value = bind(uniform_int_distribution<int>(-1000, 1000), ref(engine));
 
 	vector<real> E(16,0);
 	for (int i=0;i<16;++i) {
-		E[i] = 1000-rand()%2001;
+		E[i] = rand_value();
 	}
 
+	Petter::PseudoBoolean<real> pb;
 	pb.add_clique(0,1,2,3, E);
 	pb.add_clique(0,1,2,3, E);
 
