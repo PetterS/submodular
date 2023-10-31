@@ -2,7 +2,7 @@
 
 #wget http://pub.ist.ac.at/~vnk/software/maxflow-v3.01.src.tar.gz 
 #tar -xzf maxflow-v3.01.src.tar.gz 
-wget http://vision.csd.uwo.ca/code/maxflow-v3.01.zip
+wget http://vision.csd.uwo.ca/files/maxflow-v3.01.zip
 unzip maxflow-v3.01.zip -d maxflow-tmp
 mv maxflow-tmp/* maxflow-v3.01.src/
 rm -rf maxflow-tmp
